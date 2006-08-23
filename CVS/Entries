@@ -1,0 +1,53 @@
+/CONTRIBUTORS/1.1/Tue Apr 20 22:49:32 2004//
+/CRT_noglob.c/1.2/Tue Apr 20 22:49:32 2004/-ko/
+/CRTfmode.c/1.3/Tue Apr 20 22:49:32 2004/-ko/
+/CRTglob.c/1.2/Tue Apr 20 22:49:32 2004/-ko/
+/CRTinit.c/1.2/Tue Apr 20 22:49:32 2004/-ko/
+/ChangeLog/1.314/Thu Aug  3 21:05:06 2006/-ko/
+/DISCLAIMER/1.2/Thu Apr 22 16:16:24 2004//
+/README/1.2/Thu Apr 22 16:16:26 2004//
+/TODO/1.1/Wed Nov 22 01:51:54 2000//
+/aclocal.m4/1.1/Wed May 24 16:59:02 2006//
+/binmode.c/1.1/Sat Oct 19 20:26:26 2002//
+/config.guess/1.2/Thu Jul  3 15:15:56 2003//
+/config.sub/1.2/Thu Jul  3 15:15:56 2003//
+/cpu_features.h/1.1/Mon Jul  3 10:32:58 2006//
+/crtdll.def/1.3/Tue Apr 20 22:49:32 2004/-ko/
+/crtmt.c/1.1.1.1/Thu Feb 17 19:38:32 2000/-ko/
+/crtst.c/1.1.1.1/Thu Feb 17 19:38:32 2000/-ko/
+/dllmain.c/1.2/Tue Apr 20 22:49:32 2004/-ko/
+/gccmain.c/1.2/Tue Apr 20 22:49:32 2004/-ko/
+/install-sh/1.1/Wed Nov 22 01:51:54 2000//
+/isascii.c/1.2/Tue Apr 20 22:49:32 2004//
+/iscsym.c/1.2/Tue Apr 20 22:49:32 2004//
+/iscsymf.c/1.2/Tue Apr 20 22:49:32 2004//
+/jamfile/1.2/Tue Apr 20 22:49:32 2004/-ko/
+/mkinstalldirs/1.1/Wed Nov 22 01:51:54 2000//
+/moldname.def.in/1.7/Mon Aug  8 10:22:20 2005/-ko/
+/msvcrt.def.in/1.4/Tue Apr 20 22:49:32 2004//
+/mthr.c/1.2/Wed Dec  5 15:01:06 2001/-ko/
+/mthr_init.c/1.2/Wed Dec  5 15:01:06 2001/-ko/
+/mthr_stub.c/1.3/Wed Aug 10 10:05:02 2005/-ko/
+/pseudo-reloc-list.c/1.1/Wed Jan  1 10:00:40 2003//
+/readme.txt/1.1.1.1/Thu Feb 17 19:38:32 2000/-ko/
+/strcasecmp.c/1.2/Tue Apr 20 22:49:32 2004//
+/strncasecmp.c/1.2/Thu Apr 22 16:34:32 2004//
+/test_headers.c/1.4/Thu Jul  3 07:50:54 2003//
+/toascii.c/1.2/Tue Apr 20 22:49:32 2004//
+/txtmode.c/1.1/Sat Oct 19 20:26:26 2002//
+/wcscmpi.c/1.2/Tue Apr 20 22:49:32 2004//
+D/include////
+D/mingwex////
+D/profile////
+D/samples////
+/CRT_fp10.c/1.2/Wed Aug 23 23:25:48 2006//
+/CRT_fp8.c/1.2/Wed Aug 23 23:25:48 2006//
+/Makefile.in/1.63/Wed Aug 23 23:25:48 2006/-ko/
+/configure/1.16/Wed Aug 23 23:25:50 2006/-ko/
+/configure.in/1.12/Wed Aug 23 23:25:50 2006/-ko/
+/cpu_features.c/1.1/Wed Aug 23 23:25:50 2006//
+/crt1.c/1.11/Wed Aug 23 23:25:50 2006/-ko/
+/dllcrt1.c/1.4/Wed Aug 23 23:25:50 2006/-ko/
+/init.c/1.2/Wed Aug 23 23:25:50 2006/-ko/
+/main.c/1.2/Wed Aug 23 23:25:50 2006/-ko/
+/pseudo-reloc.c/1.1/Wed Aug 23 23:25:50 2006//

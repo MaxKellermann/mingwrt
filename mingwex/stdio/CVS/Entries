@@ -1,0 +1,15 @@
+/fopen64.c/1.1/Sun Aug 15 11:28:10 2004//
+/fseeko64.c/1.2/Thu Aug 25 02:05:00 2005//
+/ftello64.c/1.1/Sun Aug 15 11:28:10 2004//
+/lseek64.c/1.1/Sun Aug 15 11:28:10 2004//
+/snprintf.c/1.1/Sun Mar  2 07:00:48 2003//
+/snwprintf.c/1.1/Sun Mar  2 07:00:48 2003//
+/vscanf.c/1.1/Sun Mar  2 07:00:48 2003//
+/vsnprintf.c/1.1/Sun Mar  2 07:00:48 2003//
+/vsnwprintf.c/1.1/Sun Mar  2 07:00:48 2003//
+/vwscanf.c/1.2/Mon Aug  9 01:17:28 2004//
+/vfscanf.c/1.2/Wed Aug 23 23:25:50 2006//
+/vfwscanf.c/1.2/Wed Aug 23 23:25:50 2006//
+/vsscanf.c/1.2/Wed Aug 23 23:25:50 2006//
+/vswscanf.c/1.2/Wed Aug 23 23:25:50 2006//
+D
