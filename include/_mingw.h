@@ -153,6 +153,16 @@
 #define __MINGW_ATTRIB_NONNULL(arg)
 #endif /* GNUC >= 3.3 */
 
+#ifdef UNDER_CE
+/* ARM Windows CE is not underscored.  */
+# define __U(SYM) (_ ## SYM)
+# define __IMP(S) (__imp_ ## S)
+#else
+/* Desktop i386 Windows versions are underscored.  */
+# define __U(SYM) (SYM)
+# define __IMP(S) (_imp__ ## S)
+#endif
+
 #ifndef __MSVCRT_VERSION__
 /*  High byte is the major version, low byte is the minor. */
 # define __MSVCRT_VERSION__ 0x0600

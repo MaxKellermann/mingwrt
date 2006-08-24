@@ -9,8 +9,12 @@
  * set in CRT_FP8.o.
  */
 
+#ifdef __i386__
+
 /* Override library  _fpreset() with asm fninit */
 void _fpreset (void)
   { __asm__ ( "fninit" ) ;}
 
 void __attribute__ ((alias ("_fpreset"))) fpreset(void);
+
+#endif

@@ -272,8 +272,9 @@ PACKAGE_STRING=
 PACKAGE_BUGREPORT=
 
 ac_unique_file="dllmain.c"
+ac_subdirs_all="$ac_subdirs_all "
 ac_subdirs_all="$ac_subdirs_all profile mingwex"
-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS CC ac_ct_CC CFLAGS LDFLAGS CPPFLAGS EXEEXT OBJEXT all_dlls_host install_dlls_host AR ac_ct_AR AS ac_ct_AS RANLIB ac_ct_RANLIB LD ac_ct_LD DLLTOOL ac_ct_DLLTOOL DLLWRAP ac_ct_DLLWRAP WINDRES ac_ct_WINDRES ALLOCA CPP EGREP build build_cpu build_vendor build_os host host_cpu host_vendor host_os target target_cpu target_vendor target_os subdirs MKINSTALLDIRS MNO_CYGWIN THREAD_DLL LIBM_A LIBGMON_A HEADER_SUBDIR W32API_INCLUDE INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA LIBOBJS LTLIBOBJS'
+ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS CC ac_ct_CC CFLAGS LDFLAGS CPPFLAGS EXEEXT OBJEXT all_dlls_host install_dlls_host AR ac_ct_AR AS ac_ct_AS RANLIB ac_ct_RANLIB LD ac_ct_LD DLLTOOL ac_ct_DLLTOOL DLLWRAP ac_ct_DLLWRAP WINDRES ac_ct_WINDRES ALLOCA CPP EGREP build build_cpu build_vendor build_os host host_cpu host_vendor host_os target target_cpu target_vendor target_os subdirs MKINSTALLDIRS MNO_CYGWIN THREAD_DLL LIBM_A LIBGMON_A HEADER_SUBDIR W32API_INCLUDE DLL_ENTRY MINGWEX_DIR INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA LIBOBJS LTLIBOBJS'
 ac_subst_files=''
 
 # Initialize some variables set by options.
@@ -3565,8 +3566,25 @@ test -n "$target_alias" &&
     NONENONEs,x,x, &&
   program_prefix=${target_alias}-
 
+case "$target" in
+arm*)
+  #subdirs not ported yet.
+
+
+subdirs="$subdirs "
+
+  DLL_ENTRY = DllMainCRTStartup
+  MINGWEX_DIR =
+  ;;
+*)
+
 
 subdirs="$subdirs profile mingwex"
+
+  DLL_ENTRY = _DllMainCRTStartup@12
+  MINGWEX_DIR = -Lmingwex
+  ;;
+esac
 
 HEADER_SUBDIR=""
 
@@ -3596,6 +3614,8 @@ esac
 THREAD_DLL=mingwm
 
 MKINSTALLDIRS=$ac_aux_dir/mkinstalldirs
+
+
 
 
 
@@ -4366,6 +4386,8 @@ s,@LIBM_A@,$LIBM_A,;t t
 s,@LIBGMON_A@,$LIBGMON_A,;t t
 s,@HEADER_SUBDIR@,$HEADER_SUBDIR,;t t
 s,@W32API_INCLUDE@,$W32API_INCLUDE,;t t
+s,@DLL_ENTRY@,$DLL_ENTRY,;t t
+s,@MINGWEX_DIR@,$MINGWEX_DIR,;t t
 s,@INSTALL_PROGRAM@,$INSTALL_PROGRAM,;t t
 s,@INSTALL_SCRIPT@,$INSTALL_SCRIPT,;t t
 s,@INSTALL_DATA@,$INSTALL_DATA,;t t

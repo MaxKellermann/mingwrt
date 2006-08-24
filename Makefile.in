@@ -152,15 +152,32 @@ FLAGS_TO_PASS:=\
 	TARFLAGS="$(TARFLAGS)" \
 	TARFILEEXT="$(TARFILEEXT)"
 
-CRT0S = crt1.o dllcrt1.o crt2.o dllcrt2.o CRT_noglob.o crtmt.o crtst.o \
-	CRT_fp8.o CRT_fp10.o txtmode.o binmode.o
-MINGW_OBJS = CRTglob.o CRTfmode.o CRTinit.o  dllmain.o gccmain.o \
-	     main.o crtst.o mthr_stub.o CRT_fp10.o txtmode.o \
+CRT0S = crt1.o dllcrt1.o crt2.o dllcrt2.o CRT_noglob.o crtmt.o crtst.o
+ifneq (,$(findstring wince,$(target_alias)))
+CRT0S += 
+else
+CRT0S += CRT_fp8.o CRT_fp10.o txtmode.o binmode.o
+endif
+
+MINGW_OBJS = CRTglob.o CRTfmode.o CRTinit.o dllmain.o gccmain.o \
+	     main.o crtst.o mthr_stub.o \
 	     pseudo-reloc.o pseudo-reloc-list.o cpu_features.o
+
+ifneq (,$(findstring wince,$(target_alias)))
+MINGW_OBJS += 
+else
+MINGW_OBJS += CRT_fp10.o txtmode.o
+endif
 
 MOLD_OBJS = isascii.o iscsym.o iscsymf.o toascii.o \
 	strcasecmp.o strncasecmp.o wcscmpi.o
 
+ifneq (,$(findstring wince,$(target_alias)))
+LIBS = libmingw32.a \
+       libcoldname.a \
+       libmoldname.a libmoldnamed.a \
+       libmingwthrd.a
+else
 LIBS = libcrtdll.a \
        libmsvcrt.a libmsvcrtd.a \
        libmsvcr70.a libmsvcr70d.a \
@@ -171,6 +188,7 @@ LIBS = libcrtdll.a \
        libmoldname.a libmoldnamed.a \
        $(LIBM_A) \
        libmingwthrd.a
+endif
 
 DLLS = $(THREAD_DLL_NAME)
 
@@ -229,9 +247,10 @@ xx_$(THREAD_DLL_NAME) xx_mingwthrd.def: mthr.o mthr_init.o
 
 DLL_OFILES        = mthr.o mthr_init.o
 DLL_CC_STUFF      = -B./ -mdll $(MNO_CYGWIN) -Wl,--image-base,0x6FBC0000 \
-		    -Wl,--entry,_DllMainCRTStartup@12 \
+		    \
                     $(DLL_OFILES) \
-		    -Lmingwex
+		    $(MINGWEX_DIR)
+
 DLL_DLLTOOL_STUFF = --as=$(AS) --dllname $(THREAD_DLL_NAME) \
                     --def mingwthrd.def \
                     --base-file mingwthrd.base --output-exp mingwthrd.exp

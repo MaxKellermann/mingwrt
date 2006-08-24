@@ -1,6 +1,8 @@
 #include <stdbool.h>
 #include "cpu_features.h"
 
+#ifdef __i386__
+
 /* level 1 edx bits */
 #define EDX_CX8 (1 << 8) /* CMPXCHG8B */
 #define EDX_CMOV (1 << 15)
@@ -101,5 +103,7 @@ int main()
   report(_CRT_3DNOWP);
  return 0;
 }
+
+#endif
 
 #endif

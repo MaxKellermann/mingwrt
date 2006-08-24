@@ -87,10 +87,10 @@ extern wchar_t***  __cdecl __p___wargv(void);
 
 #ifndef __DECLSPEC_SUPPORTED
 
-extern int*    _imp____argc_dll;
-extern char***  _imp____argv_dll;
-#define __argc (*_imp____argc_dll)
-#define __argv (*_imp____argv_dll)
+extern int*    __IMP(__argc_dll);
+extern char***  __IMP(__argv_dll;
+#define __argc (*__IMP(__argc_dll))
+#define __argv (*__IMP(__argv_dll))
 
 #else /* __DECLSPEC_SUPPORTED */
 
@@ -118,14 +118,16 @@ __MINGW_IMPORT char**  __argv_dll;
 
 #else		/* ! __DECLSPEC_SUPPORTED */
 # ifdef __MSVCRT__
-   extern int* _imp____mbcur_max;
-#  define MB_CUR_MAX (*_imp____mb_cur_max)
+   extern int* __IMP(__mbcur_max);
+#  define MB_CUR_MAX (*__IMP(__mb_cur_max))
 # else		/* not __MSVCRT */
-   extern int*  _imp____mbcur_max_dll;
-#  define MB_CUR_MAX (*_imp____mb_cur_max_dll)
+   extern int*  __IMP(__mbcur_max_dll);
+#  define MB_CUR_MAX (*__IMP(__mb_cur_max_dll))
 # endif 	/* not __MSVCRT */
 #endif  	/*  __DECLSPEC_SUPPORTED */
 #endif  /* MB_CUR_MAX */
+
+#ifndef UNDER_CE
 
 /* 
  * MS likes to declare errno in stdlib.h as well. 
@@ -141,10 +143,14 @@ extern int errno;
  _CRTIMP int* __cdecl	__doserrno(void);
 #define	_doserrno	(*__doserrno())
 
+#endif
+
 #if !defined (__STRICT_ANSI__)
 /*
  * Use environ from the DLL, not as a global. 
  */
+
+#ifndef UNDER_CE
 
 #ifdef __MSVCRT__
   extern _CRTIMP char *** __cdecl __p__environ(void);
@@ -162,6 +168,8 @@ extern int errno;
 #endif /* ! __MSVCRT__ */
 
 #define environ _environ
+
+#endif
 
 #ifdef	__MSVCRT__
 /* One of the MSVCRTxx libraries */
@@ -280,12 +288,12 @@ _CRTIMP wchar_t** __cdecl __p__wpgmptr(void);
 #if !defined (__DECLSPEC_SUPPORTED) || defined (__IN_MINGW_RUNTIME)
 
 #ifdef __MSVCRT__
-extern int* _imp___fmode;
-#define	_fmode	(*_imp___fmode)
+extern int* __IMP(_fmode);
+#define	_fmode	(*__IMP(_fmode))
 #else
 /* CRTDLL */
-extern int* _imp___fmode_dll;
-#define	_fmode	(*_imp___fmode_dll)
+extern int* __IMP(_fmode_dll);
+#define	_fmode	(*__IMP(_fmode_dll))
 #endif
 
 #else /* __DECLSPEC_SUPPORTED */

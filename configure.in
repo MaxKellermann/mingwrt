@@ -47,7 +47,21 @@ AC_SUBST(WINDRES)
 AC_ALLOCA
 
 AC_CANONICAL_SYSTEM
-AC_CONFIG_SUBDIRS(profile mingwex)
+
+case "$target" in
+arm-wince-*)
+  #subdirs not ported yet.
+  AC_CONFIG_SUBDIRS()
+  DLL_ENTRY = DllMainCRTStartup
+  MINGWEX_DIR =
+  ;;
+*)
+  AC_CONFIG_SUBDIRS(profile mingwex)
+  DLL_ENTRY = _DllMainCRTStartup@12
+  MINGWEX_DIR = -Lmingwex
+  ;;
+esac
+
 HEADER_SUBDIR=""
 
 LIBGMON_A=libgmon.a
@@ -83,6 +97,8 @@ AC_SUBST(LIBM_A)
 AC_SUBST(LIBGMON_A)
 AC_SUBST(HEADER_SUBDIR)
 AC_SUBST(W32API_INCLUDE)
+AC_SUBST(DLL_ENTRY)
+AC_SUBST(MINGWEX_DIR)
 
 AC_PROG_INSTALL
 AC_OUTPUT(Makefile)

@@ -11,8 +11,10 @@
 
 /* Link against the _fpreset visible in import lib */
 
-extern void (*_imp___fpreset)(void) ;
+#include <_mingw.h>
+
+extern void (*__IMP(_fpreset))(void) ;
 void _fpreset (void)
-{  (*_imp___fpreset)(); }
+{  (*__IMP(_fpreset))(); }
 
 void __attribute__ ((alias ("_fpreset"))) fpreset(void);
