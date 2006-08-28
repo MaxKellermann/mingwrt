@@ -184,39 +184,6 @@ _onexit (_onexit_t pfn )
   return ((_onexit_t) __dllonexit ((p_atexit_fn)pfn,  &first_atexit, &next_atexit));
 }
 
-
 #ifdef UNDER_CE
-
-p_atexit_fn __dllonexit(p_atexit_fn func,
-                                              p_atexit_fn **start,
-                                              p_atexit_fn **end)
- {
-  p_atexit_fn *tmp;
-  int len;
-
-//  TRACE("(%p,%p,%p)\n", func, start, end);
-
-  if (!start || !*start || !end || !*end)
-  {
-//   FIXME("bad table\n");
-   return NULL;
-  }
-
-  len = (*end - *start);
-
-//  TRACE("table start %p-%p, %d entries\n", *start, *end, len);
-
-  if (++len <= 0)
-    return NULL;
-
-  tmp = (p_atexit_fn *)realloc(*start, len * sizeof(tmp));
-  if (!tmp)
-    return NULL;
-  *start = tmp;
-  *end = tmp + len;
-  tmp[len - 1] = func;
-//  TRACE("new table start %p-%p, %d entries\n", *start, *end, len);
-  return func;
- }
-
+#include "__dllonexit.c"
 #endif
