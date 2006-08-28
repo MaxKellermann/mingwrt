@@ -155,12 +155,12 @@
 
 #ifdef UNDER_CE
 /* ARM Windows CE is not underscored.  */
-# define __U(SYM) (_ ## SYM)
-# define __IMP(S) (__imp_ ## S)
+# define __U(SYM) _ ## SYM
+# define __IMP(S) __imp_ ## S
 #else
 /* Desktop i386 Windows versions are underscored.  */
-# define __U(SYM) (SYM)
-# define __IMP(S) (_imp__ ## S)
+# define __U(SYM) SYM
+# define __IMP(S) _imp__ ## S
 #endif
 
 #ifndef __MSVCRT_VERSION__
