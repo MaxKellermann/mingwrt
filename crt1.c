@@ -285,6 +285,8 @@ WinMainCRTStartup (void)
 
 #endif
 
+#ifndef UNDER_CE
+
 /*
  *  We force use of library version of atexit, which is only
  *  visible in import lib as _imp__atexit
@@ -302,3 +304,5 @@ _onexit (_onexit_t pfn )
 {
    return (*__IMP(_onexit))(pfn);
 }
+
+#endif
