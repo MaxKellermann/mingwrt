@@ -203,7 +203,7 @@ __mingw_CRTStartup (void)
   SetUnhandledExceptionFilter (_gnu_exception_handler);
 #elif defined (__arm__)
   /* Windows CE on RISC architectures uses table based seh. 
-     We could install a top-level handler using the same tecnique as cegcc.  */
+     We could install a top-level handler using the same technique as cegcc.  */
 #endif
 
   /*
