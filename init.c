@@ -117,10 +117,10 @@ _parse_tokens(char* string, char*** tokens, int start, int length)
             /* Double memory.  */
             newlen += (length == 0) ? 1 : newlen;
             new_tokens = realloc (tokens, sizeof (char**) * newlen);
-            if (!new_tokens || tokens == new_tokens)
+            if (!new_tokens)
             {
                 /* Out of memory.  */
-                break;
+                goto exit;
             }
             length = newlen;
             tokens = new_tokens;
@@ -132,6 +132,7 @@ _parse_tokens(char* string, char*** tokens, int start, int length)
         *tokenEnd = '\0';
         string = tokenEnd + 1;
     }
+exit:
     return ntokens;
 }
 
