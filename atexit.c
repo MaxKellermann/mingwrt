@@ -19,7 +19,7 @@ static p_atexit_fn* first_atexit;
 static p_atexit_fn* next_atexit;
 
 /* This  is based on the function in the Wine project's exit.c */
-p_atexit_fn __dllonexit (p_atexit_fn, p_atexit_fn**, p_atexit_fn**);
+static p_atexit_fn __dllonexit (p_atexit_fn, p_atexit_fn**, p_atexit_fn**);
 
 int
 atexit (p_atexit_fn pfn )

@@ -31,7 +31,11 @@ static void
 __dll_exit (void);
 
 /* This  is based on the function in the Wine project's exit.c */
+#ifdef UNDER_CE
+static p_atexit_fn __dllonexit (p_atexit_fn, p_atexit_fn**, p_atexit_fn**);
+#else
 p_atexit_fn __dllonexit (p_atexit_fn, p_atexit_fn**, p_atexit_fn**);
+#endif
 
 
 extern BOOL WINAPI DllMain (HANDLE, DWORD, LPVOID);
