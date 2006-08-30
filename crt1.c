@@ -48,6 +48,8 @@ extern int main (int, char **);
 __MINGW_IMPORT void __set_app_type(int);
 #endif /* __MSVCRT__ */
 
+#ifndef __COREDLL__
+
 /*  Global _fmode for this .exe, not the one in msvcrt.dll,
     The default is set in txtmode.o in libmingw32.a */
 /* Override the dllimport'd declarations in stdlib.h */
@@ -56,7 +58,6 @@ extern int _fmode;
 #ifdef __MSVCRT__
 extern int* __p__fmode(void); /* To access the dll _fmode */
 #endif
-
 /*
  * Setup the default file handles to have the _CRT_fmode mode, as well as
  * any new files created by the user.
@@ -99,6 +100,7 @@ _mingw32_init_fmode (void)
     *__IMP(_fmode_dll) = _fmode;
 #endif
 }
+#endif
 
 #ifndef UNDER_CE
 
@@ -217,6 +219,7 @@ __mingw_CRTStartup (void)
    */
   _mingw32_init_mainargs ();
 
+#ifndef __COREDLL__
   /*
    * Sets the default file mode.
    * If _CRT_fmode is set, also set mode for stdin, stdout
@@ -224,6 +227,7 @@ __mingw_CRTStartup (void)
    * NOTE: DLLs don't do this because that would be rude!
    */
   _mingw32_init_fmode ();
+#endif
   
    /* Adust references to dllimported data that have non-zero offsets.  */
   _pei386_runtime_relocator ();
@@ -269,6 +273,8 @@ mainCRTStartup (void)
   __mingw_CRTStartup ();
 }
 
+#endif
+
 /*
  * For now the GUI startup function is the same as the console one.
  * This simply gets rid of the annoying warning about not being able
@@ -282,8 +288,6 @@ WinMainCRTStartup (void)
 #endif
   __mingw_CRTStartup ();
 }
-
-#endif
 
 #ifndef UNDER_CE
 
