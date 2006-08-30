@@ -83,7 +83,7 @@ extern wchar_t***  __cdecl __p___wargv(void);
 #define __argv (*__p___argv())
 #define __wargv (*__p___wargv())
 
-#else /* !MSVCRT */
+#elif defined (__CRTDLL__)
 
 #ifndef __DECLSPEC_SUPPORTED
 
@@ -101,7 +101,7 @@ __MINGW_IMPORT char**  __argv_dll;
 
 #endif /* __DECLSPEC_SUPPORTED */
 
-#endif /* __MSVCRT */
+#endif /* __MSVCRT, __CRTDLL__ */
 #endif /* __STRICT_ANSI__ */
 /*
  * Also defined in ctype.h.
@@ -111,23 +111,23 @@ __MINGW_IMPORT char**  __argv_dll;
 # ifdef __MSVCRT__
 #  define MB_CUR_MAX __mb_cur_max
    __MINGW_IMPORT int __mb_cur_max;
-# else		/* not __MSVCRT */
+# elif defined (__CRTDLL__)
 #  define MB_CUR_MAX __mb_cur_max_dll
    __MINGW_IMPORT int __mb_cur_max_dll;
-# endif		/* not __MSVCRT */
+# endif		/* __CRTDLL__ */
 
 #else		/* ! __DECLSPEC_SUPPORTED */
 # ifdef __MSVCRT__
    extern int* __IMP(__mbcur_max);
 #  define MB_CUR_MAX (*__IMP(__mb_cur_max))
-# else		/* not __MSVCRT */
+# elif defined (__CRTDLL__)
    extern int*  __IMP(__mbcur_max_dll);
 #  define MB_CUR_MAX (*__IMP(__mb_cur_max_dll))
-# endif 	/* not __MSVCRT */
+# endif		/* __CRTDLL__ */
 #endif  	/*  __DECLSPEC_SUPPORTED */
 #endif  /* MB_CUR_MAX */
 
-#ifndef UNDER_CE
+#ifndef __COREDLL__
 
 /* 
  * MS likes to declare errno in stdlib.h as well. 
@@ -143,21 +143,19 @@ extern int errno;
  _CRTIMP int* __cdecl	__doserrno(void);
 #define	_doserrno	(*__doserrno())
 
-#endif
+#endif  /* Not __COREDLL__ */
 
 #if !defined (__STRICT_ANSI__)
 /*
  * Use environ from the DLL, not as a global. 
  */
 
-#ifndef UNDER_CE
-
 #ifdef __MSVCRT__
   extern _CRTIMP char *** __cdecl __p__environ(void);
   extern _CRTIMP wchar_t *** __cdecl  __p__wenviron(void);
 # define _environ (*__p__environ())
 # define _wenviron (*__p__wenviron())
-#else /* ! __MSVCRT__ */
+#elif defined (__CRTDLL__)
 # ifndef __DECLSPEC_SUPPORTED
     extern char *** _imp___environ_dll;
 #   define _environ (*_imp___environ_dll)
@@ -165,10 +163,10 @@ extern int errno;
     __MINGW_IMPORT char ** _environ_dll;
 #   define _environ _environ_dll
 # endif /* __DECLSPEC_SUPPORTED */
-#endif /* ! __MSVCRT__ */
+#endif /* __CRTDLL__ */
 
+#ifndef __COREDLL__
 #define environ _environ
-
 #endif
 
 #ifdef	__MSVCRT__
@@ -184,7 +182,7 @@ extern int errno;
 # endif /* _UWIN */
 #endif /* __DECLSPEC_SUPPORTED */
 
-#else /* ! __MSVCRT__ */
+#elif defined (__CRTDLL__)
 
 /* CRTDLL run time library */
 
@@ -196,7 +194,9 @@ extern int errno;
 # define sys_nerr	_sys_nerr_dll
 #endif /* __DECLSPEC_SUPPORTED */
 
-#endif /* ! __MSVCRT__ */
+#endif /* __DLLCRT__ */
+
+#ifndef __COREDLL__
 
 #ifndef __DECLSPEC_SUPPORTED
 extern char***	_imp__sys_errlist;
@@ -207,6 +207,8 @@ __MINGW_IMPORT char*	_sys_errlist[];
 #define	sys_errlist	_sys_errlist
 #endif /* _UWIN */
 #endif /* __DECLSPEC_SUPPORTED */
+
+#endif  /* Not __COREDLL__ */
 
 /*
  * OS version and such constants.
@@ -232,8 +234,7 @@ __MINGW_IMPORT unsigned int _winmajor;
 __MINGW_IMPORT unsigned int _winminor;
 #endif /* __DECLSPEC_SUPPORTED */
 
-#else
-/* Not msvcrtxx.dll, thus crtdll.dll */
+#elif defined (__CRTDLL__)
 
 #ifndef __DECLSPEC_SUPPORTED
 
@@ -270,7 +271,7 @@ _CRTIMP char** __cdecl __p__pgmptr(void);
 #define _pgmptr     (*__p__pgmptr())
 _CRTIMP wchar_t** __cdecl __p__wpgmptr(void);
 #define _wpgmptr    (*__p__wpgmptr())
-#else /* ! __MSVCRT__ */
+#elif defined (__CRTDLL__)
 # ifndef __DECLSPEC_SUPPORTED
   extern char** __imp__pgmptr_dll;
 # define _pgmptr (*_imp___pgmptr_dll)
@@ -279,7 +280,7 @@ _CRTIMP wchar_t** __cdecl __p__wpgmptr(void);
 # define _pgmptr _pgmptr_dll
 # endif /* __DECLSPEC_SUPPORTED */
 /* no wide version in CRTDLL */
-#endif /* __MSVCRT__ */
+#endif /* __DLLCRT__ */
 
 /*
  * This variable determines the default file mode.
@@ -290,8 +291,7 @@ _CRTIMP wchar_t** __cdecl __p__wpgmptr(void);
 #ifdef __MSVCRT__
 extern int* __IMP(_fmode);
 #define	_fmode	(*__IMP(_fmode))
-#else
-/* CRTDLL */
+#elif defined (__CRTDLL__)
 extern int* __IMP(_fmode_dll);
 #define	_fmode	(*__IMP(_fmode_dll))
 #endif
@@ -300,10 +300,10 @@ extern int* __IMP(_fmode_dll);
 
 #ifdef __MSVCRT__
 __MINGW_IMPORT  int _fmode;
-#else /* ! __MSVCRT__ */
+#elif defined (__CRTDLL__)
 __MINGW_IMPORT  int _fmode_dll;
 #define	_fmode	_fmode_dll
-#endif /* ! __MSVCRT__ */
+#endif /* __CRTDLL__ */
 
 #endif /* __DECLSPEC_SUPPORTED */
 
@@ -313,8 +313,10 @@ _CRTIMP double __cdecl	atof	(const char*);
 _CRTIMP int __cdecl	atoi	(const char*);
 _CRTIMP long __cdecl 	atol	(const char*);
 #if !defined (__STRICT_ANSI__)
+#if !defined (__COREDLL__)
 _CRTIMP int __cdecl	_wtoi (const wchar_t *);
 _CRTIMP long __cdecl _wtol (const wchar_t *);
+#endif
 #endif
 _CRTIMP double __cdecl	strtod	(const char*, char**);
 #if !defined __NO_ISOCEXT  /* extern stub in static libmingwex.a */
@@ -345,9 +347,12 @@ _CRTIMP unsigned long __cdecl	wcstoul (const wchar_t*, wchar_t**, int);
 _CRTIMP size_t __cdecl	wcstombs	(char*, const wchar_t*, size_t);
 _CRTIMP int __cdecl	wctomb		(char*, wchar_t);
 
+#ifndef __COREDLL__
 _CRTIMP int __cdecl	mblen		(const char*, size_t);
-_CRTIMP size_t __cdecl	mbstowcs	(wchar_t*, const char*, size_t);
 _CRTIMP int __cdecl	mbtowc		(wchar_t*, const char*, size_t);
+#endif
+
+_CRTIMP size_t __cdecl	mbstowcs	(wchar_t*, const char*, size_t);
 
 _CRTIMP int __cdecl	rand	(void);
 _CRTIMP void __cdecl	srand	(unsigned int);
@@ -363,12 +368,16 @@ _CRTIMP void __cdecl	exit	(int) __MINGW_ATTRIB_NORETURN;
 /* Note: This is in startup code, not imported directly from dll */
 int __cdecl	atexit	(void (*)(void));
 
+#ifndef __COREDLL__
 _CRTIMP int __cdecl	system	(const char*);
 _CRTIMP char* __cdecl	getenv	(const char*);
+#endif
 
 /* bsearch and qsort are also in non-ANSI header search.h  */
+#ifndef __COREDLL__
 _CRTIMP void* __cdecl	bsearch	(const void*, const void*, size_t, size_t, 
 				 int (*)(const void*, const void*));
+#endif
 _CRTIMP void __cdecl	qsort	(void*, size_t, size_t,
 				 int (*)(const void*, const void*));
 
@@ -391,6 +400,7 @@ _CRTIMP ldiv_t __cdecl	ldiv	(long, long) __MINGW_ATTRIB_CONST;
 
 #if !defined (__STRICT_ANSI__)
 
+#ifndef __COREDLL__
 /*
  * NOTE: Officially the three following functions are obsolete. The Win32 API
  *       functions SetErrorMode, Beep and Sleep are their replacements.
@@ -398,6 +408,7 @@ _CRTIMP ldiv_t __cdecl	ldiv	(long, long) __MINGW_ATTRIB_CONST;
 _CRTIMP void __cdecl	_beep (unsigned int, unsigned int);
 _CRTIMP void __cdecl	_seterrormode (int);
 _CRTIMP void __cdecl	_sleep (unsigned long);
+#endif
 
 _CRTIMP void __cdecl	_exit	(int) __MINGW_ATTRIB_NORETURN;
 
@@ -406,17 +417,20 @@ _CRTIMP void __cdecl	_exit	(int) __MINGW_ATTRIB_NORETURN;
 typedef  int (* _onexit_t)(void);
 _onexit_t __cdecl _onexit( _onexit_t );
 
+#ifndef __COREDLL__
 _CRTIMP int __cdecl	_putenv	(const char*);
 _CRTIMP void __cdecl	_searchenv (const char*, const char*, char*);
-
+#endif
 
 _CRTIMP char* __cdecl	_ecvt (double, int, int*, int*);
 _CRTIMP char* __cdecl	_fcvt (double, int, int*, int*);
 _CRTIMP char* __cdecl	_gcvt (double, int, char*);
 
+#ifndef __COREDLL__
 _CRTIMP void __cdecl	_makepath (char*, const char*, const char*, const char*, const char*);
 _CRTIMP void __cdecl	_splitpath (const char*, char*, char*, char*, char*);
 _CRTIMP char* __cdecl	_fullpath (char*, const char*, size_t);
+#endif
 
 _CRTIMP char* __cdecl	_itoa (int, char*, int);
 _CRTIMP char* __cdecl	_ltoa (long, char*, int);
@@ -425,8 +439,10 @@ _CRTIMP wchar_t* __cdecl  _itow (int, wchar_t*, int);
 _CRTIMP wchar_t* __cdecl  _ltow (long, wchar_t*, int);
 _CRTIMP wchar_t* __cdecl  _ultow (unsigned long, wchar_t*, int);
 
-#ifdef __MSVCRT__
+#if defined(__MSVCRT__) || defined (__COREDLL__)
 _CRTIMP __int64 __cdecl	_atoi64(const char *);
+#endif
+#ifdef __MSVCRT__
 _CRTIMP char* __cdecl	_i64toa(__int64, char *, int);
 _CRTIMP char* __cdecl	_ui64toa(unsigned __int64, char *, int);
 _CRTIMP __int64 __cdecl	_wtoi64(const wchar_t *);
@@ -440,11 +456,6 @@ _CRTIMP void __cdecl    _wmakepath(wchar_t*, const wchar_t*, const wchar_t*, con
 _CRTIMP void __cdecl	_wsplitpath (const wchar_t*, wchar_t*, wchar_t*, wchar_t*, wchar_t*);
 _CRTIMP wchar_t* __cdecl    _wfullpath (wchar_t*, const wchar_t*, size_t);
 
-_CRTIMP unsigned int __cdecl _rotl(unsigned int, int) __MINGW_ATTRIB_CONST;
-_CRTIMP unsigned int __cdecl _rotr(unsigned int, int) __MINGW_ATTRIB_CONST;
-_CRTIMP unsigned long __cdecl _lrotl(unsigned long, int) __MINGW_ATTRIB_CONST;
-_CRTIMP unsigned long __cdecl _lrotr(unsigned long, int) __MINGW_ATTRIB_CONST;
-
 _CRTIMP int __cdecl _set_error_mode (int);
 #define _OUT_TO_DEFAULT	0
 #define _OUT_TO_STDERR	1
@@ -453,7 +464,15 @@ _CRTIMP int __cdecl _set_error_mode (int);
 
 #endif
 
+#if defined(__MSVCRT__) || defined (__COREDLL__)
+_CRTIMP unsigned int __cdecl _rotl(unsigned int, int) __MINGW_ATTRIB_CONST;
+_CRTIMP unsigned int __cdecl _rotr(unsigned int, int) __MINGW_ATTRIB_CONST;
+_CRTIMP unsigned long __cdecl _lrotl(unsigned long, int) __MINGW_ATTRIB_CONST;
+_CRTIMP unsigned long __cdecl _lrotr(unsigned long, int) __MINGW_ATTRIB_CONST;
+#endif
+
 #ifndef	_NO_OLDNAMES
+#ifndef __COREDLL__
 
 _CRTIMP int __cdecl	putenv (const char*);
 _CRTIMP void __cdecl	searchenv (const char*, const char*, char*);
@@ -466,6 +485,7 @@ _CRTIMP char* __cdecl	ecvt (double, int, int*, int*);
 _CRTIMP char* __cdecl	fcvt (double, int, int*, int*);
 _CRTIMP char* __cdecl	gcvt (double, int, char*);
 #endif /* _UWIN */
+#endif	/* Not __COREDLL__ */
 #endif	/* Not _NO_OLDNAMES */
 
 #endif	/* Not __STRICT_ANSI__ */
@@ -518,6 +538,13 @@ __CRT_INLINE wchar_t*  __cdecl ulltow (unsigned long long _n, wchar_t * _w, int 
 #endif /* (__STRICT_ANSI__)  */
 
 #endif /* __MSVCRT__ */
+
+#if defined (__COREDLL__) /* these are stubs for MS _i64 versions */ 
+#if !defined (__STRICT_ANSI__)
+__CRT_INLINE long long  __cdecl atoll (const char * _c)
+{ return _atoi64 (_c); }
+#endif
+#endif
 
 #endif /* !__NO_ISOCEXT */
 

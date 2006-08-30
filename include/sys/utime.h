@@ -52,6 +52,7 @@ struct __utimbuf64
 extern "C" {
 #endif
 
+#ifndef __COREDLL__
 _CRTIMP int __cdecl	_utime (const char*, struct _utimbuf*);
 
 #ifndef	_NO_OLDNAMES
@@ -59,6 +60,7 @@ _CRTIMP int __cdecl	utime (const char*, struct utimbuf*);
 #endif	/* Not _NO_OLDNAMES */
 
 _CRTIMP int __cdecl	_futime (int, struct _utimbuf*);
+#endif
 
 /* The wide character version, only available for MSVCRT versions of the
  * C runtime library. */

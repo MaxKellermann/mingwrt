@@ -76,12 +76,18 @@ _CRTIMP int __cdecl toupper(int);
  * exported.
  */
 #ifndef	__STRICT_ANSI__
+
+#if defined (__MSVCRT__) || defined (__CRTDLL__)
+
 /*
  *  These are the cheap non-std versions: The return values are undefined
  *  if the argument is not ASCII char or is not of appropriate case
  */ 
 _CRTIMP int __cdecl _tolower(int);
 _CRTIMP int __cdecl _toupper(int);
+
+#endif
+
 #endif
 
 /* Also defined in stdlib.h */
@@ -90,39 +96,43 @@ _CRTIMP int __cdecl _toupper(int);
 # ifdef __MSVCRT__
 #  define MB_CUR_MAX __mb_cur_max
    __MINGW_IMPORT int __mb_cur_max;
-# else	/* not __MSVCRT */
+# elif defined (__CRTDLL__)
 #  define MB_CUR_MAX __mb_cur_max_dll
    __MINGW_IMPORT int __mb_cur_max_dll;
-# endif	/* not __MSVCRT */
+# endif	/* __CRTDLL__ */
 
 #else		/* ! __DECLSPEC_SUPPORTED */
 # ifdef __MSVCRT__
    extern int* _imp____mbcur_max;
 #  define MB_CUR_MAX (*_imp____mb_cur_max)
-# else		/* not __MSVCRT */
+# elif defined (__CRTDLL__)
    extern int*  _imp____mbcur_max_dll;
 #  define MB_CUR_MAX (*_imp____mb_cur_max_dll)
-# endif 	/* not __MSVCRT */
+# endif 	/* __CRTDLL__ */
 #endif  	/*  __DECLSPEC_SUPPORTED */
 #endif  /* MB_CUR_MAX */
 
 
 #ifdef __DECLSPEC_SUPPORTED
+# if defined (__MSVCRT__) || defined (__CRTDLL__)
 __MINGW_IMPORT unsigned short _ctype[];
+# endif
 # ifdef __MSVCRT__
   __MINGW_IMPORT unsigned short* _pctype;
-# else /* CRTDLL */
+# elif defined (__CRTDLL__)
   __MINGW_IMPORT unsigned short* _pctype_dll;
 # define  _pctype _pctype_dll
 # endif 
 
 #else		/*  __DECLSPEC_SUPPORTED */
+# if defined (__MSVCRT__) || defined (__CRTDLL__)
 extern unsigned short** _imp___ctype;
-#define _ctype (*_imp___ctype)
+# define _ctype (*_imp___ctype)
+# endif
 # ifdef __MSVCRT__
   extern unsigned short** _imp___pctype;
 # define _pctype (*_imp___pctype)
-# else /* CRTDLL */
+# elif defined (__CRTDLL__)
   extern unsigned short** _imp___pctype_dll;
 # define _pctype (*_imp___pctype_dll)
 # endif /* CRTDLL */
@@ -145,8 +155,12 @@ extern unsigned short** _imp___ctype;
 #if ! (defined (__NO_INLINE__)  || defined (__NO_CTYPE_INLINES) \
 	|| defined (__STRICT_ANSI__))
 
-/* use  simple lookup if SB locale, else  _isctype()  */
-#define __ISCTYPE(c, mask)  (MB_CUR_MAX == 1 ? (_pctype[c] & mask) : _isctype(c, mask))
+#ifdef __COREDLL__
+# define __ISCTYPE(c, mask)  _isctype(c, mask)
+#else
+  /* use  simple lookup if SB locale, else  _isctype()  */
+# define __ISCTYPE(c, mask)  (MB_CUR_MAX == 1 ? (_pctype[c] & mask) : _isctype(c, mask))
+#endif
 __CRT_INLINE int __cdecl isalnum(int c) {return __ISCTYPE(c, (_ALPHA|_DIGIT));}
 __CRT_INLINE int __cdecl isalpha(int c) {return __ISCTYPE(c, _ALPHA);}
 __CRT_INLINE int __cdecl iscntrl(int c) {return __ISCTYPE(c, _CONTROL);}
@@ -212,6 +226,11 @@ int __cdecl iswblank (wint_t);
 _CRTIMP wint_t __cdecl towlower (wint_t);
 _CRTIMP wint_t __cdecl towupper (wint_t);
 
+#ifdef __COREDLL__
+/* From winnls.h */
+long __cdecl IsDBCSLeadByte ( unsigned char tc);
+#endif
+
 _CRTIMP int __cdecl isleadbyte (int);
 
 /* Also in wctype.h */
@@ -230,7 +249,11 @@ __CRT_INLINE int __cdecl iswpunct(wint_t wc) {return (iswctype(wc,_PUNCT));}
 __CRT_INLINE int __cdecl iswspace(wint_t wc) {return (iswctype(wc,_SPACE));}
 __CRT_INLINE int __cdecl iswupper(wint_t wc) {return (iswctype(wc,_UPPER));}
 __CRT_INLINE int __cdecl iswxdigit(wint_t wc) {return (iswctype(wc,_HEX));}
+#ifdef __COREDLL__
+__CRT_INLINE int __cdecl isleadbyte(int c) {return IsDBCSLeadByte(tc); }
+#else
 __CRT_INLINE int __cdecl isleadbyte(int c) {return (_pctype[(unsigned char)(c)] & _LEADBYTE);}
+#endif
 #if (defined (__STDC_VERSION__) && __STDC_VERSION__ >= 199901L) \
      || !defined __STRICT_ANSI__
 __CRT_INLINE int __cdecl iswblank (wint_t wc)

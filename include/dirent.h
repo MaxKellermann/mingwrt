@@ -19,6 +19,8 @@
 extern "C" {
 #endif
 
+#ifndef __COREDLL__
+
 struct dirent
 {
 	long		d_ino;		/* Always zero. */
@@ -113,6 +115,7 @@ void __cdecl _wrewinddir (_WDIR*);
 long __cdecl _wtelldir (_WDIR*);
 void __cdecl _wseekdir (_WDIR*, long);
 
+#endif /* Not __COREDLL__ */
 
 #ifdef	__cplusplus
 }

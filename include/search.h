@@ -37,23 +37,24 @@ typedef unsigned int size_t;
 #define _SIZE_T_DEFINED
 #endif
 
+_CRTIMP void __cdecl qsort (void*, size_t, size_t,
+                            int (*)(const void*, const void*));
+
+#ifndef __COREDLL__
 /* bsearch and qsort are also declared in stdlib.h */
 _CRTIMP void* __cdecl bsearch (const void*, const void*, size_t, size_t, 
 			       int (*)(const void*, const void*));
-_CRTIMP void __cdecl qsort (void*, size_t, size_t,
-			    int (*)(const void*, const void*));
-
 _CRTIMP void* __cdecl _lfind (const void*, const void*, unsigned int*,
 			      unsigned int, int (*)(const void*, const void*));
 _CRTIMP void* __cdecl _lsearch (const void*, void*, unsigned int*, unsigned int,
 				int (*)(const void*, const void*));
-
 #ifndef	_NO_OLDNAMES
 _CRTIMP void* __cdecl lfind (const void*, const void*, unsigned int*,
 			     unsigned int, int (*)(const void*, const void*));
 _CRTIMP void* __cdecl lsearch (const void*, void*, unsigned int*, unsigned int,
 			       int (*)(const void*, const void*));
 #endif
+#endif  /* Not __COREDLL__ */
 
 #ifdef __cplusplus
 }

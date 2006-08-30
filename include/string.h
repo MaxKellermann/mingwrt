@@ -41,10 +41,14 @@ _CRTIMP void* __cdecl	memset (void*, int, size_t);
 _CRTIMP char* __cdecl	strcat (char*, const char*);
 _CRTIMP char* __cdecl	strchr (const char*, int)  __MINGW_ATTRIB_PURE;
 _CRTIMP int __cdecl	strcmp (const char*, const char*)  __MINGW_ATTRIB_PURE;
+#ifndef __COREDLL__
 _CRTIMP int __cdecl	strcoll (const char*, const char*);	/* Compare using locale */
+#endif
 _CRTIMP char* __cdecl	strcpy (char*, const char*);
 _CRTIMP size_t __cdecl	strcspn (const char*, const char*)  __MINGW_ATTRIB_PURE;
+#ifndef __COREDLL__
 _CRTIMP char* __cdecl	strerror (int); /* NOTE: NOT an old name wrapper. */
+#endif
 
 _CRTIMP size_t __cdecl	strlen (const char*)  __MINGW_ATTRIB_PURE;
 _CRTIMP char* __cdecl	strncat (char*, const char*, size_t);
@@ -55,19 +59,25 @@ _CRTIMP char* __cdecl	strrchr (const char*, int)  __MINGW_ATTRIB_PURE;
 _CRTIMP size_t __cdecl	strspn (const char*, const char*)  __MINGW_ATTRIB_PURE;
 _CRTIMP char* __cdecl	strstr (const char*, const char*)  __MINGW_ATTRIB_PURE;
 _CRTIMP char* __cdecl	strtok (char*, const char*);
+#ifndef __COREDLL__
 _CRTIMP size_t __cdecl	strxfrm (char*, const char*, size_t);
+#endif
 
 #ifndef __STRICT_ANSI__
 /*
  * Extra non-ANSI functions provided by the CRTDLL library
  */
+#ifndef __COREDLL__
 _CRTIMP char* __cdecl	_strerror (const char *);
+#endif
 _CRTIMP void* __cdecl	_memccpy (void*, const void*, int, size_t);
 _CRTIMP int __cdecl 	_memicmp (const void*, const void*, size_t);
 _CRTIMP char* __cdecl 	_strdup (const char*) __MINGW_ATTRIB_MALLOC;
 _CRTIMP int __cdecl	_strcmpi (const char*, const char*);
 _CRTIMP int __cdecl	_stricmp (const char*, const char*);
+#ifndef __COREDLL__
 _CRTIMP int __cdecl	_stricoll (const char*, const char*);
+#endif
 _CRTIMP char* __cdecl	_strlwr (char*);
 _CRTIMP int __cdecl	_strnicmp (const char*, const char*, size_t);
 _CRTIMP char* __cdecl	_strnset (char*, int, size_t);
@@ -120,7 +130,9 @@ _CRTIMP void __cdecl	swab (const char*, char*, size_t);
 _CRTIMP wchar_t* __cdecl wcscat (wchar_t*, const wchar_t*);
 _CRTIMP wchar_t* __cdecl wcschr (const wchar_t*, wchar_t);
 _CRTIMP int __cdecl	wcscmp (const wchar_t*, const wchar_t*);
+#ifndef __COREDLL__
 _CRTIMP int __cdecl	wcscoll (const wchar_t*, const wchar_t*);
+#endif
 _CRTIMP wchar_t* __cdecl wcscpy (wchar_t*, const wchar_t*);
 _CRTIMP size_t __cdecl	wcscspn (const wchar_t*, const wchar_t*);
 /* Note:  _wcserror requires __MSVCRT_VERSION__ >= 0x0700.  */
@@ -133,7 +145,9 @@ _CRTIMP wchar_t* __cdecl wcsrchr(const wchar_t*, wchar_t);
 _CRTIMP size_t __cdecl	wcsspn(const wchar_t*, const wchar_t*);
 _CRTIMP wchar_t* __cdecl wcsstr(const wchar_t*, const wchar_t*);
 _CRTIMP wchar_t* __cdecl wcstok(wchar_t*, const wchar_t*);
+#ifndef __COREDLL__
 _CRTIMP size_t __cdecl	wcsxfrm(wchar_t*, const wchar_t*, size_t);
+#endif
 
 #ifndef	__STRICT_ANSI__
 /*
@@ -145,7 +159,9 @@ _CRTIMP size_t __cdecl	wcsxfrm(wchar_t*, const wchar_t*, size_t);
 
 _CRTIMP wchar_t* __cdecl _wcsdup (const wchar_t*);
 _CRTIMP int __cdecl	_wcsicmp (const wchar_t*, const wchar_t*);
+#ifndef __COREDLL__
 _CRTIMP int __cdecl	_wcsicoll (const wchar_t*, const wchar_t*);
+#endif
 _CRTIMP wchar_t* __cdecl _wcslwr (wchar_t*);
 _CRTIMP int __cdecl	_wcsnicmp (const wchar_t*, const wchar_t*, size_t);
 _CRTIMP wchar_t* __cdecl _wcsnset (wchar_t*, wchar_t, size_t);

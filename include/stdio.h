@@ -135,6 +135,9 @@
  */
 #ifndef _FILE_DEFINED
 #define	_FILE_DEFINED
+#ifdef __COREDLL__
+typedef void FILE;
+#else
 typedef struct _iobuf
 {
 	char*	_ptr;
@@ -146,12 +149,23 @@ typedef struct _iobuf
 	int	_bufsiz;
 	char*	_tmpfname;
 } FILE;
+#endif
 #endif	/* Not _FILE_DEFINED */
 
 
 /*
  * The standard file handles
  */
+
+#ifdef __COREDLL__
+
+# define stdin	_getstdfilex(0)
+# define stdout	_getstdfilex(1)
+# define stderr	_getstdfilex(2)
+_CRTIMP FILE*  __cdecl _getstdfilex(int);
+
+#else /* __COREDLL__ */
+
 #ifndef __DECLSPEC_SUPPORTED
 
 extern FILE (*_imp___iob)[];	/* A pointer to an array of FILE */
@@ -168,6 +182,8 @@ __MINGW_IMPORT FILE _iob[];	/* An array of FILE imported from DLL. */
 #define stdout	(&_iob[STDOUT_FILENO])
 #define stderr	(&_iob[STDERR_FILENO])
 
+#endif  /* Not __COREDLL__ */
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -176,9 +192,13 @@ extern "C" {
  * File Operations
  */
 _CRTIMP FILE* __cdecl fopen (const char*, const char*);
+#ifndef __COREDLL__
 _CRTIMP FILE* __cdecl	freopen (const char*, const char*, FILE*);
+#endif
 _CRTIMP int __cdecl	fflush (FILE*);
 _CRTIMP int __cdecl	fclose (FILE*);
+
+#ifndef __COREDLL__
 /* MS puts remove & rename (but not wide versions) in io.h  also */
 _CRTIMP int __cdecl	remove (const char*);
 _CRTIMP int __cdecl	rename (const char*, const char*);
@@ -194,10 +214,14 @@ _CRTIMP char* __cdecl	tempnam (const char*, const char*);
 _CRTIMP int __cdecl     rmtmp(void);
 #endif
 #endif /* __STRICT_ANSI__ */
+#endif  /* Not __COREDLL__ */
+
 
 _CRTIMP int __cdecl	setvbuf (FILE*, char*, int, size_t);
 
+#ifndef __COREDLL__
 _CRTIMP void __cdecl	setbuf (FILE*, char*);
+#endif
 
 /*
  * Formatted Output
@@ -246,9 +270,10 @@ _CRTIMP int __cdecl	ungetc (int, FILE*);
 /* Traditionally, getc and putc are defined as macros. but the
    standard doesn't say that they must be macros.
    We use inline functions here to allow the fast versions
-   to be used in C++ with namespace qualification, eg., ::getc.
+   to be used in C++ with namespace qualification, eg., ::getc.  */
 
-   _filbuf and _flsbuf  are not thread-safe. */
+#ifndef __COREDLL__
+/*_filbuf and _flsbuf  are not thread-safe. */
 _CRTIMP int __cdecl	_filbuf (FILE*);
 _CRTIMP int __cdecl	_flsbuf (int, FILE*);
 
@@ -288,7 +313,16 @@ _CRTIMP int __cdecl	putc (int, FILE*);
 _CRTIMP int __cdecl	getchar (void);
 _CRTIMP int __cdecl	putchar (int);
 
-#endif
+#endif /* _MT */
+
+#else /* __COREDLL__ */
+
+__CRT_INLINE int __cdecl getc (FILE* __F) { return fgetc(__F); }
+__CRT_INLINE int __cdecl putc (int __c, FILE* __F) { fputc (__c, __F); }
+_CRTIMP int __cdecl getchar (void);
+_CRTIMP int __cdecl putchar(int __c);
+
+#endif  /* Not __COREDLL__ */
 
 /*
  * Direct Input and Output Functions
@@ -303,7 +337,9 @@ _CRTIMP size_t __cdecl	fwrite (const void*, size_t, size_t, FILE*);
 
 _CRTIMP int __cdecl	fseek (FILE*, long, int);
 _CRTIMP long __cdecl	ftell (FILE*);
+#ifndef __COREDLL__
 _CRTIMP void __cdecl	rewind (FILE*);
+#endif
 
 #ifdef __USE_MINGW_FSEEK  /* These are in libmingwex.a */
 /*
@@ -342,6 +378,7 @@ _CRTIMP int __cdecl	fsetpos (FILE*, const fpos_t*);
 _CRTIMP int __cdecl	feof (FILE*);
 _CRTIMP int __cdecl	ferror (FILE*);
 
+#ifndef __COREDLL__
 #ifdef __cplusplus
 inline int __cdecl feof (FILE* __F)
   { return __F->_flag & _IOEOF; }
@@ -351,12 +388,15 @@ inline int __cdecl ferror (FILE* __F)
 #define feof(__F)     ((__F)->_flag & _IOEOF)
 #define ferror(__F)   ((__F)->_flag & _IOERR)
 #endif
+#endif
 
 _CRTIMP void __cdecl	clearerr (FILE*);
+#ifndef __COREDLL__
 _CRTIMP void __cdecl	perror (const char*);
-
+#endif
 
 #ifndef __STRICT_ANSI__
+#ifndef __COREDLL__
 /*
  * Pipes
  */
@@ -367,32 +407,38 @@ _CRTIMP int __cdecl	_pclose (FILE*);
 _CRTIMP FILE* __cdecl	popen (const char*, const char*);
 _CRTIMP int __cdecl	pclose (FILE*);
 #endif
-
+#endif  /* __COREDLL__ */
 /*
  * Other Non ANSI functions
  */
 _CRTIMP int __cdecl	_flushall (void);
+#ifndef __COREDLL__
 _CRTIMP int __cdecl	_fgetchar (void);
 _CRTIMP int __cdecl	_fputchar (int);
 _CRTIMP FILE* __cdecl	_fdopen (int, const char*);
+_CRTIMP FILE* __cdecl	_fsopen(const char*, const char*, int);
+#endif
 _CRTIMP int __cdecl	_fileno (FILE*);
 _CRTIMP int __cdecl	_fcloseall(void);
-_CRTIMP FILE* __cdecl	_fsopen(const char*, const char*, int);
 #ifdef __MSVCRT__
 _CRTIMP int __cdecl	_getmaxstdio(void);
 _CRTIMP int __cdecl	_setmaxstdio(int);
 #endif
 
 #ifndef _NO_OLDNAMES
+#ifndef __COREDLL__
 _CRTIMP int __cdecl	fgetchar (void);
 _CRTIMP int __cdecl	fputchar (int);
 _CRTIMP FILE* __cdecl	fdopen (int, const char*);
 _CRTIMP int __cdecl	fileno (FILE*);
+#endif
 #endif	/* Not _NO_OLDNAMES */
 
+#ifndef __COREDLL__
 #define _fileno(__F) ((__F)->_file)
 #ifndef _NO_OLDNAMES
 #define fileno(__F) ((__F)->_file)
+#endif
 #endif
 
 #if defined (__MSVCRT__) && !defined (__NO_MINGW_LFS)
@@ -440,18 +486,24 @@ _CRTIMP wint_t __cdecl	fgetwc (FILE*);
 _CRTIMP wint_t __cdecl	fputwc (wchar_t, FILE*);
 _CRTIMP wint_t __cdecl	ungetwc (wchar_t, FILE*);
 
-#ifdef __MSVCRT__ 
+#if defined (__MSVCRT__) || defined (__COREDLL__)
 _CRTIMP wchar_t* __cdecl fgetws (wchar_t*, int, FILE*);
 _CRTIMP int __cdecl	fputws (const wchar_t*, FILE*);
-_CRTIMP wint_t __cdecl	getwc (FILE*);
 _CRTIMP wint_t __cdecl	getwchar (void);
-_CRTIMP wchar_t* __cdecl _getws (wchar_t*);
-_CRTIMP wint_t __cdecl	putwc (wint_t, FILE*);
-_CRTIMP int __cdecl	_putws (const wchar_t*);
 _CRTIMP wint_t __cdecl	putwchar (wint_t);
+#ifndef __STRICT_ANSI__
+_CRTIMP wchar_t* __cdecl _getws (wchar_t*);
+_CRTIMP int __cdecl	_putws (const wchar_t*);
 _CRTIMP FILE* __cdecl	_wfdopen(int, wchar_t *);
 _CRTIMP FILE* __cdecl	_wfopen (const wchar_t*, const wchar_t*);
 _CRTIMP FILE* __cdecl	_wfreopen (const wchar_t*, const wchar_t*, FILE*);
+#endif  /* __STRICT_ANSI__ */
+#endif	/* __MSVCRT__ || __COREDLL__ */
+
+#ifdef __MSVCRT__
+_CRTIMP wint_t __cdecl	getwc (FILE*);
+_CRTIMP wint_t __cdecl	putwc (wint_t, FILE*);
+#ifndef __STRICT_ANSI__
 _CRTIMP FILE* __cdecl	_wfsopen (const wchar_t*, const wchar_t*, int);
 _CRTIMP wchar_t* __cdecl _wtmpnam (wchar_t*);
 _CRTIMP wchar_t* __cdecl _wtempnam (const wchar_t*, const wchar_t*);
@@ -459,7 +511,13 @@ _CRTIMP int __cdecl	_wrename (const wchar_t*, const wchar_t*);
 _CRTIMP int __cdecl	_wremove (const wchar_t*);
 _CRTIMP void __cdecl	_wperror (const wchar_t*);
 _CRTIMP FILE* __cdecl	_wpopen (const wchar_t*, const wchar_t*);
+#endif  /* __STRICT_ANSI__ */
 #endif	/* __MSVCRT__ */
+
+#ifdef __COREDLL__
+__CRT_INLINE wint_t __cdecl	getwc(FILE* f) { return fgetwc(f); }
+__CRT_INLINE wint_t __cdecl	putwc(wint_t c, FILE* f) { return fputwc(c, f); }
+#endif
 
 #ifndef __NO_ISOCEXT  /* externs in libmingwex.a */
 int __cdecl snwprintf (wchar_t* s, size_t n, const wchar_t*  format, ...);
@@ -483,6 +541,7 @@ _CRTIMP FILE* __cdecl	wpopen (const wchar_t*, const wchar_t*);
 #endif /* not NO_OLDNAMES */
 #endif /* MSVCRT runtime */
 
+#ifndef __COREDLL__
 /*
  * Other Non ANSI wide functions
  */
@@ -497,6 +556,7 @@ _CRTIMP wint_t __cdecl	fputwchar (wint_t);
 _CRTIMP int __cdecl	getw (FILE*);
 _CRTIMP int __cdecl	putw (int, FILE*);
 #endif	/* Not _NO_OLDNAMES */
+#endif  /* Not __COREDLL__ */
 
 #endif /* __STRICT_ANSI */
 

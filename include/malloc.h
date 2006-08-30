@@ -50,26 +50,33 @@ extern "C" {
    The _heap* memory allocation functions are supported on NT
    but not W9x. On latter, they always set errno to ENOSYS.
 */
+#ifndef __COREDLL__
 _CRTIMP int __cdecl _heapwalk (_HEAPINFO*);
+#endif
 #ifdef __GNUC__
 #define _alloca(x) __builtin_alloca((x))
 #endif
 
 #ifndef	_NO_OLDNAMES
+#ifndef __COREDLL__
 _CRTIMP int __cdecl heapwalk (_HEAPINFO*);
+#endif
 #ifdef __GNUC__
 #define alloca(x) __builtin_alloca((x))
 #endif
 #endif	/* Not _NO_OLDNAMES */
 
+_CRTIMP size_t __cdecl _msize (void*);
+
+#ifndef __COREDLL__
 _CRTIMP int __cdecl _heapchk (void);	/* Verify heap integrety. */
 _CRTIMP int __cdecl _heapmin (void);	/* Return unused heap to the OS. */
 _CRTIMP int __cdecl _heapset (unsigned int);
 
-_CRTIMP size_t __cdecl _msize (void*);
 _CRTIMP size_t __cdecl _get_sbh_threshold (void); 
 _CRTIMP int __cdecl _set_sbh_threshold (size_t);
 _CRTIMP void* __cdecl _expand (void*, size_t); 
+#endif
 
 /* These require msvcr70.dll or higher. */ 
 #if __MSVCRT_VERSION__ >= 0x0700

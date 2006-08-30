@@ -65,6 +65,9 @@ extern "C" {
 
 #ifndef _FILE_DEFINED  /* Also in stdio.h */
 #define	_FILE_DEFINED
+#ifdef __COREDLL__
+typedef void FILE;
+#else
 typedef struct _iobuf
 {
 	char*	_ptr;
@@ -76,6 +79,7 @@ typedef struct _iobuf
 	int	_bufsiz;
 	char*	_tmpfname;
 } FILE;
+#endif
 #endif	/* Not _FILE_DEFINED */
 
 #ifndef _TIME_T_DEFINED  /* Also in time.h */
@@ -115,12 +119,10 @@ _CRTIMP wint_t __cdecl	fgetwc (FILE*);
 _CRTIMP wint_t __cdecl	fputwc (wchar_t, FILE*);
 _CRTIMP wint_t __cdecl	ungetwc (wchar_t, FILE*);
 
-#ifdef __MSVCRT__ 
+#if defined (__MSVCRT__) || defined (__COREDLL__)
 _CRTIMP wchar_t* __cdecl fgetws (wchar_t*, int, FILE*);
 _CRTIMP int __cdecl	fputws (const wchar_t*, FILE*);
-_CRTIMP wint_t __cdecl	getwc (FILE*);
 _CRTIMP wint_t __cdecl	getwchar (void);
-_CRTIMP wint_t __cdecl	putwc (wint_t, FILE*);
 _CRTIMP wint_t __cdecl	putwchar (wint_t);
 #ifndef __STRICT_ANSI__
 _CRTIMP wchar_t* __cdecl _getws (wchar_t*);
@@ -128,6 +130,13 @@ _CRTIMP int __cdecl	_putws (const wchar_t*);
 _CRTIMP FILE* __cdecl	_wfdopen(int, wchar_t *);
 _CRTIMP FILE* __cdecl	_wfopen (const wchar_t*, const wchar_t*);
 _CRTIMP FILE* __cdecl	_wfreopen (const wchar_t*, const wchar_t*, FILE*);
+#endif  /* __STRICT_ANSI__ */
+#endif	/* __MSVCRT__ || __COREDLL__ */
+
+#ifdef __MSVCRT__
+_CRTIMP wint_t __cdecl	getwc (FILE*);
+_CRTIMP wint_t __cdecl	putwc (wint_t, FILE*);
+#ifndef __STRICT_ANSI__
 _CRTIMP FILE* __cdecl	_wfsopen (const wchar_t*, const wchar_t*, int);
 _CRTIMP wchar_t* __cdecl _wtmpnam (wchar_t*);
 _CRTIMP wchar_t* __cdecl _wtempnam (const wchar_t*, const wchar_t*);
@@ -137,6 +146,11 @@ _CRTIMP void __cdecl	_wperror (const wchar_t*);
 _CRTIMP FILE* __cdecl	_wpopen (const wchar_t*, const wchar_t*);
 #endif  /* __STRICT_ANSI__ */
 #endif	/* __MSVCRT__ */
+
+#ifdef __COREDLL__
+__CRT_INLINE wint_t __cdecl	getwc(FILE* f) { return fgetwc(f); }
+__CRT_INLINE wint_t __cdecl	putwc(wint_t c, FILE* f) { return fputwc(c, f); }
+#endif
 
 #ifndef __NO_ISOCEXT  /* externs in libmingwex.a */
 int __cdecl snwprintf (wchar_t* s, size_t n, const wchar_t*  format, ...);
@@ -191,7 +205,9 @@ _CRTIMP size_t __cdecl	wcsftime (wchar_t*, size_t, const wchar_t*, const struct 
 _CRTIMP wchar_t* __cdecl wcscat (wchar_t*, const wchar_t*);
 _CRTIMP wchar_t* __cdecl wcschr (const wchar_t*, wchar_t);
 _CRTIMP int __cdecl	wcscmp (const wchar_t*, const wchar_t*);
+#ifndef __COREDLL__
 _CRTIMP int __cdecl	wcscoll (const wchar_t*, const wchar_t*);
+#endif
 _CRTIMP wchar_t* __cdecl wcscpy (wchar_t*, const wchar_t*);
 _CRTIMP size_t __cdecl	wcscspn (const wchar_t*, const wchar_t*);
 /* Note:  _wcserror requires __MSVCRT_VERSION__ >= 0x0700.  */
@@ -204,7 +220,9 @@ _CRTIMP wchar_t* __cdecl wcsrchr(const wchar_t*, wchar_t);
 _CRTIMP size_t __cdecl	wcsspn(const wchar_t*, const wchar_t*);
 _CRTIMP wchar_t* __cdecl wcsstr(const wchar_t*, const wchar_t*);
 _CRTIMP wchar_t* __cdecl wcstok(wchar_t*, const wchar_t*);
+#ifndef __COREDLL__
 _CRTIMP size_t __cdecl	wcsxfrm(wchar_t*, const wchar_t*, size_t);
+#endif
 
 #ifndef	__STRICT_ANSI__
 /*
@@ -216,7 +234,9 @@ _CRTIMP size_t __cdecl	wcsxfrm(wchar_t*, const wchar_t*, size_t);
 
 _CRTIMP wchar_t* __cdecl _wcsdup (const wchar_t*);
 _CRTIMP int __cdecl	_wcsicmp (const wchar_t*, const wchar_t*);
+#ifndef __COREDLL__
 _CRTIMP int __cdecl	_wcsicoll (const wchar_t*, const wchar_t*);
+#endif
 _CRTIMP wchar_t* __cdecl _wcslwr (wchar_t*);
 _CRTIMP int __cdecl	_wcsnicmp (const wchar_t*, const wchar_t*, size_t);
 _CRTIMP wchar_t* __cdecl _wcsnset (wchar_t*, wchar_t, size_t);
@@ -459,7 +479,9 @@ _CRTIMP int __cdecl _wstat64 (const wchar_t*, struct __stat64*);
 #endif /* ! _WSTAT_DEFIND  */
 
 #ifndef _WLOCALE_DEFINED  /* also declared in locale.h */
+#ifndef __COREDLL__
 _CRTIMP wchar_t* __cdecl _wsetlocale (int, const wchar_t*);
+#endif
 #define _WLOCALE_DEFINED
 #endif
 

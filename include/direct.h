@@ -27,6 +27,8 @@
 extern "C" {
 #endif
 
+#ifndef __COREDLL__
+
 #ifndef _DISKFREE_T_DEFINED
 /* needed by _getdiskfree (also in dos.h) */
 struct _diskfree_t {
@@ -63,6 +65,8 @@ _CRTIMP int __cdecl _wrmdir(const wchar_t*);
 #endif	/* __MSVCRT__ */
 #define _WDIRECT_DEFINED
 #endif
+
+#endif /* !__COREDLL__ */
 
 #ifdef	__cplusplus
 }

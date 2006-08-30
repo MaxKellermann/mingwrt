@@ -53,12 +53,14 @@ struct __timeb64
 extern "C" {
 #endif
 
+#ifndef __COREDLL__
 /* TODO: Not tested. */
 _CRTIMP void __cdecl	_ftime (struct _timeb*);
 
 #ifndef	_NO_OLDNAMES
 _CRTIMP void __cdecl	ftime (struct timeb*);
 #endif	/* Not _NO_OLDNAMES */
+#endif /* __COREDLL__ */
 
 /* This requires newer versions of msvcrt.dll (6.10 or higher).  */ 
 #if __MSVCRT_VERSION__ >= 0x0601

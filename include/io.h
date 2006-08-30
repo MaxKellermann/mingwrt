@@ -10,6 +10,8 @@
 #ifndef	_IO_H_
 #define	_IO_H_
 
+#ifndef __COREDLL__
+
 /* All the headers include this file. */
 #include <_mingw.h>
 
@@ -309,5 +311,7 @@ wchar_t * 	wmktemp(wchar_t *);
 #endif
 
 #endif	/* Not RC_INVOKED */
+
+#endif /* __COREDLL__ */
 
 #endif	/* _IO_H_ not defined */

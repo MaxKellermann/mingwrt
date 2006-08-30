@@ -68,6 +68,7 @@ typedef struct _EXCEPTION_REGISTRATION
 typedef EXCEPTION_REGISTRATION EXCEPTION_REGISTRATION_RECORD;
 typedef PEXCEPTION_REGISTRATION PEXCEPTION_REGISTRATION_RECORD;
 
+#ifdef __i386__
 /*
  * A macro which installs the supplied exception handler.
  * Push the pointer to the new handler onto the stack,
@@ -92,6 +93,7 @@ typedef PEXCEPTION_REGISTRATION PEXCEPTION_REGISTRATION_RECORD;
 #define	__except1	\
 	__asm__ ("movl (%%esp),%%eax;movl %%eax,%%fs:0;addl $8,%%esp;" \
 	 : : : "%eax");
+#endif /* __i386__ */
 
 #ifdef	__cplusplus
 }

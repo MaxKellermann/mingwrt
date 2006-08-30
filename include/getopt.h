@@ -34,6 +34,8 @@
 #ifndef __GETOPT_H__
 #define __GETOPT_H__
 
+#ifndef __COREDLL__
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -76,9 +78,12 @@ int getopt_long (int, char *const *, const char *, const struct option *, int *)
 #define required_argument       1
 #define optional_argument       2
 
+
 #ifdef __cplusplus
 }
 #endif
+
+#endif /* __COREDLL__ */
 
 #endif /* __GETOPT_LONG_H__ */
 #endif /* __UNISTD_GETOPT__ */

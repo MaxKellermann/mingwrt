@@ -28,7 +28,7 @@
 extern "C" {
 #endif
 
-#ifndef __MSVCRT__ /* these are in CRTDLL, but not MSVCRT */
+#ifdef __CRTDLL__ /* these are in CRTDLL, but not MSVCRT */
 #ifndef __DECLSPEC_SUPPORTED
 extern unsigned int *_imp___basemajor_dll;
 extern unsigned int *_imp___baseminor_dll;
@@ -61,7 +61,9 @@ __MINGW_IMPORT unsigned int _osmode_dll;
 #define _osmode _osmode_dll
 
 #endif /* __DECLSPEC_SUPPORTED */
-#endif /* ! __MSVCRT__ */
+#endif /* __CRTDLL__ */
+
+#ifndef __COREDLL__
 
 #ifndef _DISKFREE_T_DEFINED
 /* needed by _getdiskfree (also in direct.h) */
@@ -79,6 +81,8 @@ _CRTIMP unsigned __cdecl _getdiskfree (unsigned, struct _diskfree_t *);
 #ifndef	_NO_OLDNAMES
 # define diskfree_t _diskfree_t
 #endif
+
+#endif /* __COREDLL__ */
 
 #ifdef __cplusplus
 }

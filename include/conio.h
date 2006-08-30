@@ -21,6 +21,8 @@
 extern "C" {
 #endif
 
+#ifndef __COREDLL__
+
 _CRTIMP char* __cdecl	_cgets (char*);
 _CRTIMP int __cdecl	_cprintf (const char*, ...);
 _CRTIMP int __cdecl	_cputs (const char*);
@@ -43,6 +45,7 @@ _CRTIMP int __cdecl	ungetch (int);
 
 #endif	/* Not _NO_OLDNAMES */
 
+#endif /* !__COREDLL__ */
 
 #ifdef	__cplusplus
 }

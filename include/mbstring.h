@@ -33,6 +33,8 @@
 extern "C" {
 #endif
 
+#ifndef __COREDLL__
+
 #ifndef	__STRICT_ANSI__
 
 /* character classification */
@@ -121,6 +123,8 @@ _CRTIMP unsigned int __cdecl _mbctohira (unsigned int);
 _CRTIMP unsigned int __cdecl _mbctokata (unsigned int);
 
 #endif	/* Not strict ANSI */
+
+#endif /* !__COREDLL__*/
 
 #ifdef __cplusplus
 }

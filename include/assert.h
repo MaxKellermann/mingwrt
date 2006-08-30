@@ -31,11 +31,15 @@ extern "C" {
 
 #else /* debugging enabled */
 
+#if defined (__MSVCRT__ ) || defined (__CRTDLL__)
 /*
  * CRTDLL nicely supplies a function which does the actual output and
  * call to abort.
  */
 _CRTIMP void __cdecl _assert (const char*, const char*, int) __MINGW_ATTRIB_NORETURN;
+#elif defined (__COREDLL__)
+#define _assert(e, f, l)  OutputDebugStringW(TEXT(e) L"fixme: format a nice assert message here.")
+#endif
 
 /*
  * Definition of the assert macro.

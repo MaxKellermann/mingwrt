@@ -24,6 +24,8 @@
 /* All the headers include this file. */
 #include <_mingw.h>
 
+#ifndef __COREDLL__
+
 /* return values for _mbsbtype  and  _mbbtype in mbstring.h */
 #define _MBC_SINGLE 0 
 #define _MBC_LEAD 1  
@@ -92,6 +94,8 @@ __MINGW_IMPORT unsigned char _mbcasemap[];
 #endif
 
 #endif	/* Not RC_INVOKED */
+
+#endif /* Not __COREDLL__ */
 
 #endif	/* Not _MCTYPE_H_ */
 

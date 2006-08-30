@@ -28,7 +28,13 @@ extern "C" {
  * NOTE: This was determined on an i386 (actually a Pentium). The
  *       contents could be different on an Alpha or something else.
  */
-#define _JBLEN 16
+#if defined (__i386__)
+# define _JBLEN 16
+#elif defined (__arm__)
+# define _JBLEN 32 /* Safe value for now. */
+# warning "_JBLEN: test value with performing several setjmps/logjmp, and checking for clobber."
+#endif
+
 #define _JBTYPE int
 typedef _JBTYPE jmp_buf[_JBLEN];
 

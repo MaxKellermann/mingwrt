@@ -55,6 +55,8 @@
 extern "C" {
 #endif
 
+#ifndef __COREDLL__
+
 _CRTIMP void __cdecl _cexit(void);
 _CRTIMP void __cdecl _c_exit(void);
 
@@ -80,6 +82,7 @@ _CRTIMP int __cdecl _spawnve	(int, const char*, const char* const*, const char* 
 _CRTIMP int __cdecl _spawnvp	(int, const char*, const char* const*);
 _CRTIMP int __cdecl _spawnvpe	(int, const char*, const char* const*, const char* const*);
 
+#endif /* !__COREDLL__*/
 
 /*
  * The functions _beginthreadex and _endthreadex are not provided by CRTDLL.
@@ -92,9 +95,11 @@ _CRTIMP int __cdecl _spawnvpe	(int, const char*, const char* const*, const char*
  *
  * NOTE: No old names for these functions. Use the underscore.
  */
+#if defined	(__MSVCRT__) || defined (__CRTDLL__)
 _CRTIMP unsigned long __cdecl
 	_beginthread	(void (*)(void *), unsigned, void*);
 _CRTIMP void __cdecl _endthread	(void);
+#endif
 
 #ifdef	__MSVCRT__
 _CRTIMP unsigned long __cdecl
@@ -105,6 +110,7 @@ _CRTIMP void __cdecl _endthreadex (unsigned);
 
 
 #ifndef	_NO_OLDNAMES
+#ifndef __COREDLL__
 /*
  * Functions without the leading underscore, for portability. These functions
  * live in liboldnames.a.
@@ -127,6 +133,7 @@ _CRTIMP int __cdecl spawnv (int, const char*, const char* const*);
 _CRTIMP int __cdecl spawnve (int, const char*, const char* const*, const char* const*);
 _CRTIMP int __cdecl spawnvp (int, const char*, const char* const*);
 _CRTIMP int __cdecl spawnvpe (int, const char*, const char* const*, const char* const*);
+#endif  /* Not __COREDLL__ */
 #endif	/* Not _NO_OLDNAMES */
 
 #ifdef	__cplusplus

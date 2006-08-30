@@ -155,6 +155,7 @@ struct __stat64
 extern "C" {
 #endif
 
+#ifndef __COREDLL__
 _CRTIMP int __cdecl	_fstat (int, struct _stat*);
 _CRTIMP int __cdecl	_chmod (const char*, int);
 _CRTIMP int __cdecl	_stat (const char*, struct _stat*);
@@ -167,6 +168,7 @@ _CRTIMP int __cdecl	chmod (const char*, int);
 _CRTIMP int __cdecl	stat (const char*, struct stat*);
 
 #endif	/* Not _NO_OLDNAMES */
+#endif
 
 #if defined (__MSVCRT__)
 _CRTIMP int __cdecl  _fstati64(int, struct _stati64 *);

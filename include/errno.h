@@ -14,6 +14,8 @@
 /* All the headers include this file. */
 #include <_mingw.h>
 
+#ifndef __COREDLL__
+
 /*
  * Error numbers.
  * TODO: Can't be sure of some of these assignments, I guessed from the
@@ -90,6 +92,8 @@ extern int errno;
 #else
 _CRTIMP int* __cdecl _errno(void);
 #define	errno		(*_errno())
+#endif
+
 #endif
 
 #ifdef	__cplusplus
