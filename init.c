@@ -175,7 +175,7 @@ _mingw32_init_mainargs(void)
     char* argv1 = _argv[0] + strlen(_argv[0]) + 1;
     wcstombs(argv1, cmdlinePtrW, cmdlineLen + 1);
 //    WCETRACE(WCE_IO, "command line: \"%s\"", argv1);
-    _argc += _parse_tokens(argv1, &__argv, 1, __argv_len);
+    _argc += _parse_tokens(argv1, &_argv, 1, __argv_len);
   }
   _argv[_argc] = 0;
 }
