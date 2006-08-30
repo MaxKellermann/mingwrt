@@ -106,4 +106,10 @@ int main()
 
 #endif
 
+#else
+
+void  __cpu_features_init (void)
+{
+}
+
 #endif
