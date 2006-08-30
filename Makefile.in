@@ -159,11 +159,11 @@ FLAGS_TO_PASS:=\
 	TARFLAGS="$(TARFLAGS)" \
 	TARFILEEXT="$(TARFILEEXT)"
 
-CRT0S = crt1.o dllcrt1.o crt2.o dllcrt2.o CRT_noglob.o crtmt.o crtst.o
+CRT0S = crt2.o dllcrt2.o CRT_noglob.o crtmt.o crtst.o
 ifneq (,$(findstring wince,$(target_alias)))
 CRT0S +=
 else
-CRT0S += CRT_fp8.o CRT_fp10.o txtmode.o binmode.o
+CRT0S += crt1.o dllcrt1.o CRT_fp8.o CRT_fp10.o txtmode.o binmode.o
 endif
 
 MINGW_OBJS = CRTglob.o CRTfmode.o CRTinit.o dllmain.o gccmain.o \
@@ -323,12 +323,24 @@ libmoldnamed.a: moldname-msvcrt.def $(MOLD_OBJS)
 	$(AR) rc $@ $(MOLD_OBJS)
 	$(RANLIB) $@
 
+
+ifneq (,$(findstring wince,$(target_alias)))
+# The special rules are necessary.
+crt1.o dllcrt1.o:
+	$(CC) -c -D__COREDLL__ -U__CRTDLL__ -U__MSVCRT__ $(ALL_CFLAGS) $< -o $@
+
+crt2.o dllcrt2.o:
+	$(CC) -c -D__COREDLL__ -U__CRTDLL__ -U__MSVCRT__ $(ALL_CFLAGS) $< -o $@
+
+else
+
 # The special rules are necessary.
 crt1.o dllcrt1.o:
 	$(CC) -c -D__CRTDLL__ -U__MSVCRT__ $(ALL_CFLAGS) $< -o $@
 
 crt2.o dllcrt2.o:
 	$(CC) -c -D__MSVCRT__ -U__CRTDLL__ $(ALL_CFLAGS) $< -o $@
+endif
 
 TEST_H_OPTIONS = $(ALL_CFLAGS) -Wall -W -Wsystem-headers -c \
 	$(srcdir)/test_headers.c -o test_headers.o
