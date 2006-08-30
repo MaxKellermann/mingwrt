@@ -93,9 +93,9 @@ _mingw32_init_fmode (void)
     }
 
     /*  Now sync  the dll _fmode to the  one for this .exe.  */
-#ifdef __MSVCRT__
+#if defined (__MSVCRT__)
     *__p__fmode() = _fmode;	
-#else
+#elif defined (__CRTDLL__)
     *__IMP(_fmode_dll) = _fmode;
 #endif
 }
