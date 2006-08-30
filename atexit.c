@@ -22,7 +22,7 @@ static p_atexit_fn* next_atexit;
 static p_atexit_fn __dllonexit (p_atexit_fn, p_atexit_fn**, p_atexit_fn**);
 
 int
-atexit (p_atexit_fn pfn )
+atexit (p_atexit_fn pfn)
 {
 #ifdef DEBUG
   printf ("%s: registering exit function  0x%x at 0x%x\n",
@@ -33,13 +33,31 @@ atexit (p_atexit_fn pfn )
 }
 
 _onexit_t
-_onexit (_onexit_t pfn )
+_onexit (_onexit_t pfn)
 {
 #ifdef DEBUG
   printf ("%s: registering exit function  0x%x at 0x%x\n",
 	  __FUNCTION__, (unsigned)pfn, (unsigned)next_atexit);
 #endif
   return ((_onexit_t) __dllonexit ((p_atexit_fn)pfn,  &first_atexit, &next_atexit));
+}
+
+void
+_cexit (void)
+{
+    size_t len = next_atexit - first_atexit;
+    p_atexit_fn* pfn = next_atexit;
+    int i;
+
+    if (len != 0)
+    {
+        --pfn;
+        do 
+        {
+            (*pfn)(); 
+        } 
+        while (pfn != first_atexit);
+    }
 }
 
 #include "__dllonexit.c"
