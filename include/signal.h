@@ -14,7 +14,9 @@
 /* All the headers include this file. */
 #include <_mingw.h>
 
-#ifndef __COREDLL__
+#ifdef __COREDLL__
+#include_next <signal.h>
+#endif
 
 /*
  * The actual signal values. Using other values with signal
@@ -95,8 +97,6 @@ _CRTIMP int __cdecl	raise (int);
 #endif
 
 #endif	/* Not RC_INVOKED */
-
-#endif  /* Not __COREDLL__ */
 
 #endif	/* Not _SIGNAL_H_ */
 
