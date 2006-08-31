@@ -58,6 +58,11 @@ _cexit (void)
         } 
         while (pfn != first_atexit);
     }
+
+    _fcloseall ();
+    fclose(stdin);
+    fclose(stdout);
+    fclose(stderr);
 }
 
 #include "__dllonexit.c"
