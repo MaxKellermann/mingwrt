@@ -15,6 +15,10 @@
 /* All the headers include this file. */
 #include <_mingw.h>
 
+#ifdef __COREDLL__
+#include_next <locale.h>
+#endif
+
 /*
  * NOTE: I have tried to test this, but I am limited by my knowledge of
  *       locale issues. The structure does not bomb if you look at the
