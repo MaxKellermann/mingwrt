@@ -38,7 +38,8 @@ extern "C" {
  */
 _CRTIMP void __cdecl _assert (const char*, const char*, int) __MINGW_ATTRIB_NORETURN;
 #elif defined (__COREDLL__)
-#define _assert(e, f, l)  OutputDebugStringW(TEXT(e) L"fixme: format a nice assert message here.")
+_CRTIMP void __cdecl _assert (const char*, const char*, int) __MINGW_ATTRIB_NORETURN;
+//#define _assert(e, f, l)  OutputDebugStringW(TEXT(e) L"fixme: format a nice assert message here.")
 #endif
 
 /*
