@@ -14,7 +14,9 @@
 /* All the headers include this file. */
 #include <_mingw.h>
 
-#ifndef __COREDLL__
+#ifdef __COREDLL__
+#include_next <errno.h>
+#endif
 
 /*
  * Error numbers.
@@ -94,12 +96,10 @@ _CRTIMP int* __cdecl _errno(void);
 #define	errno		(*_errno())
 #endif
 
-#endif
-
 #ifdef	__cplusplus
 }
 #endif
 
-#endif	/* Not RC_INVOKED */
+#endif /* Not RC_INVOKED */
 
 #endif	/* Not _ERRNO_H_ */
