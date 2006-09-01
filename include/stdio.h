@@ -162,6 +162,10 @@ typedef struct _iobuf
 # define stdin	_getstdfilex(0)
 # define stdout	_getstdfilex(1)
 # define stderr	_getstdfilex(2)
+
+#ifdef __cplusplus
+extern "C"
+#endif
 _CRTIMP FILE*  __cdecl _getstdfilex(int);
 
 #else /* __COREDLL__ */
