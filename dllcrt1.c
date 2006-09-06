@@ -11,7 +11,11 @@
 #include <stdio.h>
 #include <io.h>
 #include <process.h>
+
+#ifndef __COREDLL__
 #include <errno.h>
+#endif
+
 #include <windows.h>
 
 /* Unlike normal crt1, I don't initialize the FPU, because the process

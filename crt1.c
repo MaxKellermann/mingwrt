@@ -19,7 +19,10 @@
 #include <float.h>
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+
+#ifndef __COREDLL__
 #include <signal.h>
+#endif
 
 /* NOTE: The code for initializing the _argv, _argc, and environ variables
  *       has been moved to a separate .c file which is included in both

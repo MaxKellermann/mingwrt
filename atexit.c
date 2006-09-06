@@ -11,7 +11,6 @@
 #include <stdio.h>
 #include <io.h>
 #include <process.h>
-#include <errno.h>
 #include <windows.h>
 
 typedef void (* p_atexit_fn )(void);
