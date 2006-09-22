@@ -4,6 +4,11 @@
  * unistd.h maps (roughly) to io.h
  */
 
+#ifdef __COREDLL__
+/* No such file on Windows CE.  */
+# include_next <unistd.h>
+#else /* __COREDLL__ */
+
 #ifndef _UNISTD_H
 #define _UNISTD_H
 
@@ -18,7 +23,6 @@
 extern "C" {
 #endif
 
-#ifndef __COREDLL__
 /* This is defined as a real library function to allow autoconf
    to verify its existence. */
 int ftruncate(int, off_t);
@@ -26,10 +30,11 @@ __CRT_INLINE int ftruncate(int __fd, off_t __length)
 {
   return _chsize (__fd, __length);
 }
-#endif
 
 #ifdef __cplusplus
 }
 #endif
 
 #endif /* _UNISTD_H */
+
+#endif  /* __COREDLL__ */
