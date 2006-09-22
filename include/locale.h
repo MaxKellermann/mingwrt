@@ -9,15 +9,17 @@
  *
  */
 
+#ifdef __COREDLL__
+# include_next <locale.h>
+#else /* __COREDLL__ */
+
 #ifndef	_LOCALE_H_
 #define	_LOCALE_H_
 
 /* All the headers include this file. */
 #include <_mingw.h>
 
-#ifdef __COREDLL__
-#include_next <locale.h>
-#endif
+
 
 /*
  * NOTE: I have tried to test this, but I am limited by my knowledge of
@@ -90,3 +92,4 @@ _CRTIMP struct lconv* __cdecl localeconv (void);
 
 #endif	/* Not _LOCALE_H_ */
 
+#endif  /* Not __COREDLL__ */
