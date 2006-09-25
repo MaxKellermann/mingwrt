@@ -171,7 +171,7 @@ MINGW_OBJS = CRTglob.o CRTfmode.o CRTinit.o dllmain.o gccmain.o \
 	     pseudo-reloc.o pseudo-reloc-list.o cpu_features.o
 
 ifneq (,$(findstring wince,$(target_alias)))
-MINGW_OBJS += abort.o atexit.o
+MINGW_OBJS += abort.o atexit.o assert.o
 else
 MINGW_OBJS += CRT_fp10.o txtmode.o
 endif
@@ -501,6 +501,7 @@ CRT_fp8.o: CRT_fp8.c
 CRT_fp10.o: CRT_fp10.c
 abort.o: abort.c
 atexit.o: atexit.c __dllonexit.c
+assert.o: assert.c
 
 Makefile: Makefile.in config.status configure
 	$(SHELL) config.status
