@@ -90,10 +90,16 @@ int __cdecl iswblank (wint_t);
 _CRTIMP wint_t __cdecl	towlower (wint_t);
 _CRTIMP wint_t __cdecl	towupper (wint_t);
 
+#ifdef __COREDLL__
+/* From winnls.h */
+long __cdecl IsDBCSLeadByte (unsigned char tc);
+#endif
+
 _CRTIMP int __cdecl	isleadbyte (int);
 
 /* Also in ctype.h */
 
+#if defined (__MSVCRT__) || defined (__CRTDLL__) 
 #ifdef __DECLSPEC_SUPPORTED
 __MINGW_IMPORT unsigned short _ctype[];
 # ifdef __MSVCRT__
@@ -114,6 +120,7 @@ extern unsigned short** _imp___ctype;
 # define _pctype (*_imp___pctype_dll)
 # endif	/* CRTDLL */
 #endif		/*  __DECLSPEC_SUPPORTED */
+#endif
 
 
 #if !(defined (__NO_INLINE__) || defined(__NO_CTYPE_INLINES) \
@@ -131,7 +138,11 @@ __CRT_INLINE int __cdecl iswpunct(wint_t wc) {return (iswctype(wc,_PUNCT));}
 __CRT_INLINE int __cdecl iswspace(wint_t wc) {return (iswctype(wc,_SPACE));}
 __CRT_INLINE int __cdecl iswupper(wint_t wc) {return (iswctype(wc,_UPPER));}
 __CRT_INLINE int __cdecl iswxdigit(wint_t wc) {return (iswctype(wc,_HEX));}
+#ifdef __COREDLL__
+__CRT_INLINE int __cdecl isleadbyte(int c) {return IsDBCSLeadByte(c); }
+#else
 __CRT_INLINE int __cdecl isleadbyte(int c) {return (_pctype[(unsigned char)(c)] & _LEADBYTE);}
+#endif
 
 #if (defined (__STDC_VERSION__) && __STDC_VERSION__ >= 199901L) \
      || !defined __STRICT_ANSI__
