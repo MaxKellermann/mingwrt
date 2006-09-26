@@ -228,7 +228,7 @@ _CRTIMP wint_t __cdecl towupper (wint_t);
 
 #ifdef __COREDLL__
 /* From winnls.h */
-long __cdecl IsDBCSLeadByte ( unsigned char tc);
+long __cdecl IsDBCSLeadByte (unsigned char tc);
 #endif
 
 _CRTIMP int __cdecl isleadbyte (int);
