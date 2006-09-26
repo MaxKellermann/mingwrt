@@ -37,6 +37,7 @@ extern void _pei386_runtime_relocator (void);
 #ifndef UNDER_CE
 extern int main (int, char **, char **);
 #else
+/* No environ.  */
 extern int main (int, char **);
 #endif
 
