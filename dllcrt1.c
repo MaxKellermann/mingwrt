@@ -23,7 +23,11 @@
  * because that would be rude. */
 
 #ifdef	__GNUC__
+#ifdef __MINGW32CE__
+extern void __gccmain ();
+#else
 extern void __main ();
+#endif
 extern void __do_global_dtors ();
 #endif
 
@@ -81,8 +85,11 @@ DllMainCRTStartup (HANDLE hDll, DWORD dwReason, LPVOID lpReserved)
 	 __do_global_ctors, which registers __do_global_dtors
 	 as the first entry of the private atexit table we
 	 have just initialised  */
+#ifdef __MINGW32CE__
+      __gccmain ();
+#else
       __main ();
-      	
+#endif
 #endif
    }
 

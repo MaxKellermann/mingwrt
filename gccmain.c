@@ -68,7 +68,11 @@ __do_global_ctors (void)
 static int initialized = 0;
 
 void
+#ifndef __MINGW32CE__
 __main (void)
+#else
+__gccmain (void)
+#endif
 {
   if (!initialized)
     {
