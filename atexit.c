@@ -20,6 +20,8 @@ static p_atexit_fn* next_atexit;
 /* This  is based on the function in the Wine project's exit.c */
 static p_atexit_fn __dllonexit (p_atexit_fn, p_atexit_fn**, p_atexit_fn**);
 
+#define DEBUG
+
 int
 atexit (p_atexit_fn pfn)
 {
@@ -47,21 +49,23 @@ _cexit (void)
     size_t len = next_atexit - first_atexit;
     p_atexit_fn* pfn = next_atexit;
     int i;
-
     if (len != 0)
     {
-        --pfn;
         do 
         {
-            (*pfn)(); 
+		  --pfn;
+		  (*pfn)();
         } 
         while (pfn != first_atexit);
     }
 
+    /* Closes all except stdin/stdout/stderr.  */
     _fcloseall ();
+#if 0
     fclose(stdin);
-    fclose(stdout);
+    fclose(stdout); /* closing stdout hangs the process? */
     fclose(stderr);
+#endif
 }
 
 #include "__dllonexit.c"
