@@ -20,7 +20,7 @@ static p_atexit_fn* next_atexit;
 /* This  is based on the function in the Wine project's exit.c */
 static p_atexit_fn __dllonexit (p_atexit_fn, p_atexit_fn**, p_atexit_fn**);
 
-#define DEBUG
+//#define DEBUG
 
 int
 atexit (p_atexit_fn pfn)
@@ -47,8 +47,8 @@ void
 _cexit (void)
 {
     size_t len = next_atexit - first_atexit;
+
     p_atexit_fn* pfn = next_atexit;
-    int i;
     if (len != 0)
     {
         do 

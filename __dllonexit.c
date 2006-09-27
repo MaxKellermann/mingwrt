@@ -11,23 +11,34 @@
 #include <io.h>
 #include <windows.h>
 
+#ifdef DEBUG
+# define TRACE(FMT, ...) \
+	printf ("trace: %s:%d : " FMT, __FILE__, __LINE__, ##__VA_ARGS__)
+
+# define FIXME(FMT, ...) \
+	printf ("fixme: %s:%d : " FMT, __FILE__, __LINE__, ##__VA_ARGS__)
+#else
+# define TRACE(FMT, ...) do; while (0)
+# define FIXME(FMT, ...) do; while (0)
+#endif
+
 p_atexit_fn 
 __dllonexit(p_atexit_fn func, p_atexit_fn **start, p_atexit_fn **end)
 {
   p_atexit_fn *tmp;
   int len;
 
-//  TRACE("(%p,%p,%p)\n", func, start, end);
+  TRACE("(%p,%p,%p)\n", func, start, end);
 
-  if (!start || !*start || !end || !*end)
+  if (!start || !end)
   {
-//   FIXME("bad table\n");
+   FIXME("bad table\n");
    return NULL;
   }
 
   len = (*end - *start);
 
-//  TRACE("table start %p-%p, %d entries\n", *start, *end, len);
+  TRACE("table start %p-%p, %d entries\n", *start, *end, len);
 
   if (++len <= 0)
     return NULL;
@@ -38,6 +49,6 @@ __dllonexit(p_atexit_fn func, p_atexit_fn **start, p_atexit_fn **end)
   *start = tmp;
   *end = tmp + len;
   tmp[len - 1] = func;
-//  TRACE("new table start %p-%p, %d entries\n", *start, *end, len);
+  TRACE("new table start %p-%p, %d entries\n", *start, *end, len);
   return func;
 }
