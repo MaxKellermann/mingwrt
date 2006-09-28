@@ -70,71 +70,70 @@ _mingw32_init_mainargs ()
 #ifdef __COREDLL__
 
 static int
-_parse_tokens(char* string, char*** tokens, int start, int length)
+_parse_tokens(char* string, char*** tokens, int length)
 {
     /* Extract whitespace- and quotes- delimited tokens from the given string
         and put them into the tokens array. Returns number of tokens
         extracted. Length specifies the current size of tokens[].
         THIS METHOD MODIFIES string.  */
 
-    char*  whitespace = " \t\r\n";
-    char*  tokenEnd;
-    char*  quoteCharacters = "\"\'";
-    int numQuotes = strlen(quoteCharacters);
-    int quoteIndex;
-    char quote;
-    int ntokens = 0;
+    const char* whitespace = " \t\r\n";
+    char* tokenEnd;
+    const char* quoteCharacters = "\"\'";
+	char* end = string + strlen (string);
 
     if (string == NULL)
-        return 0;
+        return length;
 
     while (1)
     {
+		const char* q;
         /* Skip over initial whitespace.  */
         string += strspn(string, whitespace);
-        if (strlen(string) == 0)
+        if (*string == '\0')
             break;
-        quoteIndex = numQuotes;
-        while (--quoteIndex >= 0) 
-            if (*string == quoteCharacters[quoteIndex]) 
+
+        for (q = quoteCharacters; *q; ++q) 
+		{
+            if (*string == *q) 
                 break;
-        if (quoteIndex >= 0) 
+		}
+        if (*q) 
         {
             /* Token is quoted.  */
-            quote = *string++;
+			char quote = *string++;
             tokenEnd = strchr(string, quote);
             /* If there is no endquote, the token is the rest of the string.  */
             if (!tokenEnd)
-                tokenEnd = string + strlen(string);
+                tokenEnd = end;
         } 
         else 
         {
             tokenEnd = string + strcspn(string, whitespace);
         }
-        if ((length-start) <= ntokens)
-        {
-            char*** new_tokens;
-            int newlen = length;
-            /* Double memory.  */
-            newlen += (length == 0) ? 1 : newlen;
-            new_tokens = realloc (tokens, sizeof (char**) * newlen);
+
+		*tokenEnd = '\0';
+
+		{
+            char** new_tokens;
+            int newlen = length + 1;
+            new_tokens = realloc (*tokens, sizeof (char**) * newlen);
             if (!new_tokens)
             {
                 /* Out of memory.  */
-                goto exit;
+                return -1;
             }
+
+            *tokens = new_tokens;
+			(*tokens)[length] = string;
             length = newlen;
-            tokens = new_tokens;
-        }
-        (*tokens)[ntokens+start] = string;
-        ntokens++;
-        if (*tokenEnd == '\0') 
+		}
+        if (tokenEnd == end) 
             break;
-        *tokenEnd = '\0';
         string = tokenEnd + 1;
     }
 exit:
-    return ntokens;
+    return length;
 }
 
 static void
@@ -146,7 +145,6 @@ __GetMainArgs (int *argc, char ***argv, char *** env, int glob)
     wchar_t* cmdlinePtrW;
     int modlen;
     char* __cmdlinebuf;
-    int argv_len = 1;
 
     /* argv[0] is the path of invoked program - get this from CE.  */
     cmdnameBufW[0] = 0;
@@ -162,7 +160,7 @@ __GetMainArgs (int *argc, char ***argv, char *** env, int glob)
     if (!__cmdlinebuf)
         ExitProcess(-1);
 
-    *argv = malloc (sizeof (char**) * argv_len);
+    *argv = malloc (sizeof (char**) * 1);
     if (!*argv)
         ExitProcess(-1);
 
@@ -175,7 +173,9 @@ __GetMainArgs (int *argc, char ***argv, char *** env, int glob)
     {
         char* argv1 = (*argv)[0] + strlen((*argv)[0]) + 1;
         wcstombs(argv1, cmdlinePtrW, cmdlineLen + 1);
-        *argc += _parse_tokens(argv1, argv, 1, argv_len);
+        *argc = _parse_tokens(argv1, argv, 1);
+		if (*argc < 0)
+		  ExitProcess(-1);
     }
     (*argv)[*argc] = 0;
     return;
