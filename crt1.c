@@ -297,7 +297,7 @@ WinMainCRTStartup (void)
 
 /*
  *  We force use of library version of atexit, which is only
- *  visible in import lib as _imp__atexit
+ *  visible in import lib as __IMP(atexit)
  */
 extern int (*__IMP(atexit))(void (*)(void));
 int atexit (void (* pfn )(void) )
