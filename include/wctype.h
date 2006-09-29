@@ -117,9 +117,14 @@ extern unsigned short** _imp___ctype;
 #endif		/*  __DECLSPEC_SUPPORTED */
 #endif
 
+#ifdef __COREDLL__
+/* From winnls.h */
+int IsDBCSLeadByte(unsigned char);
+#endif
 
-#if !(defined (__NO_INLINE__) || defined(__NO_CTYPE_INLINES) \
-      || defined(__WCTYPE_INLINES_DEFINED))
+#if !defined(__WCTYPE_INLINES_DEFINED) \
+	&& (!(defined (__NO_INLINE__) || defined(__NO_CTYPE_INLINES)) \
+	    || defined (__COREDLL__))
 #define __WCTYPE_INLINES_DEFINED
 __CRT_INLINE int __cdecl iswalnum(wint_t wc) {return (iswctype(wc,_ALPHA|_DIGIT));}
 __CRT_INLINE int __cdecl iswalpha(wint_t wc) {return (iswctype(wc,_ALPHA));}

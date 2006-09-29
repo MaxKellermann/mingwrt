@@ -219,6 +219,10 @@ _CRTIMP int __cdecl iswxdigit(wint_t);
 int __cdecl iswblank (wint_t);
 #endif
 
+#ifdef __COREDLL__
+/* From winnls.h */
+int IsDBCSLeadByte(unsigned char);
+#endif
 
 /* Older MS docs uses wchar_t for arg and return type, while newer
    online MS docs say arg is wint_t and return is int.
@@ -229,8 +233,9 @@ _CRTIMP wint_t __cdecl towupper (wint_t);
 _CRTIMP int __cdecl isleadbyte (int);
 
 /* Also in wctype.h */
-#if ! (defined (__NO_INLINE__) || defined(__NO_CTYPE_INLINES) \
-       || defined(__WCTYPE_INLINES_DEFINED))
+#if !defined(__WCTYPE_INLINES_DEFINED) \
+	&& (!(defined (__NO_INLINE__) || defined(__NO_CTYPE_INLINES)) \
+	    || defined (__COREDLL__))
 #define __WCTYPE_INLINES_DEFINED
 __CRT_INLINE int __cdecl iswalnum(wint_t wc) {return (iswctype(wc,_ALPHA|_DIGIT));}
 __CRT_INLINE int __cdecl iswalpha(wint_t wc) {return (iswctype(wc,_ALPHA));}
