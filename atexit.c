@@ -43,8 +43,8 @@ _onexit (_onexit_t pfn)
   return ((_onexit_t) __dllonexit ((p_atexit_fn)pfn,  &first_atexit, &next_atexit));
 }
 
-void
-_cexit (void)
+static void
+proc_atexit_chain (void)
 {
     size_t len = next_atexit - first_atexit;
 
@@ -58,14 +58,45 @@ _cexit (void)
         } 
         while (pfn != first_atexit);
     }
+}
 
+static void
+closeall_streams (void)
+{
     /* Closes all except stdin/stdout/stderr.  */
     _fcloseall ();
 #if 0
-    fclose(stdin);
-    fclose(stdout); /* closing stdout hangs the process? */
-    fclose(stderr);
+    fclose (stdin);
+    fclose (stdout); /* closing stdout hangs the process? */
+    fclose (stderr);
 #endif
+}
+
+void
+_cexit (void)
+{
+	proc_atexit_chain ();
+	closeall_streams ();
+}
+
+void
+exit (int code)
+{
+	_cexit ();
+	ExitProcess (code);
+}
+
+void
+_c_exit (void)
+{
+	closeall_streams ();
+}
+
+void
+_exit (int code)
+{
+	closeall_streams ();
+	ExitProcess (code);
 }
 
 #include "__dllonexit.c"
