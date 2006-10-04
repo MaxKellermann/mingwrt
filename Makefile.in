@@ -181,8 +181,7 @@ MOLD_OBJS = isascii.o iscsym.o iscsymf.o toascii.o \
 
 ifneq (,$(findstring wince,$(target_alias)))
 LIBS = libmingw32.a \
-       libcoldname.a \
-       libmoldname.a libmoldnamed.a \
+       libceoldname.a \
        libmingwthrd.a
 else
 LIBS = libcrtdll.a \
@@ -299,6 +298,12 @@ moldname-msvcrt.def: moldname.def.in
 		-D__MSVCRT__  -C -E -P \
 		-xc-header $? > $@
 
+moldname-coredll.def: moldname.def.in
+	$(CC) -DRUNTIME=coredll \
+		-D__FILENAME__=moldname-coredll.def \
+		-D__COREDLL__  -C -E -P \
+		-xc-header $? > $@
+
 libcoldname.a: moldname-crtdll.def $(MOLD_OBJS)
 	$(DLLTOOL) --as $(AS) -k -U	\
 		--dllname crtdll.dll	\
@@ -323,6 +328,13 @@ libmoldnamed.a: moldname-msvcrt.def $(MOLD_OBJS)
 	$(AR) rc $@ $(MOLD_OBJS)
 	$(RANLIB) $@
 
+libceoldname.a: moldname-coredll.def $(MOLD_OBJS)
+	$(DLLTOOL) --as $(AS) -k -U	\
+		--dllname coredll.dll	\
+		--def moldname-coredll.def	\
+		--output-lib $@
+	$(AR) rc $@ $(MOLD_OBJS)
+	$(RANLIB) $@
 
 ifneq (,$(findstring wince,$(target_alias)))
 # The special rules are necessary.

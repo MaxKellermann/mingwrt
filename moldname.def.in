@@ -24,6 +24,7 @@
 ;  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 ;
 EXPORTS
+#ifndef __COREDLL__
 access
 chdir
 chmod
@@ -31,12 +32,16 @@ chsize
 close
 creat
 cwait
-#if !(__CRTDLL__)
+#endif /* __COREDLL__ */
+#if (__MSVCRT__)
 daylight DATA
 #endif
+#ifndef __COREDLL__
 dup
 dup2
+#endif /* __COREDLL__ */
 ecvt
+#ifndef __COREDLL__
 eof
 execl
 execle
@@ -46,19 +51,25 @@ execv
 execve
 execvp
 execvpe
+#endif /* __COREDLL__ */
 fcvt
+#ifndef __COREDLL__
 fdopen
 fgetchar
 fgetwchar
 filelength
+#endif /* __COREDLL__ */
 fileno
 ; Alias fpreset is set in CRT_fp10,c and CRT_fp8.c.
 ; fpreset
+#ifndef __COREDLL__
 fputchar
 fputwchar
 fstat
 ftime
+#endif /* __COREDLL__ */
 gcvt
+#ifndef __COREDLL__
 getch
 getche
 getcwd
@@ -66,14 +77,18 @@ getpid
 getw
 heapwalk
 isatty
+#endif /* __COREDLL__ */
 itoa
+#ifndef __COREDLL__
 kbhit
 lfind
 lsearch
 lseek
+#endif /* __COREDLL__ */
 ltoa
 memccpy
 memicmp
+#ifndef __COREDLL__
 mkdir
 mktemp
 open
@@ -86,7 +101,9 @@ read
 rmdir
 rmtmp
 searchenv
+#endif /* __COREDLL__ */
 setmode
+#ifndef __COREDLL__
 sopen
 spawnl
 spawnle
@@ -98,9 +115,12 @@ spawnvp
 spawnvpe
 stat
 strcmpi
+#endif /* __COREDLL__ */
 strdup
 stricmp
+#ifndef __COREDLL__
 stricoll
+#endif /* __COREDLL__ */
 strlwr
 strnicmp
 strnset
@@ -108,9 +128,10 @@ strrev
 strset
 strupr
 swab
+#ifndef __COREDLL__
 tell
 tempnam
-#if  !(__CRTDLL__)
+#if  (__MSVCRT__)
 timezone DATA
 #endif
 ; export tzname for both. See <time.h>
@@ -120,19 +141,24 @@ umask
 ungetch
 unlink
 utime
+#endif /* __COREDLL__ */
 wcsdup
 wcsicmp
+#ifndef __COREDLL__
 wcsicoll
+#endif /* __COREDLL__ */
 wcslwr
 wcsnicmp
 wcsnset
 wcsrev
 wcsset
 wcsupr
-#if  !(__CRTDLL__)
+#if  (__MSVCRT__)
 wpopen
 #endif
+#ifndef __COREDLL__
 write
+#endif /* __COREDLL__ */
 ; non-ANSI functions declared in math.h
 j0
 j1
