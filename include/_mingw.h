@@ -107,7 +107,14 @@
 #ifdef __cplusplus
 #define __CRT_INLINE inline
 #else
+#ifdef __COREDLL__
+/* There isn't any out-of-line version of most of 
+   these functions in coredll.dll, so we need this for -O0,
+   or for -fno-inline.  */
+#define __CRT_INLINE extern __inline__ __attribute__((__always_inline__))
+#else
 #define __CRT_INLINE extern __inline__
+#endif
 #endif
 
 #if defined (__GNUC__) && defined (__GNUC_MINOR__)

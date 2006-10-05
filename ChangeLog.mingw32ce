@@ -1,4 +1,9 @@
 2006-10-05  Pedro Alves  <pedro_alves@portugalmail.pt>
 
+	* include/_mingw.h (__CRT_INLINE): Use __attribute__ ((__always_inline__))
+	on Windows CE.
+
+2006-10-05  Pedro Alves  <pedro_alves@portugalmail.pt>
+
 	* include/ctype.h: Always use the inline versions of is*
 	on Windows CE.
