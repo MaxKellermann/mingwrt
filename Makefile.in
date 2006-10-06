@@ -255,7 +255,7 @@ DLL_OFILES        = mthr.o mthr_init.o
 DLL_CC_STUFF      = -B./ -mdll $(MNO_CYGWIN) -Wl,--image-base,0x6FBC0000 \
 		    \
                     $(DLL_OFILES) \
-		    $(MINGWEX_DIR)
+		    -Lmingwex
 
 DLL_DLLTOOL_STUFF = --as=$(AS) --dllname $(THREAD_DLL_NAME) \
                     --def mingwthrd.def \

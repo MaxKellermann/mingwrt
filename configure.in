@@ -48,25 +48,21 @@ AC_ALLOCA
 
 AC_CANONICAL_SYSTEM
 
-case "$target" in
-arm-wince-*)
-  #subdirs not ported yet.
-  AC_CONFIG_SUBDIRS()
-  DLL_ENTRY = DllMainCRTStartup
-  MINGWEX_DIR =
-  ;;
-*)
-  AC_CONFIG_SUBDIRS(profile mingwex)
-  DLL_ENTRY = _DllMainCRTStartup@12
-  MINGWEX_DIR = -Lmingwex
-  ;;
-esac
-
 HEADER_SUBDIR=""
 
 LIBGMON_A=libgmon.a
 
 W32API_INCLUDE='-I $(srcdir)/../w32api/include'
+
+case "$target_os" in
+*mingw32ce*)
+  #subdirs not ported yet.
+  AC_CONFIG_SUBDIRS()
+  ;;
+*)
+  AC_CONFIG_SUBDIRS(profile mingwex)
+  ;;
+esac
 
 case "$target_os" in
 *cygwin*)

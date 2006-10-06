@@ -1,3 +1,9 @@
+2006-10-06  Pedro Alves  <pedro_alves@portugalmail.pt>
+
+	* configure.in (DLL_ENTRY, MINGWEX_DIR) : Remove, not needed anymore.
+	* Makefile.in (MINGWEX_DIR) : Revert to using -lmingwex.
+	* configure : Regenerate.
+
 2006-10-05  Pedro Alves  <pedro_alves@portugalmail.pt>
 
 	* include/_mingw.h (__CRT_INLINE): Use __attribute__ ((__always_inline__))
