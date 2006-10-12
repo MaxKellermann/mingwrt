@@ -66,7 +66,11 @@ static int	s_scale;
 /* see profil(2) where this is describe (incorrectly) */
 #define		SCALE_1_TO_1	0x10000L
 
+#ifdef	USE_STDIO
+#define ERR(s) fwrite(s, sizeof(s), 1, stderr)
+#else
 #define ERR(s) write(2, s, sizeof(s))
+#endif
 
 void	moncontrol __P((int));
 
@@ -104,7 +108,11 @@ monstartup(lowpc, highpc)
 
 	cp = fake_sbrk(p->kcountsize + p->fromssize + p->tossize);
 	if (cp == (char *)-1) {
+#ifdef	USE_STDIO
+		MessageBoxW(0, L"monstartup", L"out of memory", 0);
+#else
 		ERR("monstartup: out of memory\n");
+#endif
 		return;
 	}
 
@@ -146,7 +154,11 @@ monstartup(lowpc, highpc)
 void
 _mcleanup()
 {
+#ifdef	USE_STDIO
+	FILE	*fp;
+#else
 	int fd;
+#endif
 	int hz;
 	int fromindex;
 	int endfrom;
@@ -161,8 +173,12 @@ _mcleanup()
 	char dbuf[200];
 #endif
 
-	if (p->state == GMON_PROF_ERROR)
+	if (p->state == GMON_PROF_ERROR) {
+#ifdef	USE_STDIO
+#else
 		ERR("_mcleanup: tos overflow\n");
+#endif
+	}
 
         hz = PROF_HZ;
 	moncontrol(0);
@@ -216,9 +232,19 @@ _mcleanup()
 	proffile = "gmon.out";
 #endif
 
+#ifdef	USE_STDIO
+	fp = fopen(proffile, "wb");
+	if (fp == 0)
+#else
 	fd = open(proffile , O_CREAT|O_TRUNC|O_WRONLY|O_BINARY, 0666);
-	if (fd < 0) {
+	if (fd < 0)
+#endif
+	{
+#ifdef	USE_STDIO
+		MessageBoxW(0, L"mcleanup", L"cannot open file", 0);
+#else
 		perror( proffile );
+#endif
 		return;
 	}
 #ifdef DEBUG
@@ -237,8 +263,13 @@ _mcleanup()
 	hdr->ncnt = p->kcountsize + sizeof(gmonhdr);
 	hdr->version = GMONVERSION;
 	hdr->profrate = hz;
+#ifdef	USE_STDIO
+	fwrite((char *)hdr, sizeof *hdr, 1, fp);
+	fwrite(p->kcount, p->kcountsize, 1, fp);
+#else
 	write(fd, (char *)hdr, sizeof *hdr);
 	write(fd, p->kcount, p->kcountsize);
+#endif
 	endfrom = p->fromssize / sizeof(*p->froms);
 	for (fromindex = 0; fromindex < endfrom; fromindex++) {
 		if (p->froms[fromindex] == 0)
@@ -258,10 +289,18 @@ _mcleanup()
 			rawarc.raw_frompc = frompc;
 			rawarc.raw_selfpc = p->tos[toindex].selfpc;
 			rawarc.raw_count = p->tos[toindex].count;
+#ifdef	USE_STDIO
+			fwrite(&rawarc, sizeof rawarc, 1, fp);
+#else
 			write(fd, &rawarc, sizeof rawarc);
+#endif
 		}
 	}
+#ifdef	USE_STDIO
+	fclose(fp);
+#else
 	close(fd);
+#endif
 }
 
 /*

@@ -62,9 +62,9 @@ static char rcsid[] = "$OpenBSD: mcount.c,v 1.6 1997/07/23 21:11:27 kstailey Exp
  * perform this optimization.
  */
 /* _mcount; may be static, inline, etc */
-_MCOUNT_DECL (u_long frompc, u_long selfpc)
+_MCOUNT_DECL (frompc, selfpc)
 {
-	register u_short *frompcindex;
+	register unsigned short *frompcindex;
 	register struct tostruct *top, *prevtop;
 	register struct gmonparam *p;
 	register long toindex;
