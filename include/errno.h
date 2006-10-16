@@ -8,15 +8,15 @@
  *
  */
 
+#ifdef __COREDLL__
+# include_next <errno.h>
+#else /* __COREDLL__ */
+
 #ifndef _ERRNO_H_
 #define	_ERRNO_H_
 
 /* All the headers include this file. */
 #include <_mingw.h>
-
-#ifdef __COREDLL__
-#include_next <errno.h>
-#endif
 
 /*
  * Error numbers.
@@ -103,3 +103,5 @@ _CRTIMP int* __cdecl _errno(void);
 #endif /* Not RC_INVOKED */
 
 #endif	/* Not _ERRNO_H_ */
+
+#endif /* Not __COREDLL__ */

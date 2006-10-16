@@ -9,7 +9,6 @@
  */
 #include <stdlib.h>
 #include <stdio.h>
-#include <io.h>
 #include <process.h>
 #include <windows.h>
 

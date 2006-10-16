@@ -8,15 +8,16 @@
  *
  */
 
+#ifdef __COREDLL__
+# include_next <signal.h>
+#else /* __COREDLL__ */
+
+
 #ifndef	_SIGNAL_H_
 #define	_SIGNAL_H_
 
 /* All the headers include this file. */
 #include <_mingw.h>
-
-#ifdef __COREDLL__
-#include_next <signal.h>
-#endif
 
 /*
  * The actual signal values. Using other values with signal
@@ -100,3 +101,4 @@ _CRTIMP int __cdecl	raise (int);
 
 #endif	/* Not _SIGNAL_H_ */
 
+#endif   /* Not __COREDLL__ */

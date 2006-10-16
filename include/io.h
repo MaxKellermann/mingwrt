@@ -7,6 +7,11 @@
  * System level I/O functions and types.
  *
  */
+
+#ifdef __COREDLL__
+# include_next <io.h>
+#else /* __COREDLL__ */
+
 #ifndef	_IO_H_
 #define	_IO_H_
 
@@ -315,3 +320,5 @@ wchar_t * 	wmktemp(wchar_t *);
 #endif /* __COREDLL__ */
 
 #endif	/* _IO_H_ not defined */
+
+#endif   /* Not __COREDLL__ */

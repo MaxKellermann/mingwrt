@@ -14,7 +14,9 @@
 #define __IN_MINGW_RUNTIME 
 #include <stdlib.h>
 #include <stdio.h>
+#ifndef __COREDLL__
 #include <io.h>
+#endif
 #include <process.h>
 #include <float.h>
 #define WIN32_LEAN_AND_MEAN

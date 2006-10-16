@@ -1,3 +1,20 @@
+2006-10-16  Pedro Alves  <pedro_alves@portugalmail.pt>
+
+	* include/io.h : Hide the file.
+	* include/signal.h : Hide the file better.
+	* include/errno.h : Likewise.
+	* include/stdio.h (_fileno) : Return void* instead of int, as reported
+	by MSVC warning logs, and as hinted here (mind the line break):
+	    http://msdn.microsoft.com/library/default.asp?url=/library/en-us/\
+	    dv_wcecrt4/html/erlrfusfileno.asp :
+	    (Return Values
+	        _fileno returns the file handle.)
+	    Notice the wording: file *handle*, not file descriptor.
+	* atexit.c : Don't include io.h.
+	* __dllonexit.c : Likewise.
+	* dllcrt1.c : Don't include io.h on __COREDLL__.
+	* crt1.c : Likewise.
+	
 2006-10-15  Danny Backx  <dannybackx@sourceforge.net>
 	* configure.in: always configure profile subdirectory.
 	* configure: regenerated due to configure.in changes.
@@ -10,7 +27,7 @@
 2006-10-06  Pedro Alves  <pedro_alves@portugalmail.pt>
 
 	* configure.in (DLL_ENTRY, MINGWEX_DIR) : Remove, not needed anymore.
-	* Makefile.in (MINGWEX_DIR) : Revert to using -lmingwex.
+	* Makefile.in (MINGWEX_DIR) : Revert to using -Lmingwex.
 	* configure : Regenerate.
 
 2006-10-05  Pedro Alves  <pedro_alves@portugalmail.pt>
