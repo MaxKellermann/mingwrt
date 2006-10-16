@@ -16,7 +16,9 @@
 #include <windows.h>
 #include <stdio.h>
 #include <sys/types.h>
+#if ! defined(UNDER_CE)
 #include <errno.h>
+#endif
 #include <math.h>
 
 #include <profil.h>

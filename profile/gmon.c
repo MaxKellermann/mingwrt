@@ -66,7 +66,7 @@ static int	s_scale;
 /* see profil(2) where this is describe (incorrectly) */
 #define		SCALE_1_TO_1	0x10000L
 
-#ifdef	USE_STDIO
+#ifdef	UNDER_CE
 #define ERR(s) fwrite(s, sizeof(s), 1, stderr)
 #else
 #define ERR(s) write(2, s, sizeof(s))
@@ -108,7 +108,7 @@ monstartup(lowpc, highpc)
 
 	cp = fake_sbrk(p->kcountsize + p->fromssize + p->tossize);
 	if (cp == (char *)-1) {
-#ifdef	USE_STDIO
+#ifdef	UNDER_CE
 		MessageBoxW(0, L"monstartup", L"out of memory", 0);
 #else
 		ERR("monstartup: out of memory\n");
@@ -154,7 +154,7 @@ monstartup(lowpc, highpc)
 void
 _mcleanup()
 {
-#ifdef	USE_STDIO
+#ifdef	UNDER_CE
 	FILE	*fp;
 #else
 	int fd;
@@ -174,7 +174,7 @@ _mcleanup()
 #endif
 
 	if (p->state == GMON_PROF_ERROR) {
-#ifdef	USE_STDIO
+#ifdef	UNDER_CE
 #else
 		ERR("_mcleanup: tos overflow\n");
 #endif
@@ -232,7 +232,7 @@ _mcleanup()
 	proffile = "gmon.out";
 #endif
 
-#ifdef	USE_STDIO
+#ifdef	UNDER_CE
 	fp = fopen(proffile, "wb");
 	if (fp == 0)
 #else
@@ -240,7 +240,7 @@ _mcleanup()
 	if (fd < 0)
 #endif
 	{
-#ifdef	USE_STDIO
+#ifdef	UNDER_CE
 		MessageBoxW(0, L"mcleanup", L"cannot open file", 0);
 #else
 		perror( proffile );
@@ -263,7 +263,7 @@ _mcleanup()
 	hdr->ncnt = p->kcountsize + sizeof(gmonhdr);
 	hdr->version = GMONVERSION;
 	hdr->profrate = hz;
-#ifdef	USE_STDIO
+#ifdef	UNDER_CE
 	fwrite((char *)hdr, sizeof *hdr, 1, fp);
 	fwrite(p->kcount, p->kcountsize, 1, fp);
 #else
@@ -289,14 +289,14 @@ _mcleanup()
 			rawarc.raw_frompc = frompc;
 			rawarc.raw_selfpc = p->tos[toindex].selfpc;
 			rawarc.raw_count = p->tos[toindex].count;
-#ifdef	USE_STDIO
+#ifdef	UNDER_CE
 			fwrite(&rawarc, sizeof rawarc, 1, fp);
 #else
 			write(fd, &rawarc, sizeof rawarc);
 #endif
 		}
 	}
-#ifdef	USE_STDIO
+#ifdef	UNDER_CE
 	fclose(fp);
 #else
 	close(fd);

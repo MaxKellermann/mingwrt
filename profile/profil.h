@@ -13,6 +13,16 @@ details. */
  * The differences should be within __MINGW32__ guard.
  */
 
+#if defined(__MINGW32__) || defined(UNDER_CE)
+#ifndef _BSDTYPES_DEFINED
+typedef unsigned char u_char;
+typedef unsigned short u_short;
+typedef unsigned int u_int;
+typedef unsigned long u_long;
+#define _BSDTYPES_DEFINED
+#endif /* _BSDTYPES_DEFINED */
+#endif /* __MINGW32__*/
+
 /* profiling frequency.  (No larger than 1000) */
 #define PROF_HZ			100
 

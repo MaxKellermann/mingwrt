@@ -50,7 +50,7 @@
 
 #include <profile.h>
 
-#ifdef __MINGW32__
+#if defined(__MINGW32__) || defined(UNDER_CE)
 #ifndef _BSDTYPES_DEFINED
 typedef unsigned char u_char;
 typedef unsigned short u_short;

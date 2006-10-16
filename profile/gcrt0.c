@@ -14,9 +14,18 @@ details. */
  */
 
 #include <sys/types.h>
+
+/*
+ * Need to undefine __COREDLL__ because this file gets compiled with __MSVCRT__
+ * defined, and stdlib.h thinks they should be mutually exclusive.
+ * It's probably right :-)
+ */
+#ifdef	__COREDLL__
+#undef	__COREDLL__
+#endif
 #include <stdlib.h>
 
-#ifdef __MINGW32__
+#if defined(__MINGW32__) || defined(UNDER_CE)
 typedef unsigned char u_char;
 typedef unsigned short u_short;
 typedef unsigned int u_int;

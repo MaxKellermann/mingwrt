@@ -1,3 +1,12 @@
+2006-10-15  Danny Backx  <dannybackx@sourceforge.net>
+	* configure.in: always configure profile subdirectory.
+	* configure: regenerated due to configure.in changes.
+	* profile/gcrt0.c profile/gmon.c profile/profil.h
+	profile/gmon.h profile/profil.c : changes to get this
+	to compile in our environments. Use only the existing
+	macros UNDER_CE, ARM. Don't use __COREDLL__ except in
+	one place where we needed to undefine it.
+
 2006-10-06  Pedro Alves  <pedro_alves@portugalmail.pt>
 
 	* configure.in (DLL_ENTRY, MINGWEX_DIR) : Remove, not needed anymore.
