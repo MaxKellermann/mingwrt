@@ -40,7 +40,10 @@ static char rcsid[] = "$OpenBSD: gmon.c,v 1.8 1997/07/23 21:11:27 kstailey Exp $
  * The differences should be within __MINGW32__ guard.
  */
 
+#ifndef __MINGW32CE__
 #include <fcntl.h>
+#endif
+
 #include <stdlib.h>
 #include <stdio.h>
 #ifndef __MINGW32__

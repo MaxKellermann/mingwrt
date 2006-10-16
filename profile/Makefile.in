@@ -38,7 +38,7 @@ CXXFLAGS = @CXXFLAGS@
 # compiling with Cygwin?
 MNO_CYGWIN = @MNO_CYGWIN@
 
-# Either crtdll (CRT_ID 1) or msvcrt (CRT_ID 2).
+# Either crtdll (CRT_ID 1), msvcrt (CRT_ID 2) or coredll (CRT_ID 3).
 RUNTIME = @RUNTIME@
 CRT_ID = @CRT_ID@
 
@@ -67,7 +67,7 @@ DLLTOOL_FLAGS = --as $(AS_FOR_TARGET)
 LIBGMON_A = @LIBGMON_A@
 LIBGMON_OBJS = gmon.o mcount.o profil.o
 CRT0S = @CRT0S@
-ALL_CRT0S = gcrt0.o gcrt1.o gcrt2.o
+ALL_CRT0S = gcrt0.o gcrt1.o gcrt2.o gcrt3.o
 
 LIBS = $(LIBGMON_A)
 DLLS = 
@@ -88,6 +88,9 @@ gcrt1.o: gcrt0.c
 
 gcrt2.o: gcrt0.c
 	$(CC) -D__MSVCRT__ -c -o $@ $(CPPFLAGS) $(ALL_CFLAGS) $?
+
+gcrt3.o: gcrt0.c
+	$(CC) -D__COREDLL__ -c -o $@ $(CPPFLAGS) $(ALL_CFLAGS) $?
 
 #
 # Dependancies
