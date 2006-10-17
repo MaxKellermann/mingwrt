@@ -8,6 +8,11 @@
  * plus functions for setting the current drive.
  *
  */
+
+#ifdef __COREDLL__
+# include_next <direct.h>
+#else /* __COREDLL__ */
+
 #ifndef	_DIRECT_H_
 #define	_DIRECT_H_
 
@@ -75,3 +80,5 @@ _CRTIMP int __cdecl _wrmdir(const wchar_t*);
 #endif	/* Not RC_INVOKED */
 
 #endif	/* Not _DIRECT_H_ */
+
+#endif /* Not __COREDLL__ */

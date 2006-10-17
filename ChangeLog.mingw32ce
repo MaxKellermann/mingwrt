@@ -1,5 +1,10 @@
 2006-10-17  Pedro Alves  <pedro_alves@portugalmail.pt>
 
+	* include/fcntl.h : Hide the file.
+	* include/direct.h : Hide the file.
+
+2006-10-17  Pedro Alves  <pedro_alves@portugalmail.pt>
+
 	* profile/gcrt0.c : Remove __COREDLL__ hack.
 	* profile/gmon.c : Don't include fcnctl.h on mingw32ce.
 	* profile/Makefile.in : Add comment about coredll being CRT_ID 3.

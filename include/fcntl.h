@@ -8,6 +8,10 @@
  * in sys/stat.h (ick).
  *
  */
+#ifdef __COREDLL__
+# include_next <fcntl.h>
+#else /* __COREDLL__ */
+
 #ifndef _FCNTL_H_
 #define _FCNTL_H_
 
@@ -67,3 +71,5 @@
 #endif	/* Not _NO_OLDNAMES */
 
 #endif	/* Not _FCNTL_H_ */
+
+#endif /* Not __COREDLL__ */
