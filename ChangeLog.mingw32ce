@@ -1,5 +1,28 @@
 2006-10-17  Pedro Alves  <pedro_alves@portugalmail.pt>
 
+	* __dllonexit : Delete. Code merged into ...
+	* atexit.c : ... this.
+	Fix filename comment.
+	Don't include __dllonexit.c.
+	(__atexit_first) : New function.
+	(__atexit_init): New function.
+	(proc_exit_chain) : Delete.
+	(__dllexit) : New function, copied from crt1.c.
+	(__dllonexit) : New function.
+	(_cexit) : Call __dllexit.
+	* Makefile.in (dllcrt1.o, dllcrt2.o, atexit.o) : Remove
+	dependency on __dllonexit.c.
+	* dllcrt1.c : Don't implement a private atexit list on
+	__COREDLL__, since the atexit implementation there is already
+	image private.
+	(DllMainCRTStartup) : Call __atexit_init. Use __atexit_first to
+	get to the private first_atexit.
+	(__dll_exit) : Hide on __COREDLL__.
+	Don't include __dllonexit.c.
+	* crt1.c (MainCRTStartup) : Call __atexit_init.
+
+2006-10-17  Pedro Alves  <pedro_alves@portugalmail.pt>
+
 	* include/fcntl.h : Hide the file.
 	* include/direct.h : Hide the file.
 

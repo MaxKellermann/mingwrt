@@ -34,19 +34,19 @@ extern void __do_global_dtors ();
 #endif
 
 typedef void (* p_atexit_fn )(void);
+
+#ifndef __COREDLL__
 static p_atexit_fn* first_atexit;
 static p_atexit_fn* next_atexit;
 
-static void
-__dll_exit (void);
-
+static void __dll_exit (void);
 /* This  is based on the function in the Wine project's exit.c */
-#ifdef UNDER_CE
-static p_atexit_fn __dllonexit (p_atexit_fn, p_atexit_fn**, p_atexit_fn**);
-#else
 p_atexit_fn __dllonexit (p_atexit_fn, p_atexit_fn**, p_atexit_fn**);
-#endif
-
+#else /* __COREDLL__ */
+void __dll_exit (void);
+BOOL __atexit_init(void);
+p_atexit_fn* __atexit_first(void);
+#endif /* __COREDLL__ */
 
 extern BOOL WINAPI DllMain (HANDLE, DWORD, LPVOID);
 
@@ -64,19 +64,22 @@ DllMainCRTStartup (HANDLE hDll, DWORD dwReason, LPVOID lpReserved)
       printf ("%s: DLL_PROCESS_ATTACH (%d)\n", __FUNCTION__);
 #endif
 
+#ifdef __COREDLL__
+	 if (!__atexit_init())
+	   return FALSE;
+#else
       /* Initialize private atexit table for this dll.
 	 32 is min size required by ANSI */
 
       first_atexit = (p_atexit_fn*) malloc (32 * sizeof (p_atexit_fn));
       if (first_atexit == NULL ) /* can't allocate memory */
 	{
-#ifndef UNDER_CE
 	  errno=ENOMEM;
-#endif
 	  return FALSE;
 	}
       *first_atexit =  NULL;
       next_atexit = first_atexit;
+#endif
 
       /* Adust references to dllimported data (from other DLL's)
 	 that have non-zero offsets.  */ 
@@ -121,6 +124,9 @@ DllMainCRTStartup (HANDLE hDll, DWORD dwReason, LPVOID lpReserved)
 #ifdef DEBUG
       printf ("%s: DLL_PROCESS_DETACH (%d)\n", __FUNCTION__);
 #endif
+#ifdef __COREDLL__
+	 p_atexit_fn* first_atexit = __atexit_first();
+#endif
       /* If not attached, return FALSE. Cleanup already done above
 	 if failed attachment attempt. */
       if  (! first_atexit )
@@ -136,6 +142,7 @@ DllMainCRTStartup (HANDLE hDll, DWORD dwReason, LPVOID lpReserved)
   return bRet;
 }
 
+#ifndef __COREDLL__
 static
 void
 __dll_exit(void)
@@ -201,6 +208,4 @@ _onexit (_onexit_t pfn )
   return ((_onexit_t) __dllonexit ((p_atexit_fn)pfn,  &first_atexit, &next_atexit));
 }
 
-#ifdef UNDER_CE
-#include "__dllonexit.c"
 #endif

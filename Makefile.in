@@ -503,8 +503,8 @@ crt2.o: crt1.c init.c
 crtmt.o: crtmt.c
 crtst.o: crtst.c
 ctype_old.o: ctype_old.c
-dllcrt1.o: dllcrt1.c __dllonexit.c
-dllcrt2.o: dllcrt1.c __dllonexit.c
+dllcrt1.o: dllcrt1.c
+dllcrt2.o: dllcrt1.c
 dllmain.o: dllmain.c
 main.o: main.c
 oldnames.o: oldnames.c
@@ -512,7 +512,7 @@ string_old.o: string_old.c
 CRT_fp8.o: CRT_fp8.c
 CRT_fp10.o: CRT_fp10.c
 abort.o: abort.c
-atexit.o: atexit.c __dllonexit.c
+atexit.o: atexit.c
 assert.o: assert.c
 
 Makefile: Makefile.in config.status configure

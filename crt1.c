@@ -41,6 +41,8 @@ extern int main (int, char **, char **);
 #else
 /* No environ.  */
 extern int main (int, char **);
+/* No atexit on coredll, we must initialize our private version.  */
+BOOL __atexit_init(void);
 #endif
 
 /*
@@ -242,6 +244,13 @@ __mingw_CRTStartup (void)
   /* Align the stack to 16 bytes for the sake of SSE ops in main
      or in functions inlined into main.  */
   asm  __volatile__  ("andl $-16, %%esp" : : : "%esp");
+#endif
+
+#ifdef __COREDLL__
+  /*
+   * Initialize the atexit table.
+  */
+  __atexit_init();
 #endif
 
   /*
