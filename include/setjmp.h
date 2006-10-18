@@ -38,6 +38,9 @@ extern "C" {
 #define _JBTYPE int
 typedef _JBTYPE jmp_buf[_JBLEN];
 
+#ifdef __COREDLL__
+_CRTIMP int __cdecl setjmp (jmp_buf);
+#else
 /*
  * The function provided by CRTDLL which appears to do the actual work
  * of setjmp.
@@ -45,6 +48,7 @@ typedef _JBTYPE jmp_buf[_JBLEN];
 _CRTIMP int __cdecl _setjmp (jmp_buf);
 
 #define	setjmp(x)	_setjmp(x)
+#endif
 
 /*
  * Return to the last setjmp call and act as if setjmp had returned
