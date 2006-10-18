@@ -1,3 +1,7 @@
+2006-10-18  Pedro Alves  <pedro_alves@portugalmail.pt>
+
+	* include/stdio.h : Expose fileno. We have it on libceoldname.
+
 2006-10-17  Pedro Alves  <pedro_alves@portugalmail.pt>
 
 	* __dllonexit : Delete. Code merged into ...

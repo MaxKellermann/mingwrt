@@ -436,6 +436,8 @@ _CRTIMP int __cdecl	fgetchar (void);
 _CRTIMP int __cdecl	fputchar (int);
 _CRTIMP FILE* __cdecl	fdopen (int, const char*);
 _CRTIMP int __cdecl	fileno (FILE*);
+#else
+_CRTIMP void* __cdecl	fileno (FILE*);
 #endif
 #endif	/* Not _NO_OLDNAMES */
 
