@@ -159,7 +159,7 @@ typedef struct _iobuf
 
 #ifdef __COREDLL__
 
-# define stdin	_getstdfilex(0)
+# define stdin 	_getstdfilex(0)
 # define stdout	_getstdfilex(1)
 # define stderr	_getstdfilex(2)
 
