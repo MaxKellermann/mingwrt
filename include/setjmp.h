@@ -31,8 +31,7 @@ extern "C" {
 #if defined (__i386__)
 # define _JBLEN 16
 #elif defined (__arm__)
-# define _JBLEN 32 /* Safe value for now. */
-# warning "_JBLEN: test value with performing several setjmps/logjmp, and checking for clobber."
+# define _JBLEN 11
 #endif
 
 #define _JBTYPE int
