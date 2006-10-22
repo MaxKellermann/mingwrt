@@ -1,5 +1,9 @@
 2006-10-22  Pedro Alves  <pedro_alves@portugalmail.pt>
 
+	* test_headers.c: Adapt to __COREDLL__.
+
+2006-10-22  Pedro Alves  <pedro_alves@portugalmail.pt>
+
 	* include/stdio.h (puts) [__COREDLL__]: Add missing return.
 
 2006-10-19  Pedro Alves  <pedro_alves@portugalmail.pt>
