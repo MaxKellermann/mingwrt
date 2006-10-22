@@ -322,7 +322,7 @@ _CRTIMP int __cdecl	putchar (int);
 #else /* __COREDLL__ */
 
 __CRT_INLINE int __cdecl getc (FILE* __F) { return fgetc(__F); }
-__CRT_INLINE int __cdecl putc (int __c, FILE* __F) { fputc (__c, __F); }
+__CRT_INLINE int __cdecl putc (int __c, FILE* __F) { return fputc (__c, __F); }
 _CRTIMP int __cdecl getchar (void);
 _CRTIMP int __cdecl putchar(int __c);
 
