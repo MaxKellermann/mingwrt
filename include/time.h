@@ -83,9 +83,9 @@ extern "C" {
 
 #ifndef __COREDLL__
 _CRTIMP clock_t __cdecl	clock (void);
+#endif
 _CRTIMP time_t __cdecl	time (time_t*);
 _CRTIMP time_t __cdecl	mktime (struct tm*);
-#endif
 _CRTIMP double __cdecl	difftime (time_t, time_t);
 
 /*
@@ -98,14 +98,12 @@ _CRTIMP double __cdecl	difftime (time_t, time_t);
  * Fault and crap out your program. Guess how I know. Hint: stat called on
  * a directory gives 'invalid' times in st_atime etc...
  */
-#ifndef __COREDLL__
 _CRTIMP char* __cdecl		asctime (const struct tm*);
 _CRTIMP char* __cdecl		ctime (const time_t*);
 _CRTIMP struct tm*  __cdecl	gmtime (const time_t*);
 _CRTIMP struct tm*  __cdecl	localtime (const time_t*);
 
 _CRTIMP size_t __cdecl		strftime (char*, size_t, const char*, const struct tm*);
-#endif
 
 #ifndef __STRICT_ANSI__
 
@@ -210,9 +208,7 @@ _CRTIMP wchar_t* __cdecl	_wctime64 (const __time64_t*);
 #endif
 #endif /*  __MSVCRT__ */
 #endif /* __STRICT_ANSI__ */
-#ifndef __COREDLL__
 _CRTIMP size_t __cdecl		wcsftime (wchar_t*, size_t, const wchar_t*, const struct tm*);
-#endif
 #define _WTIME_DEFINED
 #endif /* _WTIME_DEFINED */ 
 

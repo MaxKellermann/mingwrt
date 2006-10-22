@@ -8,14 +8,8 @@
  *
  */
 
-#ifdef __COREDLL__
-# include_next <io.h>
-#else /* __COREDLL__ */
-
 #ifndef	_IO_H_
 #define	_IO_H_
-
-#ifndef __COREDLL__
 
 /* All the headers include this file. */
 #include <_mingw.h>
@@ -27,6 +21,8 @@
 #include <sys/types.h>	/* To get time_t.  */
 #include <stdint.h>  /* For intptr_t.  */
 
+#ifndef __COREDLL__
+
 /*
  * Attributes of files as returned by _findfirst et al.
  */
@@ -37,7 +33,6 @@
 #define	_A_VOLID	0x00000008
 #define	_A_SUBDIR	0x00000010
 #define	_A_ARCH		0x00000020
-
 
 #ifndef RC_INVOKED
 
@@ -118,6 +113,8 @@ struct __wfinddata64_t {
 #define _WFINDDATA_T_DEFINED
 #endif
 
+#endif /* __COREDLL__ */
+
 #ifdef	__cplusplus
 extern "C" {
 #endif
@@ -129,6 +126,9 @@ extern "C" {
  * and 0 if a match was found. Call _findclose when you are finished.
  */
 /*  FIXME: Should these all use intptr_t, as per recent MSDN docs?  */
+
+#ifndef __COREDLL__
+
 _CRTIMP long __cdecl _findfirst (const char*, struct _finddata_t*);
 _CRTIMP int __cdecl _findnext (long, struct _finddata_t*);
 _CRTIMP int __cdecl _findclose (long);
@@ -139,6 +139,8 @@ _CRTIMP int __cdecl _mkdir (const char*);
 _CRTIMP char* __cdecl _mktemp (char*);
 _CRTIMP int __cdecl _rmdir (const char*);
 _CRTIMP int __cdecl _chmod (const char*, int);
+
+#endif /* __COREDLL__ */
 
 #ifdef __MSVCRT__
 _CRTIMP __int64 __cdecl _filelengthi64(int);
@@ -163,14 +165,14 @@ __CRT_INLINE off64_t lseek64 (int fd, off64_t offset, int whence)
 
 #ifndef _NO_OLDNAMES
 
-#ifndef _UWIN
+#if !defined (_UWIN) && !defined (__COREDLL__)
 _CRTIMP int __cdecl chdir (const char*);
 _CRTIMP char* __cdecl getcwd (char*, int);
 _CRTIMP int __cdecl mkdir (const char*);
 _CRTIMP char* __cdecl mktemp (char*);
 _CRTIMP int __cdecl rmdir (const char*);
 _CRTIMP int __cdecl chmod (const char*, int);
-#endif /* _UWIN */
+#endif /* _UWIN && __COREDLL__ */
 
 #endif /* Not _NO_OLDNAMES */
 
@@ -196,6 +198,8 @@ _CRTIMP int __cdecl chmod (const char*, int);
 #ifdef	__cplusplus
 extern "C" {
 #endif
+
+#ifndef __COREDLL__
 
 _CRTIMP int __cdecl _access (const char*, int);
 _CRTIMP int __cdecl _chsize (int, long);
@@ -241,8 +245,11 @@ _CRTIMP int __cdecl _sopen (const char*, int, int, ...);
 _CRTIMP long __cdecl _tell (int);
 /* Should umask be in sys/stat.h and/or sys/types.h instead? */
 _CRTIMP int __cdecl _umask (int);
+#endif /* __COREDLL__ */
 _CRTIMP int __cdecl _unlink (const char*);
+#ifndef __COREDLL__
 _CRTIMP int __cdecl _write (int, const void*, unsigned int);
+#endif /* __COREDLL__ */
 
 /* Wide character versions. Also declared in wchar.h. */
 /* Not in crtdll.dll */
@@ -274,6 +281,7 @@ _CRTIMP intptr_t __cdecl _wfindnext64(intptr_t, struct __wfinddata64_t*);
  */
 
 #ifndef _UWIN
+#ifndef __COREDLL__
 _CRTIMP int __cdecl access (const char*, int);
 _CRTIMP int __cdecl chsize (int, long );
 _CRTIMP int __cdecl close (int);
@@ -290,8 +298,11 @@ _CRTIMP int __cdecl setmode (int, int);
 _CRTIMP int __cdecl sopen (const char*, int, int, ...);
 _CRTIMP long __cdecl tell (int);
 _CRTIMP int __cdecl umask (int);
+#endif /* __COREDLL__ */
 _CRTIMP int __cdecl unlink (const char*);
+#ifndef __COREDLL__
 _CRTIMP int __cdecl write (int, const void*, unsigned int);
+#endif /* __COREDLL__ */
 #endif /* _UWIN */
 
 /* Wide character versions. Also declared in wchar.h. */
@@ -317,8 +328,4 @@ wchar_t * 	wmktemp(wchar_t *);
 
 #endif	/* Not RC_INVOKED */
 
-#endif /* __COREDLL__ */
-
 #endif	/* _IO_H_ not defined */
-
-#endif   /* Not __COREDLL__ */

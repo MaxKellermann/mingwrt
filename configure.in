@@ -54,17 +54,7 @@ LIBGMON_A=libgmon.a
 
 W32API_INCLUDE='-I $(srcdir)/../w32api/include'
 
-AC_CONFIG_SUBDIRS(profile)
-
-dnl case "$target_os" in
-dnl *cegcc* | *mingw32ce*)
-dnl   #subdirs not ported yet.
-dnl   AC_CONFIG_SUBDIRS(profile)
-dnl   ;;
-dnl *)
-dnl   AC_CONFIG_SUBDIRS(profile mingwex)
-dnl   ;;
-dnl esac
+AC_CONFIG_SUBDIRS(profile mingwex)
 
 case "$target_os" in
 *cygwin*)

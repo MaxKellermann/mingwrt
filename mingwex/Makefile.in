@@ -4,7 +4,7 @@
 # This makefile requires GNU make.
 
 srcdir = @srcdir@
-VPATH = $(srcdir):$(srcdir)/math:$(srcdir)/stdio:$(srcdir)/complex
+VPATH = $(srcdir):$(srcdir)/math:$(srcdir)/stdio:$(srcdir)/complex:$(srcdir)/wince
 objdir = .
 
 target_alias = @target_alias@
@@ -82,6 +82,10 @@ COMPLEX_DISTFILES = \
 	cprojf.c cprojl.c creal.c crealf.c creall.c csin.c csinf.c \
 	csinl.c csinh.c csinhf.c csinhl.c csqrt.c csqrtf.c csqrtl.c \
 	ctan.c ctanf.c ctanl.c ctanh.c ctanhf.c ctanhl.c
+
+WINCE_DISTFILES = \
+	asctime.c freopen.c gmtime.c localtime.c mktime.c strftime.c time.c \
+	tempnam.c unlink.c wcsftime.c
 
 CC = @CC@
 # FIXME: Which is it, CC or CC_FOR_TARGET?
@@ -179,10 +183,17 @@ COMPLEX_OBJS = \
 	cprojf.o cprojl.o creal.o crealf.o creall.o csin.o csinf.o \
 	csinl.o csinh.o csinhf.o csinhl.o csqrt.o csqrtf.o csqrtl.o \
 	ctan.o ctanf.o ctanl.o ctanh.o ctanhf.o ctanhl.o
+WINCE_OBJS = \
+	asctime.o freopen.o gmtime.o localtime.o mktime.o strftime.o time.o \
+	tempnam.o unlink.o wcsftime.o
 
+ifneq (,$(findstring wince,$(target_alias)))
+LIB_OBJS = $(WINCE_OBJS)
+else
 LIB_OBJS = $(Q8_OBJS)  $(CTYPE_OBJS) $(STDLIB_OBJS) $(STDLIB_STUB_OBJS) \
 	$(STDIO_OBJS) $(MATH_OBJS)  $(FENV_OBJS) \
 	$(POSIX_OBJS) $(REPLACE_OBJS) $(COMPLEX_OBJS)
+endif
 
 LIBS = $(LIBMINGWEX_A)
 DLLS = 
@@ -260,5 +271,10 @@ dist:
 	chmod 755 $(distdir)/mingwex/complex
 	@for i in $(COMPLEX_DISTFILES); do\
 		cp -p $(srcdir)/complex/$$i $(distdir)/mingwex/complex/$$i ; \
+	done
+	mkdir $(distdir)/mingwex/wince
+	chmod 755 $(distdir)/mingwex/wince
+	@for i in $(WINCE_DISTFILES); do\
+		cp -p $(srcdir)/complex/$$i $(distdir)/mingwex/wince/$$i ; \
 	done
 

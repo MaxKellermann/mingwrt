@@ -130,16 +130,20 @@ strupr
 swab
 #ifndef __COREDLL__
 tell
+#endif /* __COREDLL__ */
 tempnam
 #if  (__MSVCRT__)
 timezone DATA
 #endif
+#ifndef __COREDLL__
 ; export tzname for both. See <time.h>
 tzname DATA
 tzset
 umask
 ungetch
+#endif /* __COREDLL__ */
 unlink
+#ifndef __COREDLL__
 utime
 #endif /* __COREDLL__ */
 wcsdup

@@ -1,5 +1,32 @@
 2006-10-22  Pedro Alves  <pedro_alves@portugalmail.pt>
 
+	* configure.in [AC_CONFIG_SUBDIRS]: Add mingwex.
+	* configure : Regenerate.
+	* mingwex/Makefile.in (VPATH): Add wince subdir.
+	(WINCE_DISTFILES): New.
+	(WINCE_OBJS): New.
+	(LIB_OBJS): Special case for wince. Build WINCE_OBJS.
+	(dist): Install WINCE_DISTFILES.
+	* mingwex/wince: New subdir.
+	* mingwex/wince/time.c: New file.
+	* mingwex/wince/freopen.c: New file.
+	* mingwex/wince/unlink.c: New file.
+	* mingwex/wince/tempnam.c: New file.
+	* mingwex/wince/wcsftime.c: New file.
+	* mingwex/wince/gmtime.c: New file.
+	* mingwex/wince/asctime.c: New file.
+	* mingwex/wince/mktime.c: New file.
+	* mingwex/wince/localtime.c: New file.
+	* mingwex/wince/strftime.c: New file.
+	* include/time.h (time, mktime, asctime, 
+	ctime, gmtime, localtime, strftime, wcsftime): Expose on __COREDLL__.
+	* include/stdio.h (freopen, _tempnam, 
+	tempnam, _wtempnam): Likewise.
+	* include/io.h: Expose the header. Needed for unlink.
+	(_unlink, unlink): Expose functions on __COREDLL__.
+
+2006-10-22  Pedro Alves  <pedro_alves@portugalmail.pt>
+
 	* test_headers.c: Adapt to __COREDLL__.
 
 2006-10-22  Pedro Alves  <pedro_alves@portugalmail.pt>

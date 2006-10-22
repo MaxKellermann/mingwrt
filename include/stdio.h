@@ -196,9 +196,7 @@ extern "C" {
  * File Operations
  */
 _CRTIMP FILE* __cdecl fopen (const char*, const char*);
-#ifndef __COREDLL__
 _CRTIMP FILE* __cdecl	freopen (const char*, const char*, FILE*);
-#endif
 _CRTIMP int __cdecl	fflush (FILE*);
 _CRTIMP int __cdecl	fclose (FILE*);
 
@@ -208,17 +206,19 @@ _CRTIMP int __cdecl	remove (const char*);
 _CRTIMP int __cdecl	rename (const char*, const char*);
 _CRTIMP FILE* __cdecl	tmpfile (void);
 _CRTIMP char* __cdecl	tmpnam (char*);
-
+#endif /* __COREDLL__ */
 #ifndef __STRICT_ANSI__
 _CRTIMP char* __cdecl	_tempnam (const char*, const char*);
+#ifndef __COREDLL__
 _CRTIMP int  __cdecl    _rmtmp(void);
-
+#endif /* __COREDLL__ */
 #ifndef	NO_OLDNAMES
 _CRTIMP char* __cdecl	tempnam (const char*, const char*);
-_CRTIMP int __cdecl     rmtmp(void);
-#endif
+#ifndef __COREDLL__
+CRTIMP int __cdecl     rmtmp(void);
+#endif /* __COREDLL__ */
+#endif /* NO_OLDNAMES */
 #endif /* __STRICT_ANSI__ */
-#endif  /* Not __COREDLL__ */
 
 
 _CRTIMP int __cdecl	setvbuf (FILE*, char*, int, size_t);
@@ -522,6 +522,7 @@ _CRTIMP FILE* __cdecl	_wpopen (const wchar_t*, const wchar_t*);
 #endif	/* __MSVCRT__ */
 
 #ifdef __COREDLL__
+_CRTIMP wchar_t* __cdecl _wtempnam (const wchar_t*, const wchar_t*);
 __CRT_INLINE wint_t __cdecl	getwc(FILE* f) { return fgetwc(f); }
 __CRT_INLINE wint_t __cdecl	putwc(wint_t c, FILE* f) { return fputwc(c, f); }
 #endif
