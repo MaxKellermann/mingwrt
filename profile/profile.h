@@ -64,16 +64,14 @@
  * The canonical name for the counter function is `mcount', no _.  */
 void _mcount (void) asm ("mcount");
 #else
-/* The canonical name for the function is `_mcount' in both C and asm,
- * but some old asm code might assume it's `mcount'.  */
+/* The canonical name for the function is `_mcount' in both C and asm. */
 void _mcount (void);
-weak_alias (_mcount, mcount)
 #endif
 
-static void mcount_internal (unsigned long frompc, unsigned long selfpc);
+void mcount_internal (unsigned long frompc, unsigned long selfpc);
 
 #define _MCOUNT_DECL(frompc, selfpc) \
-	static void mcount_internal (unsigned long frompc, unsigned long selfpc)
+	void mcount_internal (unsigned long frompc, unsigned long selfpc)
 
 /* This macro/func MUST save r0, r1 because the compiler inserts
  * blind calls to _mount(), ignoring the fact that _mcount may
@@ -103,6 +101,13 @@ void _mcount (void)							\
 		  "ldmia	sp!, {r0, r1, r2, r3}");		\
 }
 #else
+/***************************************************************************
+ ***************************************************************************
+ *
+ * The stuff below doesn't mention a processor, but it's Cygwin so x86
+ *
+ ***************************************************************************
+ ***************************************************************************/
 /*
  * This file is taken from Cygwin distribution. Please keep it in sync.
  * The differences should be within __MINGW32__ guard.

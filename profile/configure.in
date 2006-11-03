@@ -52,7 +52,7 @@ case "$target_os" in
   # Do not build libm.a when building under Cygwin winsup. Otherwise, it'll
   # overwrite Cygwin's one. Likewise for libgmon.a.
   ;;
-*mingw32ce*)
+*cegcc* | *mingw32ce*)
   CRT_ID=3
   MNO_CYGWIN=
   RUNTIME=coredll

@@ -65,7 +65,7 @@ BOOL __atexit_init(void)
   first_atexit = (p_atexit_fn*) malloc (32 * sizeof (p_atexit_fn));
   if (first_atexit == NULL ) /* can't allocate memory */
   {
-#ifndef __COREDLL__
+#if defined(__MINGW32CE__) && !defined(__COREDLL__)
 	errno=ENOMEM;
 #endif
 	return FALSE;

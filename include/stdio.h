@@ -422,8 +422,9 @@ _CRTIMP int __cdecl	_fputchar (int);
 _CRTIMP FILE* __cdecl	_fdopen (int, const char*);
 _CRTIMP FILE* __cdecl	_fsopen(const char*, const char*, int);
 _CRTIMP int __cdecl	_fileno (FILE*);
-#endif
+#else
 _CRTIMP void* __cdecl _fileno (FILE*);
+#endif
 _CRTIMP int __cdecl	_fcloseall(void);
 #ifdef __MSVCRT__
 _CRTIMP int __cdecl	_getmaxstdio(void);

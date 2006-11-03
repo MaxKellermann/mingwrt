@@ -1,3 +1,14 @@
+2006-11-03  Danny Backx  <dannybackx@users.sourceforge.net>
+
+	* profile/gmon.c : Use the executable file name under CE to cook up
+	the file name that we put monitoring information in. This used to
+	be just "gmon.out", now if you run /apps/m1.exe it'll be /apps/m1.gmo
+
+	* atexit.c, include/wctype.h, include/stdio.h, include/ctype.h,
+	profile/configure, profile/gmon.c, profile/configure.in,
+	profile/profile.h : Port this code to both arm-wince-mingw32ce and
+	arm-wince-cegcc .
+
 2006-10-22  Pedro Alves  <pedro_alves@portugalmail.pt>
 
 	* configure.in [AC_CONFIG_SUBDIRS]: Add mingwex.

@@ -158,10 +158,12 @@ extern unsigned short** _imp___ctype;
 
 #ifdef __COREDLL__
 # define __ISCTYPE(c, mask)  _isctype(c, mask)
-#else
+#elif !defined(__CEGCC__)
   /* use  simple lookup if SB locale, else  _isctype()  */
 # define __ISCTYPE(c, mask)  (MB_CUR_MAX == 1 ? (_pctype[c] & mask) : _isctype(c, mask))
 #endif
+
+#ifdef	__ISCTYPE
 __CRT_INLINE int __cdecl isalnum(int c) {return __ISCTYPE(c, (_ALPHA|_DIGIT));}
 __CRT_INLINE int __cdecl isalpha(int c) {return __ISCTYPE(c, _ALPHA);}
 __CRT_INLINE int __cdecl iscntrl(int c) {return __ISCTYPE(c, _CONTROL);}
@@ -179,6 +181,7 @@ __CRT_INLINE int __cdecl isxdigit(int c) {return __ISCTYPE(c, _HEX);}
 __CRT_INLINE int __cdecl isblank (int c)
   {return (__ISCTYPE(c, _BLANK) || c == '\t');}
 #endif
+#endif	/* __ISCTYPE */
 
 /* these reproduce behaviour of lib underscored versions  */
 __CRT_INLINE int __cdecl _tolower(int c) {return ( c -'A'+'a');}
@@ -252,7 +255,7 @@ __CRT_INLINE int __cdecl iswupper(wint_t wc) {return (iswctype(wc,_UPPER));}
 __CRT_INLINE int __cdecl iswxdigit(wint_t wc) {return (iswctype(wc,_HEX));}
 #ifdef __COREDLL__
 __CRT_INLINE int __cdecl isleadbyte(int c) {return IsDBCSLeadByte(c); }
-#else
+#elif !defined(__CEGCC__)
 __CRT_INLINE int __cdecl isleadbyte(int c) {return (_pctype[(unsigned char)(c)] & _LEADBYTE);}
 #endif
 #if (defined (__STDC_VERSION__) && __STDC_VERSION__ >= 199901L) \

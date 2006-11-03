@@ -41,13 +41,13 @@ static char rcsid[] = "$OpenBSD: gmon.c,v 1.8 1997/07/23 21:11:27 kstailey Exp $
  */
 
 #ifndef __MINGW32CE__
-#include <fcntl.h>
+// #include <fcntl.h>
 #endif
 
 #include <stdlib.h>
 #include <stdio.h>
 #ifndef __MINGW32__
-#include <unistd.h>
+// #include <unistd.h>
 #include <sys/param.h>
 #endif
 #include <sys/types.h>
@@ -91,6 +91,10 @@ monstartup(lowpc, highpc)
 	register int o;
 	char *cp;
 	struct gmonparam *p = &_gmonparam;
+
+#if 0
+	MessageBoxW(0, L"monstartup", L"Hello", 0);
+#endif
 
 	/*
 	 * round lowpc and highpc to multiples of the density we're using
@@ -176,6 +180,10 @@ _mcleanup()
 	char dbuf[200];
 #endif
 
+#if 0
+	MessageBoxW(0, L"_mcleanup", L"Hello", 0);
+#endif
+
 	if (p->state == GMON_PROF_ERROR) {
 #ifdef	UNDER_CE
 #else
@@ -232,7 +240,34 @@ _mcleanup()
 		proffile = "gmon.out";
 	}
 #else
+#ifdef	UNDER_CE
+	/*
+	 * Provide for different file names than just "gmon.out".
+	 */
+	{
+#define	NAME_LEN	128
+		wchar_t	nlw[NAME_LEN];
+		char	nl[NAME_LEN];
+		int	len;
+
+		len = GetModuleFileNameW(NULL, nlw, NAME_LEN);
+		if (len == 0) {
+			proffile = "gmon.out";
+		} else {
+			if (wcstombs(nl, nlw, len) < 0) {
+				proffile = "gmon.out";
+			} else {
+				nl[len-3] = 'g';
+				nl[len-2] = 'm';
+				nl[len-1] = 'o';
+
+				proffile = &nl[0];
+			}
+		}
+	}
+#else
 	proffile = "gmon.out";
+#endif
 #endif
 
 #ifdef	UNDER_CE

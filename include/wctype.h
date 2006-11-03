@@ -140,7 +140,7 @@ __CRT_INLINE int __cdecl iswupper(wint_t wc) {return (iswctype(wc,_UPPER));}
 __CRT_INLINE int __cdecl iswxdigit(wint_t wc) {return (iswctype(wc,_HEX));}
 #ifdef __COREDLL__
 __CRT_INLINE int __cdecl isleadbyte(int c) {return IsDBCSLeadByte(c); }
-#else
+#elif !defined(__CEGCC__)
 __CRT_INLINE int __cdecl isleadbyte(int c) {return (_pctype[(unsigned char)(c)] & _LEADBYTE);}
 #endif
 
