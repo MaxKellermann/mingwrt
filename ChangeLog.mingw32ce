@@ -1,3 +1,14 @@
+2006-11-11  Pedro Alves  <pedro_alves@portugalmail.pt>
+
+	* mingwex/Makefile.in (WINCE_DISTFILES): Add fdopen.c, read.c, write.c,
+	open.c and lseek.c.
+	(WINCE_OBJS): Add fdopen.o, read.o, write.o, open.o and lseek.o.
+	* mingwex/wince/open.c: New file.
+	* mingwex/wince/lseek.c: New file.
+	* mingwex/wince/fdopen.c: New file.
+	* mingwex/wince/read.c: New file.
+	* mingwex/wince/write.c: New file.
+
 2006-11-03  Danny Backx  <dannybackx@users.sourceforge.net>
 
 	* profile/gmon.c : Use the executable file name under CE to cook up

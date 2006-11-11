@@ -85,7 +85,7 @@ COMPLEX_DISTFILES = \
 
 WINCE_DISTFILES = \
 	asctime.c freopen.c gmtime.c localtime.c mktime.c strftime.c time.c \
-	tempnam.c unlink.c wcsftime.c
+	tempnam.c unlink.c wcsftime.c fdopen.c read.c write.c open.c lseek.c
 
 CC = @CC@
 # FIXME: Which is it, CC or CC_FOR_TARGET?
@@ -185,7 +185,7 @@ COMPLEX_OBJS = \
 	ctan.o ctanf.o ctanl.o ctanh.o ctanhf.o ctanhl.o
 WINCE_OBJS = \
 	asctime.o freopen.o gmtime.o localtime.o mktime.o strftime.o time.o \
-	tempnam.o unlink.o wcsftime.o
+	tempnam.o unlink.o wcsftime.o fdopen.o read.o write.o open.o lseek.o
 
 ifneq (,$(findstring wince,$(target_alias)))
 LIB_OBJS = $(WINCE_OBJS)
