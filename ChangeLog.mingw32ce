@@ -1,5 +1,9 @@
 2006-11-12  Pedro Alves  <pedro_alves@portugalmail.pt>
 
+	* mingwex/wince/lseek.c: Handle invalid whence.
+
+2006-11-12  Pedro Alves  <pedro_alves@portugalmail.pt>
+
 	* mingwex/wince/close.c: New file.
 	* mingwex/Makefile.in (WINCE_DISTFILES): Add close.c.
 	(WINCE_OBJS): Add close.o.

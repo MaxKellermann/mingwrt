@@ -4,7 +4,7 @@
 long
 _lseek (int fildes, long offset, int whence)
 {
-  DWORD mode = 0;
+  DWORD mode;
   switch (whence)
     {
     case SEEK_SET:
@@ -16,6 +16,9 @@ _lseek (int fildes, long offset, int whence)
     case SEEK_END:
       mode = FILE_END;
       break;
+    default:
+     /* Specify an invalid mode so SetFilePointer catches it.  */
+      mode = (DWORD)-1;
     }
   return (long) SetFilePointer ((HANDLE) fildes, offset, NULL, mode);
 }
