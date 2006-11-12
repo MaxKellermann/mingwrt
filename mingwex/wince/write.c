@@ -2,7 +2,7 @@
 #include <unistd.h>
 
 int
-write (int fildes, const void *buf, unsigned int bufsize)
+_write (int fildes, const void *buf, unsigned int bufsize)
 {
   DWORD NumberOfBytesWritten;
   if (bufsize > 0x7fffffff)

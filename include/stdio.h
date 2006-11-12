@@ -419,7 +419,9 @@ _CRTIMP int __cdecl	_flushall (void);
 #ifndef __COREDLL__
 _CRTIMP int __cdecl	_fgetchar (void);
 _CRTIMP int __cdecl	_fputchar (int);
+#endif
 _CRTIMP FILE* __cdecl	_fdopen (int, const char*);
+#ifndef __COREDLL__
 _CRTIMP FILE* __cdecl	_fsopen(const char*, const char*, int);
 _CRTIMP int __cdecl	_fileno (FILE*);
 #else
@@ -432,10 +434,10 @@ _CRTIMP int __cdecl	_setmaxstdio(int);
 #endif
 
 #ifndef _NO_OLDNAMES
+_CRTIMP FILE* __cdecl	fdopen (int, const char*);
 #ifndef __COREDLL__
 _CRTIMP int __cdecl	fgetchar (void);
 _CRTIMP int __cdecl	fputchar (int);
-_CRTIMP FILE* __cdecl	fdopen (int, const char*);
 _CRTIMP int __cdecl	fileno (FILE*);
 #else
 _CRTIMP void* __cdecl	fileno (FILE*);

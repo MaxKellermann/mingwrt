@@ -200,10 +200,11 @@ extern "C" {
 #endif
 
 #ifndef __COREDLL__
-
 _CRTIMP int __cdecl _access (const char*, int);
 _CRTIMP int __cdecl _chsize (int, long);
+#endif /* __COREDLL__ */
 _CRTIMP int __cdecl _close (int);
+#ifndef __COREDLL__
 _CRTIMP int __cdecl _commit(int);
 
 /* NOTE: The only significant bit in unPermissions appears to be bit 7 (0x80),
@@ -227,15 +228,19 @@ _CRTIMP int __cdecl _eof (int);
 
 /* LK_... locking commands defined in sys/locking.h. */
 _CRTIMP int __cdecl _locking (int, int, long);
+#endif /* __COREDLL__ */
 
 _CRTIMP long __cdecl _lseek (int, long, int);
 
 /* Optional third argument is unsigned unPermissions. */
 _CRTIMP int __cdecl _open (const char*, int, ...);
 
+#ifndef __COREDLL__
 _CRTIMP int __cdecl _open_osfhandle (long, int);
 _CRTIMP int __cdecl _pipe (int *, unsigned int, int);
+#endif /* __COREDLL__ */
 _CRTIMP int __cdecl _read (int, void*, unsigned int);
+#ifndef __COREDLL__
 _CRTIMP int __cdecl _setmode (int, int);
 
 /* SH_... flags for nShFlags defined in share.h
@@ -247,9 +252,7 @@ _CRTIMP long __cdecl _tell (int);
 _CRTIMP int __cdecl _umask (int);
 #endif /* __COREDLL__ */
 _CRTIMP int __cdecl _unlink (const char*);
-#ifndef __COREDLL__
 _CRTIMP int __cdecl _write (int, const void*, unsigned int);
-#endif /* __COREDLL__ */
 
 /* Wide character versions. Also declared in wchar.h. */
 /* Not in crtdll.dll */
@@ -284,25 +287,27 @@ _CRTIMP intptr_t __cdecl _wfindnext64(intptr_t, struct __wfinddata64_t*);
 #ifndef __COREDLL__
 _CRTIMP int __cdecl access (const char*, int);
 _CRTIMP int __cdecl chsize (int, long );
+#endif /* __COREDLL__ */
 _CRTIMP int __cdecl close (int);
+#ifndef __COREDLL__
 _CRTIMP int __cdecl creat (const char*, int);
 _CRTIMP int __cdecl dup (int);
 _CRTIMP int __cdecl dup2 (int, int);
 _CRTIMP int __cdecl eof (int);
 _CRTIMP long __cdecl filelength (int);
 _CRTIMP int __cdecl isatty (int);
+#endif /* __COREDLL__ */
 _CRTIMP long __cdecl lseek (int, long, int);
 _CRTIMP int __cdecl open (const char*, int, ...);
 _CRTIMP int __cdecl read (int, void*, unsigned int);
+#ifndef __COREDLL__
 _CRTIMP int __cdecl setmode (int, int);
 _CRTIMP int __cdecl sopen (const char*, int, int, ...);
 _CRTIMP long __cdecl tell (int);
 _CRTIMP int __cdecl umask (int);
 #endif /* __COREDLL__ */
 _CRTIMP int __cdecl unlink (const char*);
-#ifndef __COREDLL__
 _CRTIMP int __cdecl write (int, const void*, unsigned int);
-#endif /* __COREDLL__ */
 #endif /* _UWIN */
 
 /* Wide character versions. Also declared in wchar.h. */

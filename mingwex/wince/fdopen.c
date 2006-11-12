@@ -4,7 +4,7 @@
 #define MAX_MODE 64
 
 FILE *
-fdopen (int fildes, const char *mode)
+_fdopen (int fildes, const char *mode)
 {
   FILE *f;
   wchar_t wmode[MAX_MODE];

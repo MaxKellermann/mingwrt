@@ -2,7 +2,7 @@
 #include <unistd.h>
 
 int
-read (int fildes, void *buf, unsigned int bufsize)
+_read (int fildes, void *buf, unsigned int bufsize)
 {
   DWORD NumberOfBytesRead;
   if (bufsize > 0x7fffffff)

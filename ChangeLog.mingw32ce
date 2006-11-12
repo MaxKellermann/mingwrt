@@ -1,5 +1,19 @@
 2006-11-11  Pedro Alves  <pedro_alves@portugalmail.pt>
 
+	* mingwex/wince/open.c (open): Rename to _open.
+	* mingwex/wince/lseek.c (lseek): Rename to _lseek.
+	* mingwex/wince/fdopen.c (fdopen): Rename to _fdopen.
+	* mingwex/wince/read.c (read): Rename to _read.
+	* mingwex/wince/write.c (write): Rename to _write.
+	* include/fcntl.h: Enable file.
+	* include/io.h (_open, open, lseek, _lseek, 
+	read, _read, write, _write): Unhide.
+	* include/stdio.h (fdopen, _fdopen): Unhide.
+	* include/unistd.h: Enable file.
+	* moldname.def.in (open, lseek, read, write): Unhide.
+
+2006-11-11  Pedro Alves  <pedro_alves@portugalmail.pt>
+
 	* mingwex/Makefile.in (WINCE_DISTFILES): Add fdopen.c, read.c, write.c,
 	open.c and lseek.c.
 	(WINCE_OBJS): Add fdopen.o, read.o, write.o, open.o and lseek.o.

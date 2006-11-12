@@ -4,11 +4,6 @@
  * unistd.h maps (roughly) to io.h
  */
 
-#ifdef __COREDLL__
-/* No such file on Windows CE.  */
-# include_next <unistd.h>
-#else /* __COREDLL__ */
-
 #ifndef _UNISTD_H
 #define _UNISTD_H
 
@@ -36,5 +31,3 @@ __CRT_INLINE int ftruncate(int __fd, off_t __length)
 #endif
 
 #endif /* _UNISTD_H */
-
-#endif  /* __COREDLL__ */

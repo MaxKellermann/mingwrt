@@ -2,7 +2,7 @@
 #include <unistd.h>
 
 long
-lseek (int fildes, long offset, int whence)
+_lseek (int fildes, long offset, int whence)
 {
   DWORD mode = 0;
   switch (whence)

@@ -3,7 +3,7 @@
 #include <fcntl.h>
 
 int
-open (const char *path, int oflag, ...)
+_open (const char *path, int oflag, ...)
 {
   wchar_t wpath[MAX_PATH];
   DWORD fileaccess;
