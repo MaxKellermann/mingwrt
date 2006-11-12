@@ -1,3 +1,9 @@
+2006-11-12  Pedro Alves  <pedro_alves@portugalmail.pt>
+
+	* mingwex/wince/close.c: New file.
+	* mingwex/Makefile.in (WINCE_DISTFILES): Add close.c.
+	(WINCE_OBJS): Add close.o.
+
 2006-11-11  Pedro Alves  <pedro_alves@portugalmail.pt>
 
 	* mingwex/wince/open.c (open): Rename to _open.
