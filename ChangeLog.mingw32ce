@@ -1,3 +1,8 @@
+2006-11-13  Pedro Alves  <pedro_alves@portugalmail.pt>
+
+	* profile/profile.h: Use __arm__ instead of ARM.
+	* profile/profil.c: Likewise.
+
 2006-11-12  Pedro Alves  <pedro_alves@portugalmail.pt>
 
 	* include/unistd.h: Hide ftruncate.

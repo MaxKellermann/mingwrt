@@ -35,7 +35,7 @@
  *	@(#)profile.h	8.1 (Berkeley) 6/11/93
  */
 
-#ifdef	ARM
+#ifdef __arm__
 /* Machine-dependent definitions for profiling support.  ARM version.
  * Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
  * This file is part of the GNU C Library.

@@ -42,7 +42,7 @@ get_thrpc (HANDLE thr)
     return (u_long) - 1;
   ctx.ContextFlags = CONTEXT_CONTROL | CONTEXT_INTEGER;
   pc = (u_long) - 1;
-#ifdef	ARM
+#ifdef __arm__
   if (GetThreadContext (thr, &ctx))
     pc = ctx.Pc;
 #else
@@ -117,7 +117,7 @@ profile_on (struct profinfo *p)
 			GetCurrentProcess (), &p->targthr, 0, FALSE,
 			DUPLICATE_SAME_ACCESS))
     {
-#ifndef	ARM
+#ifndef	__arm__
       errno = ESRCH;
 #endif
       return -1;
@@ -135,7 +135,7 @@ profile_on (struct profinfo *p)
     {
       CloseHandle (p->targthr);
       p->targthr = 0;
-#ifndef	ARM
+#ifndef	__arm__
       errno = EAGAIN;
 #endif
       return -1;
@@ -163,7 +163,7 @@ profile_ctl (struct profinfo * p, char *samples, size_t size,
 
   if (scale > 65536)
     {
-#ifndef	ARM
+#ifndef	__arm__
       errno = EINVAL;
 #endif
       return -1;
