@@ -8,3 +8,9 @@ _close (int fildes)
     return 0;
   return -1;
 }
+
+int
+close (int fildes)
+{
+  return _close (fildes);
+}

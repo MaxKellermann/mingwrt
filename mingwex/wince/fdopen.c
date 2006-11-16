@@ -15,3 +15,9 @@ _fdopen (int fildes, const char *mode)
   f = _wfdopen (fildes, wmode);
   return f;
 }
+
+FILE *
+fdopen (int fildes, const char *mode)
+{
+  return _fdopen (fildes, mode);
+}

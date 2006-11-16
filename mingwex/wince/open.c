@@ -2,8 +2,8 @@
 #include <unistd.h>
 #include <fcntl.h>
 
-int
-_open (const char *path, int oflag, ...)
+static int
+vopen (const char *path, int oflag, va_list ap)
 {
   wchar_t wpath[MAX_PATH];
   DWORD fileaccess;
@@ -71,4 +71,26 @@ _open (const char *path, int oflag, ...)
     SetFilePointer (hnd, 0, NULL, FILE_END);
 
   return (int) hnd;
+}
+
+int
+_open (const char *path, int oflag, ...)
+{
+  va_list ap;
+  int ret;
+  va_start (ap, oflag);
+  ret = vopen (path, oflag, ap);
+  va_end (ap);
+  return ret;
+}
+
+int
+open (const char *path, int oflag, ...)
+{
+  va_list ap;
+  int ret;
+  va_start (ap, oflag);
+  ret = vopen (path, oflag, ap);
+  va_end (ap);
+  return ret;
 }

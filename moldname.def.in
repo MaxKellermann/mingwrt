@@ -29,9 +29,7 @@ access
 chdir
 chmod
 chsize
-#endif /* __COREDLL__ */
 close
-#ifndef __COREDLL__
 creat
 cwait
 #endif /* __COREDLL__ */
@@ -85,25 +83,21 @@ itoa
 kbhit
 lfind
 lsearch
-#endif /* __COREDLL__ */
 lseek
+#endif /* __COREDLL__ */
 ltoa
 memccpy
 memicmp
 #ifndef __COREDLL__
 mkdir
 mktemp
-#endif /* __COREDLL__ */
 open
-#ifndef __COREDLL__
 pclose
 popen
 putch
 putenv
 putw
-#endif /* __COREDLL__ */
 read
-#ifndef __COREDLL__
 rmdir
 rmtmp
 searchenv
@@ -166,7 +160,9 @@ wcsupr
 #if  (__MSVCRT__)
 wpopen
 #endif
+#ifndef __COREDLL__
 write
+#endif
 ; non-ANSI functions declared in math.h
 j0
 j1

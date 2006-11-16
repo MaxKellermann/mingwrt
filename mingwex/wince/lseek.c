@@ -17,8 +17,14 @@ _lseek (int fildes, long offset, int whence)
       mode = FILE_END;
       break;
     default:
-     /* Specify an invalid mode so SetFilePointer catches it.  */
+      /* Specify an invalid mode so SetFilePointer catches it.  */
       mode = (DWORD)-1;
     }
   return (long) SetFilePointer ((HANDLE) fildes, offset, NULL, mode);
+}
+
+long
+lseek (int fildes, long offset, int whence)
+{
+  return _lseek (fildes, offset, whence);
 }
