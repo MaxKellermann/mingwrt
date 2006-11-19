@@ -11,3 +11,9 @@ _write (int fildes, const void *buf, unsigned int bufsize)
     return -1;
   return (int) NumberOfBytesWritten;
 }
+
+int
+write (int fildes, const void *buf, unsigned int bufsize)
+{
+  return _write (fildes, buf, bufsize);
+}

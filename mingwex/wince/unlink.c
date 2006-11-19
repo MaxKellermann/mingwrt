@@ -10,3 +10,9 @@ _unlink (const char *file)
     return 0;
   return -1;
 }
+
+int
+unlink (const char *file)
+{
+  return _unlink (file);
+}

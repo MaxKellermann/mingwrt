@@ -1,3 +1,10 @@
+2006-11-19  Pedro Alves  <pedro_alves@portugalmail.pt>
+
+	* mingwex/wince/unlink.c (unlink): New function, implementing an
+	alias for the underscored version.
+	* mingwex/wince/read.c (read): Likewise.
+	* mingwex/wince/write.c (write): Likewise.
+
 2006-11-16  Pedro Alves  <pedro_alves@portugalmail.pt>
 
 	* moldname.def.in (open, lseek, read, write): Don't export on
@@ -8,8 +15,6 @@
 	* mingwex/wince/lseek.c (lseek): New function, implementing an
 	alias for the underscored version.
 	* mingwex/wince/fdopen.c (fdopen): Likewise.
-	* mingwex/wince/read.c (read): Likewise.
-	* mingwex/wince/write.c (write): Likewise.
 
 2006-11-13  Pedro Alves  <pedro_alves@portugalmail.pt>
 

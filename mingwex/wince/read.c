@@ -11,3 +11,9 @@ _read (int fildes, void *buf, unsigned int bufsize)
     return -1;
   return (int) NumberOfBytesRead;
 }
+
+int
+read (int fildes, void *buf, unsigned int bufsize)
+{
+  return _read (fildes, buf, bufsize);
+}
