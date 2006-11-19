@@ -1,5 +1,9 @@
 2006-11-19  Pedro Alves  <pedro_alves@portugalmail.pt>
 
+	* include/stdio.h (rmtmp): Fix typo.
+
+2006-11-19  Pedro Alves  <pedro_alves@portugalmail.pt>
+
 	* mingwex/wince/unlink.c (unlink): New function, implementing an
 	alias for the underscored version.
 	* mingwex/wince/read.c (read): Likewise.

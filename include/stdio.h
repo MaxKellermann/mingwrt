@@ -215,7 +215,7 @@ _CRTIMP int  __cdecl    _rmtmp(void);
 #ifndef	NO_OLDNAMES
 _CRTIMP char* __cdecl	tempnam (const char*, const char*);
 #ifndef __COREDLL__
-CRTIMP int __cdecl     rmtmp(void);
+_CRTIMP int __cdecl     rmtmp(void);
 #endif /* __COREDLL__ */
 #endif /* NO_OLDNAMES */
 #endif /* __STRICT_ANSI__ */
