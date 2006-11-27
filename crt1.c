@@ -14,17 +14,12 @@
 #define __IN_MINGW_RUNTIME 
 #include <stdlib.h>
 #include <stdio.h>
-#ifndef __COREDLL__
 #include <io.h>
-#endif
 #include <process.h>
 #include <float.h>
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
-
-#ifndef __COREDLL__
 #include <signal.h>
-#endif
 
 /* NOTE: The code for initializing the _argv, _argc, and environ variables
  *       has been moved to a separate .c file which is included in both
@@ -36,14 +31,7 @@
 
 extern void _pei386_runtime_relocator (void);
 
-#ifndef UNDER_CE
 extern int main (int, char **, char **);
-#else
-/* No environ.  */
-extern int main (int, char **);
-/* No atexit on coredll, we must initialize our private version.  */
-BOOL __atexit_init(void);
-#endif
 
 /*
  * Must have the correct app type for MSVCRT. 
@@ -56,8 +44,6 @@ BOOL __atexit_init(void);
 __MINGW_IMPORT void __set_app_type(int);
 #endif /* __MSVCRT__ */
 
-#ifndef __COREDLL__
-
 /*  Global _fmode for this .exe, not the one in msvcrt.dll,
     The default is set in txtmode.o in libmingw32.a */
 /* Override the dllimport'd declarations in stdlib.h */
@@ -66,6 +52,7 @@ extern int _fmode;
 #ifdef __MSVCRT__
 extern int* __p__fmode(void); /* To access the dll _fmode */
 #endif
+
 /*
  * Setup the default file handles to have the _CRT_fmode mode, as well as
  * any new files created by the user.
@@ -102,15 +89,12 @@ _mingw32_init_fmode (void)
     }
 
     /*  Now sync  the dll _fmode to the  one for this .exe.  */
-#if defined (__MSVCRT__)
+#ifdef __MSVCRT__
     *__p__fmode() = _fmode;	
-#elif defined (__CRTDLL__)
-    *__IMP(_fmode_dll) = _fmode;
+#else
+    *_imp___fmode_dll = _fmode;
 #endif
 }
-#endif
-
-#ifndef UNDER_CE
 
 /* This function will be called when a trap occurs. Thanks to Jacob
    Navia for his contribution. */
@@ -193,17 +177,14 @@ _gnu_exception_handler (EXCEPTION_POINTERS * exception_data)
   return action;
 }
 
-#endif
-
 /*
- * The function __mingw_CRTStartup is called from the entry point for all programs.
+ * The function mainCRTStartup is the entry point for all console programs.
  */
 static void  __attribute__((noreturn))
 __mingw_CRTStartup (void)
 {
   int nRet;
 
-#ifdef __i386__
   /*
    * Set up the top-level exception handler so that signal handling
    * works as expected. The mapping between ANSI/POSIX signals and
@@ -211,10 +192,6 @@ __mingw_CRTStartup (void)
    * 
    */
   SetUnhandledExceptionFilter (_gnu_exception_handler);
-#elif defined (__arm__)
-  /* Windows CE on RISC architectures uses table based seh. 
-     We could install a top-level handler using the same technique as cegcc.  */
-#endif
 
   /*
    * Initialize floating point unit.
@@ -227,7 +204,6 @@ __mingw_CRTStartup (void)
    */
   _mingw32_init_mainargs ();
 
-#ifndef __COREDLL__
   /*
    * Sets the default file mode.
    * If _CRT_fmode is set, also set mode for stdin, stdout
@@ -235,23 +211,13 @@ __mingw_CRTStartup (void)
    * NOTE: DLLs don't do this because that would be rude!
    */
   _mingw32_init_fmode ();
-#endif
   
    /* Adust references to dllimported data that have non-zero offsets.  */
   _pei386_runtime_relocator ();
 
-#ifdef __i386__
   /* Align the stack to 16 bytes for the sake of SSE ops in main
      or in functions inlined into main.  */
   asm  __volatile__  ("andl $-16, %%esp" : : : "%esp");
-#endif
-
-#ifdef __COREDLL__
-  /*
-   * Initialize the atexit table.
-  */
-  __atexit_init();
-#endif
 
   /*
    * Call the main function. If the user does not supply one
@@ -259,12 +225,7 @@ __mingw_CRTStartup (void)
    * that one calls WinMain. See main.c in the 'lib' dir
    * for more details.
    */
-#ifndef UNDER_CE
   nRet = main (_argc, _argv, environ);
-#else
-  /* Windows CE has no environ.  */
-  nRet = main (_argc, _argv);
-#endif
 
   /*
    * Perform exit processing for the C library. This means
@@ -275,7 +236,6 @@ __mingw_CRTStartup (void)
   ExitProcess (nRet);
 }
 
-#ifndef UNDER_CE
 /*
  * The function mainCRTStartup is the entry point for all console programs.
  */
@@ -287,8 +247,6 @@ mainCRTStartup (void)
 #endif
   __mingw_CRTStartup ();
 }
-
-#endif
 
 /*
  * For now the GUI startup function is the same as the console one.
@@ -304,24 +262,20 @@ WinMainCRTStartup (void)
   __mingw_CRTStartup ();
 }
 
-#ifndef UNDER_CE
-
 /*
  *  We force use of library version of atexit, which is only
- *  visible in import lib as __IMP(atexit)
+ *  visible in import lib as _imp__atexit
  */
-extern int (*__IMP(atexit))(void (*)(void));
+extern int (*_imp__atexit)(void (*)(void));
 int atexit (void (* pfn )(void) )
 {
-   return ( (*__IMP(atexit))(pfn));
+  return ( (*_imp__atexit)(pfn));
 }
 
 /* Likewise for non-ANSI _onexit */
-extern _onexit_t (*__IMP(_onexit))(_onexit_t);
+extern _onexit_t (*_imp___onexit)(_onexit_t);
 _onexit_t
 _onexit (_onexit_t pfn )
 {
-   return (*__IMP(_onexit))(pfn);
+  return (*_imp___onexit)(pfn);
 }
-
-#endif

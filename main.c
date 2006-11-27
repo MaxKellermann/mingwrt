@@ -16,30 +16,19 @@
 
 #define ISSPACE(a)	(a == ' ' || a == '\t')
 
-#ifndef UNDER_CE
 extern int PASCAL WinMain (HINSTANCE hInst, HINSTANCE hPrevInst, 
                            LPSTR szCmdLine, int nShow);
-#else
-extern int __cdecl WinMain (HINSTANCE hInst, HINSTANCE hPrevInst, 
-                           LPWSTR szCmdLine, int nShow);
-
-#endif
 
 int
 main (int argc, char *argv[], char *environ[])
 {
+  char *szCmd;
+  STARTUPINFO startinfo;
   int nRet;
 
   /* Get the command line passed to the process. */
-#ifndef UNDER_CE
-  char *szCmd;
-  STARTUPINFOA startinfo;
   szCmd = GetCommandLineA ();
   GetStartupInfoA (&startinfo);
-#else
-  wchar_t *szCmd;
-  szCmd = GetCommandLineW ();
-#endif
 
   /* Strip off the name of the application and any leading
    * whitespace. */
@@ -81,13 +70,9 @@ main (int argc, char *argv[], char *environ[])
 	}
     }
 
-#ifndef UNDER_CE
   nRet = WinMain (GetModuleHandle (NULL), NULL, szCmd,
 		  (startinfo.dwFlags & STARTF_USESHOWWINDOW) ?
 		  startinfo.wShowWindow : SW_SHOWDEFAULT);
-#else
-  nRet = WinMain (GetModuleHandle (NULL), NULL, szCmd, SW_SHOW);
-#endif
 
   return nRet;
 }

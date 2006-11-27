@@ -167,13 +167,13 @@ CRT0S += crt1.o dllcrt1.o CRT_fp8.o CRT_fp10.o txtmode.o binmode.o
 endif
 
 MINGW_OBJS = CRTglob.o CRTfmode.o CRTinit.o dllmain.o gccmain.o \
-	     main.o crtst.o mthr_stub.o \
+	     crtst.o mthr_stub.o \
 	     pseudo-reloc.o pseudo-reloc-list.o cpu_features.o
 
 ifneq (,$(findstring wince,$(target_alias)))
-MINGW_OBJS += abort.o atexit.o assert.o
+MINGW_OBJS += winmain_ce.o abort.o atexit.o assert.o
 else
-MINGW_OBJS += CRT_fp10.o txtmode.o
+MINGW_OBJS += main.o CRT_fp10.o txtmode.o
 endif
 
 MOLD_OBJS = isascii.o iscsym.o iscsymf.o toascii.o \
@@ -498,8 +498,13 @@ CRT_noglob.o: CRT_noglob.c
 CRTfmode.o: CRTfmode.c
 CRTglob.o: CRTglob.c
 CRTinit.o: CRTinit.c
+ifneq (,$(findstring wince,$(target_alias)))
+crt1.o: crt1_ce.c
+crt2.o: crt1_ce.c
+else
 crt1.o: crt1.c init.c
 crt2.o: crt1.c init.c
+endif
 crtmt.o: crtmt.c
 crtst.o: crtst.c
 ctype_old.o: ctype_old.c
@@ -507,6 +512,7 @@ dllcrt1.o: dllcrt1.c
 dllcrt2.o: dllcrt1.c
 dllmain.o: dllmain.c
 main.o: main.c
+winmain_ce.o: winmain_ce.c
 oldnames.o: oldnames.c
 string_old.o: string_old.c
 CRT_fp8.o: CRT_fp8.c

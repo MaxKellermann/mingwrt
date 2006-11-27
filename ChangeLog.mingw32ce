@@ -1,3 +1,14 @@
+2006-11-25  Kevin O'Connor  <kevin@koconnor.net>
+
+	* crt1_ce.c: New file. Implement WinMainCRTStartup for CE
+	programs in its own CE specific file.
+	* winmain_ce.c: New file. Implement a WinMain function that calls
+	main, for those CE programs that define main instead of WinMain.
+	* Makefile.in: Modify so that these two new CE specific files are
+	only built for mingw32ce.
+	* crt1.c, init.c, main.c: Revert them back to their x86 MinGW
+	originals.
+
 2006-11-19  Pedro Alves  <pedro_alves@portugalmail.pt>
 
 	* include/stdio.h (rmtmp): Fix typo.
