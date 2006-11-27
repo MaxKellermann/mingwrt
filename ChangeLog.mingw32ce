@@ -1,4 +1,10 @@
-2006-11-25  Kevin O'Connor  <kevin@koconnor.net>
+2006-11-27  Pedro Alves  <pedro_alves@portugalmail.pt>
+
+	* Makefile.in: Adjust so mingw32ce uses crt3.o and dllcrt3.o.
+	* dllcrt1.c: Remove extra space in comment.
+	* crt3.c: Rename from crt1_ce.c.
+
+2006-11-27  Kevin O'Connor  <kevin@koconnor.net>
 
 	* crt1_ce.c: New file. Implement WinMainCRTStartup for CE
 	programs in its own CE specific file.

@@ -93,7 +93,7 @@ else
    libdir=
 endif
 
-# Either crtdll (CRT_ID 1) or msvcrt (CRT_ID 2).
+# Either crtdll (CRT_ID 1) or msvcrt (CRT_ID 2) or coredll (CRT_ID 3).
 RUNTIME = @RUNTIME@
 CRT_ID = @CRT_ID@
 
@@ -159,11 +159,11 @@ FLAGS_TO_PASS:=\
 	TARFLAGS="$(TARFLAGS)" \
 	TARFILEEXT="$(TARFILEEXT)"
 
-CRT0S = crt2.o dllcrt2.o CRT_noglob.o crtmt.o crtst.o
+CRT0S = CRT_noglob.o crtmt.o crtst.o
 ifneq (,$(findstring wince,$(target_alias)))
-CRT0S +=
+CRT0S += crt3.o dllcrt3.o
 else
-CRT0S += crt1.o dllcrt1.o CRT_fp8.o CRT_fp10.o txtmode.o binmode.o
+CRT0S += crt1.o dllcrt1.o crt2.o dllcrt2.o CRT_fp8.o CRT_fp10.o txtmode.o binmode.o
 endif
 
 MINGW_OBJS = CRTglob.o CRTfmode.o CRTinit.o dllmain.o gccmain.o \
@@ -336,23 +336,15 @@ libceoldname.a: moldname-coredll.def $(MOLD_OBJS)
 	$(AR) rc $@ $(MOLD_OBJS)
 	$(RANLIB) $@
 
-ifneq (,$(findstring wince,$(target_alias)))
-# The special rules are necessary.
-crt1.o dllcrt1.o:
-	$(CC) -c -D__COREDLL__ -U__CRTDLL__ -U__MSVCRT__ $(ALL_CFLAGS) $< -o $@
-
-crt2.o dllcrt2.o:
-	$(CC) -c -D__COREDLL__ -U__CRTDLL__ -U__MSVCRT__ $(ALL_CFLAGS) $< -o $@
-
-else
-
 # The special rules are necessary.
 crt1.o dllcrt1.o:
 	$(CC) -c -D__CRTDLL__ -U__MSVCRT__ $(ALL_CFLAGS) $< -o $@
 
 crt2.o dllcrt2.o:
 	$(CC) -c -D__MSVCRT__ -U__CRTDLL__ $(ALL_CFLAGS) $< -o $@
-endif
+
+crt3.o dllcrt3.o:
+	$(CC) -c -D__COREDLL__ -U__CRTDLL__ -U__MSVCRT__ $(ALL_CFLAGS) $< -o $@
 
 TEST_H_OPTIONS = $(ALL_CFLAGS) -Wall -W -Wsystem-headers -c \
 	$(srcdir)/test_headers.c -o test_headers.o
@@ -498,18 +490,15 @@ CRT_noglob.o: CRT_noglob.c
 CRTfmode.o: CRTfmode.c
 CRTglob.o: CRTglob.c
 CRTinit.o: CRTinit.c
-ifneq (,$(findstring wince,$(target_alias)))
-crt1.o: crt1_ce.c
-crt2.o: crt1_ce.c
-else
 crt1.o: crt1.c init.c
 crt2.o: crt1.c init.c
-endif
+crt3.o: crt3.c
 crtmt.o: crtmt.c
 crtst.o: crtst.c
 ctype_old.o: ctype_old.c
 dllcrt1.o: dllcrt1.c
 dllcrt2.o: dllcrt1.c
+dllcrt3.o: dllcrt1.c
 dllmain.o: dllmain.c
 main.o: main.c
 winmain_ce.o: winmain_ce.c

@@ -40,7 +40,7 @@ static p_atexit_fn* first_atexit;
 static p_atexit_fn* next_atexit;
 
 static void __dll_exit (void);
-/* This  is based on the function in the Wine project's exit.c */
+/* This is based on the function in the Wine project's exit.c */
 p_atexit_fn __dllonexit (p_atexit_fn, p_atexit_fn**, p_atexit_fn**);
 #else /* __COREDLL__ */
 void __dll_exit (void);
