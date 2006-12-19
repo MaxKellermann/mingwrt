@@ -14,6 +14,14 @@
 BOOL WINAPI 
 DllMain (HANDLE hDll, DWORD dwReason, LPVOID lpReserved)
 {
+  if (dwReason == DLL_PROCESS_ATTACH)
+  {
+    /* Since the user didn't supply a DllMain, we might as well
+       suppress calls to it on thread creation and destruction
+       (DLL_THREAD_ATTACH and DLL_THREAD_DETACH notifications). 
+       Besides the speed optimization, this avoids paging
+       in DllMain, thus reducing it's working code set.  */
+    DisableThreadLibraryCalls (hDll);
+  }
   return TRUE;
 }
-

@@ -1,3 +1,7 @@
+2006-12-19  Pedro Alves  <pedro_alves@portugalmail.pt>
+
+	* dllmain.c: Call DisableThreadLibraryCalls on DLL_PROCESS_ATTACH.
+
 2006-11-27  Pedro Alves  <pedro_alves@portugalmail.pt>
 
 	* Makefile.in: Adjust so mingw32ce uses crt3.o and dllcrt3.o.
