@@ -20,7 +20,7 @@ DllMain (HANDLE hDll, DWORD dwReason, LPVOID lpReserved)
        suppress calls to it on thread creation and destruction
        (DLL_THREAD_ATTACH and DLL_THREAD_DETACH notifications). 
        Besides the speed optimization, this avoids paging
-       in DllMain, thus reducing it's working code set.  */
+       in DllMain, thus reducing its working code set.  */
     DisableThreadLibraryCalls (hDll);
   }
   return TRUE;
