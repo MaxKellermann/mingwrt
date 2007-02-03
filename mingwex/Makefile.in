@@ -85,7 +85,9 @@ COMPLEX_DISTFILES = \
 
 WINCE_DISTFILES = \
 	asctime.c freopen.c gmtime.c localtime.c mktime.c strftime.c time.c \
-	tempnam.c unlink.c wcsftime.c fdopen.c read.c write.c open.c lseek.c close.c
+	tempnam.c unlink.c wcsftime.c fdopen.c read.c write.c open.c lseek.c \
+	close.c isalnum.c isalpha.c iscntrl.c isgraph.c islower.c isprint.c \
+	ispunct.c isspace.c isupper.c isxdigit.c _tolower.c _toupper.c
 
 CC = @CC@
 # FIXME: Which is it, CC or CC_FOR_TARGET?
@@ -186,7 +188,9 @@ COMPLEX_OBJS = \
 WINCE_OBJS = \
 	asctime.o freopen.o gmtime.o localtime.o mktime.o strftime.o time.o \
 	tempnam.o unlink.o wcsftime.o fdopen.o read.o write.o open.o lseek.o \
-	close.o
+	close.o isalnum.o isalpha.o iscntrl.o isgraph.o islower.o isprint.o \
+	ispunct.o isspace.o isupper.o isxdigit.o _tolower.o _toupper.o
+
 
 ifneq (,$(findstring wince,$(target_alias)))
 LIB_OBJS = $(WINCE_OBJS)
@@ -276,6 +280,6 @@ dist:
 	mkdir $(distdir)/mingwex/wince
 	chmod 755 $(distdir)/mingwex/wince
 	@for i in $(WINCE_DISTFILES); do\
-		cp -p $(srcdir)/complex/$$i $(distdir)/mingwex/wince/$$i ; \
+		cp -p $(srcdir)/wince/$$i $(distdir)/mingwex/wince/$$i ; \
 	done
 

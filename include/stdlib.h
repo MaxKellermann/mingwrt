@@ -473,9 +473,9 @@ _CRTIMP unsigned long __cdecl _lrotr(unsigned long, int) __MINGW_ATTRIB_CONST;
 
 #ifndef	_NO_OLDNAMES
 #ifndef __COREDLL__
-
 _CRTIMP int __cdecl	putenv (const char*);
 _CRTIMP void __cdecl	searchenv (const char*, const char*, char*);
+#endif	/* Not __COREDLL__ */
 
 _CRTIMP char* __cdecl	itoa (int, char*, int);
 _CRTIMP char* __cdecl	ltoa (long, char*, int);
@@ -485,7 +485,6 @@ _CRTIMP char* __cdecl	ecvt (double, int, int*, int*);
 _CRTIMP char* __cdecl	fcvt (double, int, int*, int*);
 _CRTIMP char* __cdecl	gcvt (double, int, char*);
 #endif /* _UWIN */
-#endif	/* Not __COREDLL__ */
 #endif	/* Not _NO_OLDNAMES */
 
 #endif	/* Not __STRICT_ANSI__ */
