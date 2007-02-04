@@ -12,7 +12,9 @@
 */
 
 #include <wchar.h>
+#ifndef __COREDLL__
 #include <errno.h>
+#endif
 #include <ctype.h>
 #include <inttypes.h>
 
@@ -43,7 +45,9 @@ wcstoimax(nptr, endptr, base)
 
 	if ( base < 0 || base == 1 || base > 36 )
 		{
+#ifndef __COREDLL__
 		errno = EDOM;
+#endif
 		return 0;		/* unspecified behavior */
 		}
 
@@ -108,7 +112,9 @@ wcstoimax(nptr, endptr, base)
 
 	if ( toobig )
 		{
+#ifndef __COREDLL__
 		errno = ERANGE;
+#endif
 		return minus ? INTMAX_MIN : INTMAX_MAX;
 		}
 	else

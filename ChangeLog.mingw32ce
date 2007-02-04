@@ -1,5 +1,22 @@
 2007-02-04  Pedro Alves  <pedro_alves@portugalmail.pt>
 
+	* include/ctype.h (MB_CUR_MAX): Hardcode as 2.
+	* include/stdlib.h (MB_CUR_MAX): Likewise.
+	* mingwex/Makefile.in (LIB_OBJS): Add $(Q8_OBJS).
+	* mingwex/mb_wc_common.h: Don't include locale.h on __COREDLL__.
+	(get_cp_from_locale): Always return 0 on __COREDLL__.
+	* mingwex/mbrtowc.c: Don't include errno.h on __COREDLL__.
+	Don't set errno on __COREDLL__ throughout.
+	* mingwex/strtoimax.c: Likewise.
+	* mingwex/strtoumax.c: Likewise.
+	* mingwex/wcrtomb.c: Likewise.
+	* mingwex/wcstoimax.c: Likewise.
+	* mingwex/wcstoumax.c: Likewise.
+	* mingwex/wctob.c: Don't include errno.h
+	* mingwex/wmemmove.c: Likewise.
+
+2007-02-04  Pedro Alves  <pedro_alves@portugalmail.pt>
+
 	* include/complex.h (carg, cargf, cargl): Wrap in #ifdef __i386__.
 
 2007-02-04  Pedro Alves  <pedro_alves@portugalmail.pt>

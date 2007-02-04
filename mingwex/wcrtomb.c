@@ -1,7 +1,9 @@
 #include "mb_wc_common.h"
 #include <wchar.h>
 #include <stdlib.h>
+#ifndef __COREDLL__
 #include <errno.h>
+#endif
 #include <limits.h>
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -15,7 +17,9 @@ static int __MINGW_ATTRIB_NONNULL(1)
     {
       if (wc > 255)
 	{
+#ifndef __COREDLL__
 	  errno = EILSEQ;
+#endif
 	  return -1;
 	}
       *dst = (char) wc;
@@ -30,7 +34,9 @@ static int __MINGW_ATTRIB_NONNULL(1)
 				      NULL, &invalid_char);
       if (size == 0 || invalid_char)  
         {
+#ifndef __COREDLL__
           errno = EILSEQ;
+#endif
           return -1;
         }
       return size;

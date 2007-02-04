@@ -225,7 +225,7 @@ MATHCE_OBJS = \
 
 MATHCE_FLAGS=
 ifneq (,$(findstring wince,$(target_alias)))
-LIB_OBJS = $(WINCE_OBJS) $(MATHCE_OBJS) 
+LIB_OBJS = $(WINCE_OBJS) $(MATHCE_OBJS) $(Q8_OBJS)
 MATHCE_FLAGS=-D_IEEE_LIBM
 MATHDIR=mathce
 else

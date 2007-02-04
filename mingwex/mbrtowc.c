@@ -1,7 +1,9 @@
 #include "mb_wc_common.h"
 #include <wchar.h>
 #include <stdlib.h>
+#ifndef __COREDLL__
 #include <errno.h>
+#endif
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
@@ -46,7 +48,9 @@ __mbrtowc_cp (wchar_t * __restrict__ pwc, const char * __restrict__ s,
 		 == 0)
 	    {
 	      /* An invalid trailing byte */	 
+#ifndef __COREDLL__
 	      errno = EILSEQ;
+#endif
 	      return -1;
 	    }
           return 2;
@@ -65,7 +69,9 @@ __mbrtowc_cp (wchar_t * __restrict__ pwc, const char * __restrict__ s,
 					s, 2, pwc, 1)
 		    == 0)
 	    {
+#ifndef __COREDLL__
 	      errno = EILSEQ;
+#endif
 	      return -1;
 	    }
           return 2;
@@ -79,7 +85,9 @@ __mbrtowc_cp (wchar_t * __restrict__ pwc, const char * __restrict__ s,
   else if (MultiByteToWideChar (cp, MB_ERR_INVALID_CHARS, s, 1, pwc, 1)
 	    == 0)
     {
+#ifndef __COREDLL__
       errno = EILSEQ;
+#endif
       return  -1;
     }
   return 1;

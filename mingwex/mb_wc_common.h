@@ -1,4 +1,6 @@
+#ifndef __COREDLL__
 #include <locale.h>
+#endif
 #include <string.h>
 #include <stdlib.h>
 
@@ -12,7 +14,9 @@ unsigned int get_cp_from_locale (void)
 
   */
 
+#ifndef __COREDLL__
   if ((cp_string = strchr(setlocale(LC_CTYPE, NULL), '.')))
     return  ((unsigned) atoi (cp_string + 1));
+#endif
   return 0;
 }

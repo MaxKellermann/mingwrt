@@ -10,7 +10,9 @@
 	contiguous ascending order; this is true for ASCII but not EBCDIC.
 */
 #include <stdlib.h>
+#ifndef __COREDLL__
 #include <errno.h>
+#endif
 #include <ctype.h>
 #include <inttypes.h>
 
@@ -42,7 +44,9 @@ strtoumax(nptr, endptr, base)
 
 	if ( base < 0 || base == 1 || base > 36 )
 		{
+#ifndef __COREDLL__
 		errno = EDOM;
+#endif
 		return 0;		/* unspecified behavior */
 		}
 
@@ -99,7 +103,9 @@ strtoumax(nptr, endptr, base)
 
 	if ( toobig )
 		{
+#ifndef __COREDLL__
 		errno = ERANGE;
+#endif
 		return UINTMAX_MAX;
 		}
 	else
