@@ -182,6 +182,7 @@ MOLD_OBJS = isascii.o iscsym.o iscsymf.o toascii.o \
 ifneq (,$(findstring wince,$(target_alias)))
 LIBS = libmingw32.a \
        libceoldname.a \
+       $(LIBM_A) \
        libmingwthrd.a
 else
 LIBS = libcrtdll.a \

@@ -1,5 +1,9 @@
 2007-02-04  Pedro Alves  <pedro_alves@portugalmail.pt>
 
+	* Makefile.in (LIBS): Add $(LIBM_A).
+
+2007-02-04  Pedro Alves  <pedro_alves@portugalmail.pt>
+
 	* include/ctype.h (MB_CUR_MAX): Hardcode as 2.
 	* include/stdlib.h (MB_CUR_MAX): Likewise.
 	* mingwex/Makefile.in (LIB_OBJS): Add $(Q8_OBJS).
