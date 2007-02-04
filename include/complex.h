@@ -133,6 +133,7 @@ __CRT_INLINE double _Complex __MINGW_ATTRIB_CONST conj (double _Complex _Z)
   return __extension__ ~_Z;
 }
 
+#ifdef __i386__
 __CRT_INLINE  double __MINGW_ATTRIB_CONST carg (double _Complex _Z)
 {
   double res;
@@ -140,7 +141,7 @@ __CRT_INLINE  double __MINGW_ATTRIB_CONST carg (double _Complex _Z)
 	   : "=t" (res) : "0" (__real__ _Z), "u" (__imag__ _Z) : "st(1)");
   return res;
 }
-
+#endif
 
 /* float */
 __CRT_INLINE float __MINGW_ATTRIB_CONST crealf (float _Complex _Z)
@@ -158,6 +159,7 @@ __CRT_INLINE float _Complex __MINGW_ATTRIB_CONST conjf (float _Complex _Z)
   return __extension__ ~_Z;
 }
 
+#ifdef __i386__
 __CRT_INLINE  float __MINGW_ATTRIB_CONST cargf (float _Complex _Z)
 {
   float res;
@@ -165,6 +167,7 @@ __CRT_INLINE  float __MINGW_ATTRIB_CONST cargf (float _Complex _Z)
 	   : "=t" (res) : "0" (__real__ _Z), "u" (__imag__ _Z) : "st(1)");
   return res;
 }
+#endif
 
 /* long double */
 __CRT_INLINE long double __MINGW_ATTRIB_CONST creall (long double _Complex _Z)
@@ -182,6 +185,7 @@ __CRT_INLINE long double _Complex __MINGW_ATTRIB_CONST conjl (long double _Compl
   return __extension__ ~_Z;
 }
 
+#ifdef __i386__
 __CRT_INLINE  long double __MINGW_ATTRIB_CONST cargl (long double _Complex _Z)
 {
   long double res;
@@ -189,6 +193,7 @@ __CRT_INLINE  long double __MINGW_ATTRIB_CONST cargl (long double _Complex _Z)
 	   : "=t" (res) : "0" (__real__ _Z), "u" (__imag__ _Z) : "st(1)");
   return res;
 }
+#endif
 
 #endif /* __GNUC__ */
 

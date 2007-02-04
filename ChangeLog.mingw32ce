@@ -1,5 +1,9 @@
 2007-02-04  Pedro Alves  <pedro_alves@portugalmail.pt>
 
+	* include/complex.h (carg, cargf, cargl): Wrap in #ifdef __i386__.
+
+2007-02-04  Pedro Alves  <pedro_alves@portugalmail.pt>
+
 	* include/_mingw.h (__CRT_INLINE): Expand the comment.
 
 2007-02-04  Pedro Alves  <pedro_alves@portugalmail.pt>
