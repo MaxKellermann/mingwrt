@@ -4,7 +4,6 @@
 # This makefile requires GNU make.
 
 srcdir = @srcdir@
-VPATH = $(srcdir):$(srcdir)/math:$(srcdir)/stdio:$(srcdir)/complex:$(srcdir)/wince
 objdir = .
 
 target_alias = @target_alias@
@@ -89,6 +88,23 @@ WINCE_DISTFILES = \
 	close.c isalnum.c isalpha.c iscntrl.c isgraph.c islower.c isprint.c \
 	ispunct.c isspace.c isupper.c isxdigit.c _tolower.c _toupper.c
 
+MATHCE_DISTFILES = \
+	e_acosf.c e_acosh.c e_acoshf.c e_asinf.c e_atan2f.c e_atanh.c e_coshf.c \
+	e_expf.c e_gamma_r.c e_gammaf_r.c e_lgamma_r.c e_lgammaf_r.c e_log10f.c \
+	e_logf.c e_powf.c e_rem_pio2.c e_rem_pio2f.c e_remainder.c \
+	e_remainderf.c e_sinhf.c k_cos.c k_cosf.c k_rem_pio2.c k_rem_pio2f.c \
+	k_sin.c k_sinf.c k_tan.c k_tanf.c llround.c llroundf.c \
+	lround.c lroundf.c s_asinh.c s_asinhf.c s_atanf.c s_cbrt.c s_cbrtf.c \
+	s_copysignf.c s_cosf.c s_erf.c s_erff.c s_expm1.c s_expm1f.c s_frexpf.c \
+	s_ilogb.c s_ilogbf.c s_isinf.c s_isinff.c s_ldexpf.c s_llrint.c \
+	s_llrintf.c s_log1p.c s_log1pf.c s_logbf.c s_lrint.c s_lrintf.c \
+	s_modff.c s_nextafterf.c s_rint.c s_rintf.c s_round.c s_roundf.c \
+	s_scalbn.c s_scalbnf.c s_signgam.c s_sinf.c s_tanf.c s_tanh.c s_tanhf.c \
+	s_trunc.c s_truncf.c w_acosf.c w_acosh.c w_acoshf.c w_asinf.c w_atan2f.c \
+	w_atanh.c w_coshf.c w_expf.c w_hypotf.c w_lgamma.c w_lgammaf.c w_log2.c w_log2f.c \
+	w_log10f.c w_logf.c w_powf.c w_remainder.c w_remainderf.c w_sinhf.c \
+	w_tgamma.c w_tgammaf.c
+
 CC = @CC@
 # FIXME: Which is it, CC or CC_FOR_TARGET?
 CC_FOR_TARGET = $(CC)
@@ -104,8 +120,8 @@ W32API_INCLUDE = @W32API_INCLUDE@
 INCLUDES = -I$(srcdir) -I$(srcdir)/.. -I$(srcdir)/../include \
   -nostdinc \
   -iwithprefixbefore include
-ALL_CFLAGS = $(CFLAGS) $(OPTFLAGS) $(W32API_INCLUDE) $(INCLUDES) $(MNO_CYGWIN)
-ALL_CXXFLAGS = $(CXXFLAGS) $(OPTFLAGS) $(W32API_INCLUDE) $(INCLUDES) -nostdinc++ $(MNO_CYGWIN)
+ALL_CFLAGS = $(CFLAGS) $(OPTFLAGS) $(W32API_INCLUDE) $(INCLUDES) $(MNO_CYGWIN) $(MATHCE_FLAGS)
+ALL_CXXFLAGS = $(CXXFLAGS) $(OPTFLAGS) $(W32API_INCLUDE) $(INCLUDES) -nostdinc++ $(MNO_CYGWIN) $(MATHCE_FLAGS)
 
 AS = @AS@
 AR = @AR@
@@ -190,15 +206,36 @@ WINCE_OBJS = \
 	tempnam.o unlink.o wcsftime.o fdopen.o read.o write.o open.o lseek.o \
 	close.o isalnum.o isalpha.o iscntrl.o isgraph.o islower.o isprint.o \
 	ispunct.o isspace.o isupper.o isxdigit.o _tolower.o _toupper.o
+MATHCE_OBJS = \
+	e_acosf.o e_acosh.o e_acoshf.o e_asinf.o e_atan2f.o e_atanh.o e_coshf.o \
+	e_expf.o e_gamma_r.o e_gammaf_r.o e_lgamma_r.o e_lgammaf_r.o e_log10f.o \
+	e_logf.o e_powf.o e_rem_pio2.o e_rem_pio2f.o e_remainder.o \
+	e_remainderf.o e_sinhf.o k_cos.o k_cosf.o k_rem_pio2.o k_rem_pio2f.o \
+	k_sin.o k_sinf.o k_tan.o k_tanf.o llround.o llroundf.o \
+	lround.o lroundf.o s_asinh.o s_asinhf.o s_atanf.o s_cbrt.o s_cbrtf.o \
+	s_copysignf.o s_cosf.o s_erf.o s_erff.o s_expm1.o s_expm1f.o s_frexpf.o \
+	s_ilogb.o s_ilogbf.o s_isinf.o s_isinff.o s_ldexpf.o s_llrint.o \
+	s_llrintf.o s_log1p.o s_log1pf.o s_logbf.o s_lrint.o s_lrintf.o \
+	s_modff.o s_nextafterf.o s_rint.o s_rintf.o s_round.o s_roundf.o \
+	s_scalbn.o s_scalbnf.o s_signgam.o s_sinf.o s_tanf.o s_tanh.o s_tanhf.o \
+	s_trunc.o s_truncf.o w_acosf.o w_acosh.o w_acoshf.o w_asinf.o w_atan2f.o \
+	w_atanh.o w_coshf.o w_expf.o w_hypotf.o w_lgamma.o w_lgammaf.o w_log2.o w_log2f.o \
+	w_log10f.o w_logf.o w_powf.o w_remainder.o w_remainderf.o w_sinhf.o \
+	w_tgamma.o w_tgammaf.o
 
-
+MATHCE_FLAGS=
 ifneq (,$(findstring wince,$(target_alias)))
-LIB_OBJS = $(WINCE_OBJS)
+LIB_OBJS = $(WINCE_OBJS) $(MATHCE_OBJS) 
+MATHCE_FLAGS=-D_IEEE_LIBM
+MATHDIR=mathce
 else
 LIB_OBJS = $(Q8_OBJS)  $(CTYPE_OBJS) $(STDLIB_OBJS) $(STDLIB_STUB_OBJS) \
 	$(STDIO_OBJS) $(MATH_OBJS)  $(FENV_OBJS) \
 	$(POSIX_OBJS) $(REPLACE_OBJS) $(COMPLEX_OBJS)
+MATHDIR=math
 endif
+
+VPATH = $(srcdir):$(srcdir)/stdio:$(srcdir)/complex:$(srcdir)/wince:$(srcdir)/$(MATHDIR)
 
 LIBS = $(LIBMINGWEX_A)
 DLLS = 
@@ -282,4 +319,8 @@ dist:
 	@for i in $(WINCE_DISTFILES); do\
 		cp -p $(srcdir)/wince/$$i $(distdir)/mingwex/wince/$$i ; \
 	done
-
+	mkdir $(distdir)/mingwex/mathce
+	chmod 755 $(distdir)/mingwex/mathce
+	@for i in $(MATHCE_DISTFILES); do\
+		cp -p $(srcdir)/mathce/$$i $(distdir)/mingwex/mathce/$$i ; \
+	done

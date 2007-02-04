@@ -222,7 +222,9 @@ _CRTIMP double __cdecl _jn (int, double);
 _CRTIMP double __cdecl _y0 (double);
 _CRTIMP double __cdecl _y1 (double);
 _CRTIMP double __cdecl _yn (int, double);
+#ifndef __COREDLL__
 _CRTIMP int __cdecl _matherr (struct _exception *);
+#endif
 
 /* These are also declared in Mingw float.h; needed here as well to work 
    around GCC build issues.  */
@@ -305,6 +307,9 @@ extern const double __QNAN;
 #endif /* __MINGW_GNUC_PREREQ(3, 3) */
 
 /* 7.12.3.1 */
+
+#ifdef __i386__
+
 /*
    Return values for fpclassify.
    These are based on Intel x87 fpu condition codes
@@ -345,10 +350,18 @@ __CRT_INLINE int __cdecl __fpclassifyl (long double x){
 /* 7.12.3.3 */
 #define isinf(x) (fpclassify(x) == FP_INFINITE)
 
+#else
+
+extern int isfinite (double x);
+extern int isinf (double x);
+
+#endif
+
 /* 7.12.3.4 */
-/* We don't need to worry about trucation here:
+/* We don't need to worry about truncation here:
    A NaN stays a NaN. */
 
+#ifdef __i386__
 __CRT_INLINE int __cdecl __isnan (double _x)
 {
   unsigned short sw;
@@ -381,9 +394,15 @@ __CRT_INLINE int __cdecl __isnanl (long double _x)
 		  : sizeof (x) == sizeof (double) ? __isnan (x)	\
 		  : __isnanl (x))
 
+#else
+extern int isnan (double x);
+extern int isnanf (float x);
+#endif
+
 /* 7.12.3.5 */
 #define isnormal(x) (fpclassify(x) == FP_NORMAL)
 
+#ifdef __i386__
 /* 7.12.3.6 The signbit macro */
 __CRT_INLINE int __cdecl __signbit (double x) {
   unsigned short stw;
@@ -406,6 +425,7 @@ __CRT_INLINE int __cdecl __signbitl (long double x) {
 #define signbit(x) (sizeof (x) == sizeof (float) ? __signbitf (x)	\
 		    : sizeof (x) == sizeof (double) ? __signbit (x)	\
 		    : __signbitl (x))
+#endif
 
 /* 7.12.4 Trigonometric functions: Double in C89 */
 extern float __cdecl sinf (float);
@@ -517,7 +537,7 @@ extern long double __cdecl logbl (long double);
 
 /* Inline versions.  GCC-4.0+ can do a better fast-math optimization
    with __builtins. */ 
-#if !(__MINGW_GNUC_PREREQ (4, 0) && defined __FAST_MATH__ )
+#if !(__MINGW_GNUC_PREREQ (4, 0) && defined __FAST_MATH__ ) && defined __i386__
 __CRT_INLINE double __cdecl logb (double x)
 {
   double res;
@@ -541,7 +561,7 @@ __CRT_INLINE long double __cdecl logbl (long double x)
        "fstp	%%st" : "=t" (res) : "0" (x));
   return res;
 }
-#endif /* !defined __FAST_MATH__ || !__MINGW_GNUC_PREREQ (4, 0) */
+#endif /* !defined __FAST_MATH__ || !__MINGW_GNUC_PREREQ (4, 0) && __i386__ */
 
 /* 7.12.6.12  Double in C89 */
 extern float __cdecl modff (float, float*);
@@ -631,7 +651,7 @@ extern long long __cdecl llrintl (long double);
 
 /* Inline versions of above. 
    GCC 4.0+ can do a better fast-math job with __builtins. */
-#if !(__MINGW_GNUC_PREREQ (4, 0) && defined __FAST_MATH__ )
+#if !(__MINGW_GNUC_PREREQ (4, 0) && defined __FAST_MATH__ ) && defined __i386__
 __CRT_INLINE double __cdecl rint (double x)
 {
   double retval;
@@ -700,7 +720,7 @@ __CRT_INLINE long long __cdecl llrintl (long double x)
     ("fistpll %0"  : "=m" (retval) : "t" (x) : "st");
   return retval;
 }
-#endif /* !__FAST_MATH__ || !__MINGW_GNUC_PREREQ (4,0)  */
+#endif /* !__FAST_MATH__ || !__MINGW_GNUC_PREREQ (4,0) && __i386__ */
 
 /* 7.12.9.6 */
 /* round away from zero, regardless of fpu control word settings */
