@@ -1,5 +1,9 @@
 2007-02-04  Pedro Alves  <pedro_alves@portugalmail.pt>
 
+	* include/_mingw.h (__CRT_INLINE): Expand the comment.
+
+2007-02-04  Pedro Alves  <pedro_alves@portugalmail.pt>
+
 	* mingwex/Makefile.in (MATHCE_DISTFILES): New variable.
 	(MATHCE_OBJS): New variable.
 	(MATHCE_FLAGS): New variable.

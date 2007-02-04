@@ -110,7 +110,12 @@
 #ifdef __COREDLL__
 /* There isn't any out-of-line version of most of 
    these functions in coredll.dll, so we need this for -O0,
-   or for -fno-inline.  */
+   or for -fno-inline.  This is still problematic if the user
+   tries to take the address of these functions.  We will slowly
+   add out-of-line copies as those cases are found.
+   Note: We can't use static inline here, as most of there functions
+   will be declared elsewhere with external linkage, and gcc will
+   barf on that.  */
 #define __CRT_INLINE extern __inline__ __attribute__((__always_inline__))
 #else
 #define __CRT_INLINE extern __inline__
