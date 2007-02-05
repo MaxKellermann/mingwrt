@@ -7,7 +7,6 @@
  * System level I/O functions and types.
  *
  */
-
 #ifndef	_IO_H_
 #define	_IO_H_
 
@@ -33,6 +32,7 @@
 #define	_A_VOLID	0x00000008
 #define	_A_SUBDIR	0x00000010
 #define	_A_ARCH		0x00000020
+
 
 #ifndef RC_INVOKED
 
@@ -189,7 +189,9 @@ _CRTIMP int __cdecl chmod (const char*, int);
 /* Some defines for _access nAccessMode (MS doesn't define them, but
  * it doesn't seem to hurt to add them). */
 #define	F_OK	0	/* Check for file existence */
-#define	X_OK	1	/* Check for execute permission. */
+/* Well maybe it does hurt.  On newer versions of MSVCRT, an access mode
+   of 1 causes invalid parameter error. */   
+#define	X_OK	F_OK	/* MS access() doesn't check for execute permission. */
 #define	W_OK	2	/* Check for write permission */
 #define	R_OK	4	/* Check for read permission */
 
@@ -242,6 +244,10 @@ _CRTIMP int __cdecl _pipe (int *, unsigned int, int);
 _CRTIMP int __cdecl _read (int, void*, unsigned int);
 #ifndef __COREDLL__
 _CRTIMP int __cdecl _setmode (int, int);
+/* MS puts remove & rename (but not wide versions) in io.h as well
+   as in stdio.h. */
+_CRTIMP int __cdecl	remove (const char*);
+_CRTIMP int __cdecl	rename (const char*, const char*);
 
 /* SH_... flags for nShFlags defined in share.h
  * Optional fourth argument is unsigned unPermissions */

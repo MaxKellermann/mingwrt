@@ -1,0 +1,27 @@
+/README/1.1/Thu Aug 31 23:48:56 2006//
+/arithchk.c/1.1/Thu Aug 31 23:48:56 2006//
+/dmisc.c/1.1/Thu Aug 31 23:48:56 2006//
+/dtoa.c/1.1/Thu Aug 31 23:48:56 2006//
+/g__fmt.c/1.1/Thu Aug 31 23:48:56 2006//
+/g_dfmt.c/1.1/Thu Aug 31 23:48:56 2006//
+/g_ffmt.c/1.1/Thu Aug 31 23:48:56 2006//
+/g_xfmt.c/1.2/Sun Sep 17 22:27:56 2006//
+/gd_arith.h/1.1/Thu Aug 31 23:48:56 2006//
+/gd_qnan.h/1.1/Thu Aug 31 23:48:56 2006//
+/gdtoa.c/1.1/Thu Aug 31 23:48:56 2006//
+/gdtoa.h/1.3/Sun Sep 17 22:27:56 2006//
+/gdtoaimp.h/1.2/Wed Sep  6 22:03:16 2006//
+/gethex.c/1.1/Thu Aug 31 23:48:56 2006//
+/gmisc.c/1.1/Thu Aug 31 23:48:56 2006//
+/hd_init.c/1.1/Thu Aug 31 23:48:56 2006//
+/hexnan.c/1.1/Thu Aug 31 23:48:56 2006//
+/misc.c/1.2/Wed Sep  6 22:03:16 2006//
+/qnan.c/1.1/Thu Aug 31 23:48:56 2006//
+/smisc.c/1.1/Thu Aug 31 23:48:56 2006//
+/strtodg.c/1.1/Thu Aug 31 23:48:56 2006//
+/strtodnrp.c/1.1/Thu Aug 31 23:48:56 2006//
+/strtof.c/1.1/Thu Aug 31 23:48:56 2006//
+/strtopx.c/1.3/Sun Sep 17 22:27:56 2006//
+/sum.c/1.1/Thu Aug 31 23:48:56 2006//
+/ulp.c/1.1/Thu Aug 31 23:48:56 2006//
+D

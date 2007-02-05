@@ -1,3 +1,174 @@
+2007-01-27  Danny Smith  <dannysmith@users.sourceforge.net>
+
+	Expose some more msvcr80.dll functions.
+	* include/stdio.h (_fseek_nolock. _ftell_nolock, _fseeki64,
+	_ftelli64, _fseeki64_nolock, _ftelli64_nolock) Add prototypes
+	* msvcrt.def.in (_fseek_nolock. _ftell_nolock, _fseeki64,
+	_ftelli64, _fseeki64_nolock, _ftelli64_nolock) Add stubs.
+
+2007-01-26  Danny Smith  <dannysmith@users.sourceforge.net>
+
+	Expose some msvcr80.dll functions.
+	* include/stdlib.h (_set_abort_behavior): Add prototype.
+	(_WRITE_ABORT_MSG, _CALL_REPORTFAULT): Add defines for
+	_set_abort_behavior mask argument.
+	(_invalid_parameter_handler): Add typedef.
+	(_set_invalid_parameter_handler): Add prototype.
+	* include/stdio.h (_get_printf_count_output): Add prototype.
+	(_set_printf_count_output): Add prototype.
+	* msvcrt.def.in (_get_printf_count_output,_set_printf_count_output,
+	_set_abort_behavior, _set_invalid_parameter_handler): Add stubs.
+
+2007-01-26  Danny Smith  <dannysmith@users.sourceforge.net>
+
+	* include/_mingw.h (CRT_INLINE):  Correct typo.
+
+2007-01-24  Danny Smith  <dannysmith@users.sourceforge.net>
+
+	* include/io.h (X_OK):  Define to F_OK.
+
+2007-01-19  Danny Smith  <dannysmith@users.sourceforge.net>
+
+	* include/stdio.h (SEEK_SET, SEEK_CUR, SEEK_END): Define
+	unconditionally.  Change comment.
+	* include/unistd.h (SEEK_SET, SEEK_CUR, SEEK_END): Define
+	here too.
+	* include/io.h (rename): Declare.
+	(remove): Declare.
+
+2006-12-31  Keith Marshall  <keithmarshall@users.sourceforge.net>
+
+	* include/libgen.h: New file; required by...
+	* mingwex/basename.c, mingwex/dirname.c: New files.
+	* mingwex/Makefile.in (DISTFILES): Add them...
+	(POSIX_OBJS): ...with corresponding basename.o, dirname.o
+	(Dependencies): Typo; s/Dependancies/Dependencies/
+
+2006-11-25  Keith Marshall  <keithmarshall@users.sourceforge.net>
+
+	* Makefile.in (VERSION): Let configure define it.
+
+	* aclocal.m4 (MINGW_AC_CONFIG_SRCDIR): New macro.
+	* configure.in: Use it.
+	Correct quoting of autoconf macro arguments throughout.
+	(AC_INIT, AC_OUTPUT): Update to autoconf 2.5x preferred syntax.
+	(AR, AS, RANLIB, LD, DLLTOOL, DLLWRAP): Don't need AC_SUBST.
+	(AC_ALLOCA): Invalid after GCC_NO_EXECUTABLES; removed.
+	(AC_CONFIG_FILES): Add, to generate Makefile.
+
+	* configure: Regenerated.
+
+2006-11-21  Danny Smith  <dannysmith@users.sourceforge.net>
+
+	* Makefile.in: Add aclocal.m4 to source release.
+	* mingwex/Makefile.in: Ditto.
+	* profile/Makefile.in: Ditto.
+
+2006-11-18  Chris Sutcliffe  <ir0nh34d@users.sourceforge.net>
+
+	* Include/_mingw.h: Increment version to 3.11.
+	* Makefile.in: Ditto.
+
+2006-11-09  Danny Smith  <dannysmith@users.sourceforge.net>
+
+	[ mingw-Bugs-1590623 ] 
+	* include/_mingw.h (__CRT_INLINE): Use __gnu_inline__ attribute
+	in C99 mode.
+
+2006-10-04  Corinna Vinschen  <corinna@vinschen.de>
+
+	* Makefile.in: Semi-revert semi-reversion of 2006-08-30 change, now
+	correctly parenthesized.
+
+2006-09-19  Danny Smith  <dannysmith@users.sourceforge.net>
+
+	* mingwex/mb_wc_common.h (get_codepage): Get it
+	from __lc_codepage.
+
+2006-09-18  Danny Smith  <dannysmith@users.sourceforge.net>
+
+	* mingwex/gdtoa/g_xfmt.c (g_xfmt): Fix representation of infinity.
+	Use fpclassify.
+	* mingwex/gdtoa/strtopx (__strtopx): Avoid cast of long double* to
+	void*.
+	* mingwex/gdtoa/gdtoa.h (__g_fmt): Make declaration consistent with
+	others.
+
+2006-09-16  Danny Smith  <dannysmith@users.sourceforge.net>
+
+	* mingwex/gdtoa/strtopx.c (strtopx): Fix long double representation
+	of infinity.
+
+2006-09-11  Christopher Faylor  <cgf@timesys.com>
+
+	* Makefile.in: Semi-revert 2006-08-30 change.
+
+2006-09-10  Danny Smith  <dannysmith@users.sourceforge.net>
+
+	* include/_mingw.h (__MINGW_ATTRIB_DEPRECATED): Define.
+	(__MINGW_IMPORT): Ansify.
+	* include/stdlib.h (_sleep, _beep, _seterrormode): Add
+	__MINGW_ATTRIB_DEPRECATED.
+
+2006-09-10  Keith Marshall  <keithmarshall@users.sourceforge.net>
+
+	* aclocal.m4 (LIB_AC_PROG_CC, LIB_AC_PROG_CC_GNU, LIB_AC_PROG_CXX):
+	Redundant macros; deleted.
+
+	* configure.in (LIB_AC_PROG_CC): Replaced by...
+	(AC_PROG_CC): ...this.
+
+	* configure: Regenerated.
+
+2006-09-06  Danny Smith  <dannysmith@users.sourceforge.net>
+
+	* mingwex/gdtoa/misc.c (pow5mult): Restore original code.
+	* mingwex/gdtoa/gdtoa.h. Add comment that files have been modified.
+	* mingwex/gdtoa/gdtoaimp.h: Include system headers with <> brackets.
+
+2006-09-01  Danny Smith  <dannysmith@users.sourceforge.net>
+
+	* mingwex/gdtoa/(arithchk.c, dmisc.c, dtoa.c, g__fmt.c, g_dfmt.c,
+	g_ffmt.c, g_xfmt.c, gd_arith.h, gd_qnan.h, gdtoa.c, gdtoa.h,
+	gdtoaimp.h, gethex.c, gmisc.c, hd_init.c, hexnan.c, misc.c, qnan.c,
+	README, smisc.c, strtodg.c, strtodnrp.c, strtof.c, strtopx.c, sum.c,
+	ulp.c): New files.
+	* mingwex/(strtof.c, strtold.c, ldtoa.c): Remove files.
+	* mingwex/math/(cephes-emath.c, cephes-emath.h): Remove files.
+	* mingwex/mb_wc_common.h (get_cp_from_locale); Rename to get_codepage().
+        * mingwex/(btowc.c, wctob.c, mbrtowc.c, wcrtomb.c): Adjust call to get_codepage().
+	* mingwex/wcstold.c: Avoid using strtold internals.
+	* mingwex/wcstof.c: Rewrite.
+	* mingwex/Makefile.in (GDTOA_DISTFILES): Add to distribution.
+	(GDTOA_OBJS): Add to library.
+	(DISTFILES): Remove strtof.c strtold.c ldtoa.c cephes-emath.c cephes-emath.h.
+	(STDLIB_OBJS): Remove.
+	(STDLIB_STUB_OBJS): Remove strtof.o wcstof,o.
+	(Q8_OBJS): Add wcstof.o wcstold.o.
+	* include/stdlib.h (strtof): Remove inline definition.
+	(wcstof): Likewise.
+	* include/wchar.h (wcstof): Remove inline definition.
+
+2006-08-30  Corinna Vinschen  <corinna@vinschen.de>
+
+	* Makefile.in: Add with_cross_host to allow more granular checks.
+	Set installation directories accordingly.  Override CC setting only
+	if building a Cygwin target.
+	* aclocal.m4: Regenerate.
+	* configure.in: Move AC_CANONICAL_SYSTEM check up.  Add
+	GCC_NO_EXECUTABLES.  Substitute with_cross_host in depending files.
+	Test AC_ALLOCA only if building on a native system.
+	* configure: Regenerate.
+
+2006-08-27  Chris Sutcliffe  <ir0nh34d@users.sourceforge.net>
+
+	* include/ctype.h: Fix typo.
+
+2006-08-25  Danny Smith  <dannysmith@users.sourceforge.net>
+
+	* include/ctype.h: Expose iswblank if __cplusplus.
+	* include/wctype.h: Expose iswblank if __cplusplus.
+
 2006-08-03  Danny Smith  <dannysmith@users.sourceforge.net>
 
 	* include/ctype.h: Remove stray ')';
@@ -538,7 +709,6 @@
 	to main.
 	(mainCRTStartup): Change return to void.
 	(WinMainCRTStartup): Likewise.
-
 
 2004-08-15  Danny Smith  <dannysmith@users.sourceforge.net>
 

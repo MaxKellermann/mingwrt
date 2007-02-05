@@ -18,7 +18,7 @@
 # This makefile requires GNU make.
 
 PACKAGE = mingw-runtime
-VERSION = 3.10
+VERSION = @PACKAGE_VERSION@
 CYGRELEASE = 1
 
 VPATH = @srcdir@
@@ -28,6 +28,7 @@ objdir = .
 host_alias = @host_alias@
 build_alias = @build_alias@
 target_alias = @target_alias@
+with_cross_host = @with_cross_host@
 prefix = @prefix@
 conf_prefix = @prefix@
 
@@ -59,10 +60,17 @@ inst_includedir:=$(tooldir)/include
 inst_libdir:=$(tooldir)/lib
 inst_docdir:=$(prefix)/share/doc/mingw-runtime
 else
+ifneq (,$(with_cross_host))
+inst_bindir:=$(tooldir)/bin
+inst_includedir:=$(tooldir)/include
+inst_libdir:=$(tooldir)/lib
+inst_docdir:=$(tooldir)/share/doc/mingw-runtime
+else
 inst_bindir:=$(bindir)
 inst_includedir:=$(includedir)
 inst_libdir:=$(libdir)
 inst_docdir:=$(prefix)/doc/mingw-runtime
+endif
 endif
 endif
 
@@ -78,7 +86,9 @@ INSTALL_PROGRAM = @INSTALL_PROGRAM@
 mkinstalldirs = $(SHELL) @MKINSTALLDIRS@
 
 CC := @CC@
+ifneq (,$(findstring cygwin,$(target_alias)))
 override CC := ${filter-out -L% -B%,${shell echo $(CC) | sed -e 's%\(-isystem\|-iwithprefixbefore\)  *[^ ]*\( \|$$\)% %g'}}
+endif
 # FIXME: Which is it, CC or CC_FOR_TARGET?
 CC_FOR_TARGET = $(CC)
 AS_FOR_TARGET = $(AS)
@@ -205,14 +215,14 @@ INSTDOCS = CONTRIBUTORS \
 
 SRCDIST_FILES = CRT_noglob.c CRTfmode.c CRTglob.c CRTinit.c ChangeLog \
 Makefile.in README TODO config.guess config.sub configure configure.in \
-crt1.c crtdll.def crtmt.c crtst.c  dllcrt1.c dllmain.c \
+aclocal.m4 crt1.c crtdll.def crtmt.c crtst.c  dllcrt1.c dllmain.c \
 gccmain.c init.c install-sh jamfile main.c mkinstalldirs \
 moldname.def.in msvcrt.def.in \
 mthr.c mthr_init.c mthr_stub.c readme.txt \
 isascii.c iscsym.c iscsymf.c toascii.c \
 strcasecmp.c strncasecmp.c wcscmpi.c \
 CRT_fp8.c CRT_fp10.c test_headers.c txtmode.c binmode.c pseudo-reloc.c \
-pseudo-reloc-list.c cpu_features.c cpu_features.h\
+pseudo-reloc-list.c cpu_features.c cpu_features.h \
 DISCLAIMER CONTRIBUTORS
 
 

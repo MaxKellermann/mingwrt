@@ -101,20 +101,11 @@
 #define	BUFSIZ	512
 
 /* Constants for nOrigin indicating the position relative to which fseek
- * sets the file position. Enclosed in ifdefs because io.h could also
- * define them. (Though not anymore since io.h includes this file now.) */
-#ifndef	SEEK_SET
-#define SEEK_SET	(0)
-#endif
-
-#ifndef	SEEK_CUR
-#define	SEEK_CUR	(1)
-#endif
-
-#ifndef	SEEK_END
-#define SEEK_END	(2)
-#endif
-
+ * sets the file position.  Defined unconditionally since ISO and POSIX
+ * say they are defined here.  */
+#define SEEK_SET 0
+#define SEEK_CUR 1
+#define SEEK_END 2
 
 #ifndef	RC_INVOKED
 
@@ -220,7 +211,6 @@ _CRTIMP int __cdecl     rmtmp(void);
 #endif /* NO_OLDNAMES */
 #endif /* __STRICT_ANSI__ */
 
-
 _CRTIMP int __cdecl	setvbuf (FILE*, char*, int, size_t);
 
 #ifndef __COREDLL__
@@ -277,7 +267,7 @@ _CRTIMP int __cdecl	ungetc (int, FILE*);
    to be used in C++ with namespace qualification, eg., ::getc.  */
 
 #ifndef __COREDLL__
-/*_filbuf and _flsbuf  are not thread-safe. */
+/* _filbuf and _flsbuf are not thread-safe. */
 _CRTIMP int __cdecl	_filbuf (FILE*);
 _CRTIMP int __cdecl	_flsbuf (int, FILE*);
 
@@ -343,6 +333,16 @@ _CRTIMP int __cdecl	fseek (FILE*, long, int);
 _CRTIMP long __cdecl	ftell (FILE*);
 #ifndef __COREDLL__
 _CRTIMP void __cdecl	rewind (FILE*);
+#endif
+
+#if __MSVCRT_VERSION__ >= 0x800
+_CRTIMP int __cdecl    _fseek_nolock (FILE*, long, int);
+_CRTIMP long __cdecl   _ftell_nolock (FILE*);
+
+_CRTIMP int __cdecl    _fseeki64 (FILE*, __int64, int);
+_CRTIMP __int64 __cdecl        _ftelli64 (FILE*);
+_CRTIMP int __cdecl    _fseeki64_nolock (FILE*, __int64, int);
+_CRTIMP __int64 __cdecl        _ftelli64_nolock (FILE*);
 #endif
 
 #ifdef __USE_MINGW_FSEEK  /* These are in libmingwex.a */
@@ -431,6 +431,11 @@ _CRTIMP int __cdecl	_fcloseall(void);
 #ifdef __MSVCRT__
 _CRTIMP int __cdecl	_getmaxstdio(void);
 _CRTIMP int __cdecl	_setmaxstdio(int);
+#endif
+
+#if __MSVCRT_VERSION__ >= 0x800
+_CRTIMP int __cdecl _set_printf_count_output(int);
+_CRTIMP int __cdecl _get_printf_count_output(void);
 #endif
 
 #ifndef _NO_OLDNAMES

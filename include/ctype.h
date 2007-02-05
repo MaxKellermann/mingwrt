@@ -224,7 +224,7 @@ _CRTIMP int __cdecl iswupper(wint_t);
 _CRTIMP int __cdecl iswxdigit(wint_t);
 
 #if (defined (__STDC_VERSION__) && __STDC_VERSION__ >= 199901L) \
-     || !defined __STRICT_ANSI__
+     || !defined __STRICT_ANSI__ || defined __cplusplus
 int __cdecl iswblank (wint_t);
 #endif
 
@@ -264,7 +264,7 @@ __CRT_INLINE int __cdecl isleadbyte(int c) {return IsDBCSLeadByte(c); }
 __CRT_INLINE int __cdecl isleadbyte(int c) {return (_pctype[(unsigned char)(c)] & _LEADBYTE);}
 #endif
 #if (defined (__STDC_VERSION__) && __STDC_VERSION__ >= 199901L) \
-     || !defined __STRICT_ANSI__
+     || !defined __STRICT_ANSI__ || defined __cplusplus
 __CRT_INLINE int __cdecl iswblank (wint_t wc)
   {return (iswctype(wc,_BLANK) || wc == L'\t');}
 #endif

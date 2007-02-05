@@ -1,22 +1,13 @@
-#ifndef __COREDLL__
-#include <locale.h>
+#ifdef __COREDLL__
+__declspec(dllimport) unsigned int __lc_codepage;
 #endif
-#include <string.h>
-#include <stdlib.h>
 
 static inline
-unsigned int get_cp_from_locale (void)
+unsigned int get_codepage (void)
 {
-  char* cp_string;
-  /*
-    locale :: "lang[_country[.code_page]]" 
-               | ".code_page"
-
-  */
-
-#ifndef __COREDLL__
-  if ((cp_string = strchr(setlocale(LC_CTYPE, NULL), '.')))
-    return  ((unsigned) atoi (cp_string + 1));
-#endif
+#ifdef __COREDLL__
   return 0;
+#else
+  return __lc_codepage;
+#endif
 }

@@ -23,6 +23,7 @@
 #ifndef __MINGW_H
 #define __MINGW_H
 
+
 /* These are defined by the user (or the compiler)
    to specify how identifiers are imported from a DLL.
 
@@ -61,7 +62,7 @@
 #  ifndef __MINGW_IMPORT
    /* Note the extern. This is needed to work around GCC's
       limitations in handling dllimport attribute.  */
-#   define __MINGW_IMPORT  extern __attribute__ ((dllimport))
+#   define __MINGW_IMPORT  extern __attribute__ ((__dllimport__))
 #  endif
 #  ifndef _CRTIMP
 #   ifdef __USE_CRTIMP
@@ -104,30 +105,34 @@
 # endif
 #endif /* __GNUC__ */
 
-#ifdef __cplusplus
-#define __CRT_INLINE inline
-#else
-#ifdef __COREDLL__
-/* There isn't any out-of-line version of most of 
-   these functions in coredll.dll, so we need this for -O0,
-   or for -fno-inline.  This is still problematic if the user
-   tries to take the address of these functions.  We will slowly
-   add out-of-line copies as those cases are found.
-   Note: We can't use static inline here, as most of these functions
-   will be declared elsewhere with external linkage, and gcc will
-   barf on that.  */
-#define __CRT_INLINE extern __inline__ __attribute__((__always_inline__))
-#else
-#define __CRT_INLINE extern __inline__
-#endif
-#endif
-
 #if defined (__GNUC__) && defined (__GNUC_MINOR__)
 #define __MINGW_GNUC_PREREQ(major, minor) \
   (__GNUC__ > (major) \
    || (__GNUC__ == (major) && __GNUC_MINOR__ >= (minor)))
 #else
 #define __MINGW_GNUC_PREREQ(major, minor)  0
+#endif
+
+#ifdef __cplusplus
+# define __CRT_INLINE inline
+#else
+# if ( __MINGW_GNUC_PREREQ(4, 3)  && __STDC_VERSION__ >= 199901L)
+#  define __CRT_INLINE extern inline __attribute__((__gnu_inline__))
+# else
+#  ifdef __COREDLL__
+   /* There isn't any out-of-line version of most of 
+      these functions in coredll.dll, so we need this for -O0,
+      or for -fno-inline.  This is still problematic if the user
+      tries t	o take the address of these functions.  We will slowly
+      add out-of-line copies as those cases are found.
+      Note: We can't use static inline here, as most of these functions
+      will be declared elsew	here with external linkage, and gcc will
+      barf on that.  */
+#   define __CRT_INLINE extern __inline__ __attribute__((__always_inline__))
+#  else
+#   define __CRT_INLINE extern __inline__
+#  endif
+# endif
 #endif
 
 #ifdef __cplusplus
@@ -175,13 +180,19 @@
 # define __IMP(S) _imp__ ## S
 #endif
 
+#if  __MINGW_GNUC_PREREQ (3, 1)
+#define __MINGW_ATTRIB_DEPRECATED __attribute__ ((__deprecated__))
+#else
+#define __MINGW_ATTRIB_DEPRECATED
+#endif /* GNUC >= 3.1 */
+
 #ifndef __MSVCRT_VERSION__
 /*  High byte is the major version, low byte is the minor. */
 # define __MSVCRT_VERSION__ 0x0600
 #endif
 
-#define __MINGW32_VERSION 3.10
+#define __MINGW32_VERSION 3.11
 #define __MINGW32_MAJOR_VERSION 3
-#define __MINGW32_MINOR_VERSION 10
+#define __MINGW32_MINOR_VERSION 11
 
 #endif /* __MINGW_H */

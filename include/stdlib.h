@@ -14,13 +14,14 @@
 /* All the headers include this file. */
 #include <_mingw.h>
 
-
 #define __need_size_t
 #define __need_wchar_t
 #define __need_NULL
 #ifndef RC_INVOKED
 #include <stddef.h>
 #endif /* RC_INVOKED */
+
+#include <stdint.h> /* For uintptr_t */
 
 /*
  * RAND_MAX is the maximum value that may be returned by rand.
@@ -324,10 +325,8 @@ _CRTIMP long __cdecl _wtol (const wchar_t *);
 #endif
 #endif
 _CRTIMP double __cdecl	strtod	(const char*, char**);
-#if !defined __NO_ISOCEXT  /* extern stub in static libmingwex.a */
-float __cdecl strtof (const char *, char **);
-__CRT_INLINE float __cdecl strtof (const char *__nptr, char **__endptr)
-  { return (strtod (__nptr, __endptr));}
+#if !defined __NO_ISOCEXT  /*  in libmingwex.a */
+float __cdecl strtof (const char * __restrict__, char ** __restrict__);
 long double __cdecl strtold (const char * __restrict__, char ** __restrict__);
 #endif /* __NO_ISOCEXT */
 
@@ -337,10 +336,8 @@ _CRTIMP unsigned long __cdecl	strtoul	(const char*, char**, int);
 #ifndef _WSTDLIB_DEFINED
 /*  also declared in wchar.h */
 _CRTIMP double __cdecl	wcstod	(const wchar_t*, wchar_t**);
-#if !defined __NO_ISOCEXT /* extern stub in static libmingwex.a */
-float __cdecl wcstof( const wchar_t *, wchar_t **);
-__CRT_INLINE float __cdecl wcstof( const wchar_t *__nptr, wchar_t **__endptr)
-{  return (wcstod(__nptr, __endptr)); }
+#if !defined __NO_ISOCEXT /*  in libmingwex.a */
+float __cdecl wcstof( const wchar_t * __restrict__, wchar_t ** __restrict__);
 long double __cdecl wcstold (const wchar_t * __restrict__, wchar_t ** __restrict__);
 #endif /* __NO_ISOCEXT */
 
@@ -410,9 +407,10 @@ _CRTIMP ldiv_t __cdecl	ldiv	(long, long) __MINGW_ATTRIB_CONST;
  * NOTE: Officially the three following functions are obsolete. The Win32 API
  *       functions SetErrorMode, Beep and Sleep are their replacements.
  */
-_CRTIMP void __cdecl	_beep (unsigned int, unsigned int);
-_CRTIMP void __cdecl	_seterrormode (int);
-_CRTIMP void __cdecl	_sleep (unsigned long);
+_CRTIMP void __cdecl   _beep (unsigned int, unsigned int) __MINGW_ATTRIB_DEPRECATED;
+/* Not to be confused with  _set_error_mode (int).  */
+_CRTIMP void __cdecl   _seterrormode (int) __MINGW_ATTRIB_DEPRECATED;
+_CRTIMP void __cdecl   _sleep (unsigned long) __MINGW_ATTRIB_DEPRECATED;
 #endif
 
 _CRTIMP void __cdecl	_exit	(int) __MINGW_ATTRIB_NORETURN;
@@ -461,13 +459,31 @@ _CRTIMP void __cdecl    _wmakepath(wchar_t*, const wchar_t*, const wchar_t*, con
 _CRTIMP void __cdecl	_wsplitpath (const wchar_t*, wchar_t*, wchar_t*, wchar_t*, wchar_t*);
 _CRTIMP wchar_t* __cdecl    _wfullpath (wchar_t*, const wchar_t*, size_t);
 
+_CRTIMP unsigned int __cdecl _rotl(unsigned int, int) __MINGW_ATTRIB_CONST;
+_CRTIMP unsigned int __cdecl _rotr(unsigned int, int) __MINGW_ATTRIB_CONST;
+_CRTIMP unsigned long __cdecl _lrotl(unsigned long, int) __MINGW_ATTRIB_CONST;
+_CRTIMP unsigned long __cdecl _lrotr(unsigned long, int) __MINGW_ATTRIB_CONST;
+
 _CRTIMP int __cdecl _set_error_mode (int);
 #define _OUT_TO_DEFAULT	0
 #define _OUT_TO_STDERR	1
 #define _OUT_TO_MSGBOX	2
 #define _REPORT_ERRMODE	3
 
-#endif
+#if __MSVCRT_VERSION__ >= 0x800
+_CRTIMP unsigned int __cdecl _set_abort_behavior (unsigned int, unsigned int);
+/* These masks work with msvcr80.dll version 8.0.50215.44 (a beta release).  */
+#define _WRITE_ABORT_MSG 1
+#define _CALL_REPORTFAULT 2
+
+typedef void (* _invalid_parameter_handler) (const wchar_t *,
+                                            const wchar_t *,
+                                            const wchar_t *,
+                                            unsigned int,
+                                            uintptr_t);
+_invalid_parameter_handler _set_invalid_parameter_handler (_invalid_parameter_handler);
+#endif /* __MSVCRT_VERSION__ >= 0x800 */
+#endif /* __MSVCRT__ */
 
 #if defined(__MSVCRT__) || defined (__COREDLL__)
 _CRTIMP unsigned int __cdecl _rotl(unsigned int, int) __MINGW_ATTRIB_CONST;

@@ -9,7 +9,9 @@
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#ifndef __COREDLL__
 #include <locale.h>
+#endif
 #include <wchar.h>
 #include <stdlib.h>
 #include <string.h>
@@ -20,6 +22,7 @@ extern int __asctoe64(const char * __restrict__ ss,
 
 static __inline__ unsigned int get_codepage (void)
 {
+#ifndef __COREDLL__
   char* cp;
 
   /*
@@ -29,6 +32,7 @@ static __inline__ unsigned int get_codepage (void)
   if ((cp = strchr(setlocale(LC_CTYPE, NULL), '.')))
     return atoi( cp + 1);
   else
+#endif
     return 0;
 }
 
