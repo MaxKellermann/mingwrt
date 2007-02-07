@@ -1,5 +1,9 @@
 2007-02-07  Pedro Alves  <pedro_alves@portugalmail.pt>
 
+	* mingwex/wince/fdopen.c (fdopen): Include stdlib.h.
+
+2007-02-07  Pedro Alves  <pedro_alves@portugalmail.pt>
+
 	* mingwex/btowc.c (btowc): get_cp_from_locale was renamed to 
 	get_codepage upstream.  Update call.
 
