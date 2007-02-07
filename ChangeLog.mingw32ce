@@ -1,5 +1,10 @@
 2007-02-07  Pedro Alves  <pedro_alves@portugalmail.pt>
 
+	* mingwex/btowc.c (btowc): get_cp_from_locale was renamed to 
+	get_codepage upstream.  Update call.
+
+2007-02-07  Pedro Alves  <pedro_alves@portugalmail.pt>
+
 	* mingwex/wcstold.c: Update from upstream.
 	(_mbslen): New function.
 
