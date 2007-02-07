@@ -202,7 +202,9 @@ extern Char *MALLOC ANSI((size_t));
 #define IEEE_Arith
 #endif
 
+#ifndef NO_ERRNO
 #include <errno.h>
+#endif
 #ifdef Bad_float_h
 
 #ifdef IEEE_Arith
