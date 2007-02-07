@@ -1,4 +1,20 @@
 2007-02-07  Pedro Alves  <pedro_alves@portugalmail.pt>
+	
+	* include/math.h: Expose __fpclassifyf, __fpclassify,
+	__fpclassifyl, and fpclassify.
+	(_isnanl): Implement on terms of fpclassify.
+	(isnan): New version for __COREDLL__.
+	Expose functions that depend on fpclassify.
+	* mingwex/mathce/_fpmath.h: New.
+	* mingwex/mathce/fpmath.h: New.
+	* mingwex/mathce/fpclassify.c: New.
+	* mingwex/mathce/s_isinf.c: Undefine isinf before
+	definition.
+	* mingwex/mathce/math_private.h (_BIG_ENDIAN, _LITTLE_ENDIAN,
+	_BYTE_ORDER): New defines.
+	* mingwex/Makefile.in (MATHCE_OBJS): Add fpclassify.o.
+
+2007-02-07  Pedro Alves  <pedro_alves@portugalmail.pt>
 
 	* mingwex/wince/mb_cur_max.c: New file.
 	* mingwex/Makefile.in (WINCE_OBJS): Add mb_cur_max.o

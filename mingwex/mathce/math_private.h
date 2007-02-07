@@ -38,8 +38,11 @@ typedef uint32_t u_int;
 
 #define BIG_ENDIAN 0
 #define LITTLE_ENDIAN 1
-
 #define BYTE_ORDER LITTLE_ENDIAN
+
+#define _BIG_ENDIAN BIG_ENDIAN
+#define _LITTLE_ENDIAN LITTLE_ENDIAN
+#define _BYTE_ORDER BYTE_ORDER
 
 #endif /* __MINGW32CE__ */
 
