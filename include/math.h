@@ -308,8 +308,6 @@ extern const double __QNAN;
 
 /* 7.12.3.1 */
 
-#ifdef __i386__
-
 /*
    Return values for fpclassify.
    These are based on Intel x87 fpu condition codes
@@ -333,12 +331,15 @@ extern const double __QNAN;
 
 extern int __cdecl __fpclassifyf (float);
 extern int __cdecl __fpclassify (double);
+extern int __cdecl __fpclassifyl (long double);
 
+#ifdef __i386__
 __CRT_INLINE int __cdecl __fpclassifyl (long double x){
   unsigned short sw;
   __asm__ ("fxam; fstsw %%ax;" : "=a" (sw): "t" (x));
   return sw & (FP_NAN | FP_NORMAL | FP_ZERO );
 }
+#endif
 
 #define fpclassify(x) (sizeof (x) == sizeof (float) ? __fpclassifyf (x)	  \
 		       : sizeof (x) == sizeof (double) ? __fpclassify (x) \
@@ -350,18 +351,13 @@ __CRT_INLINE int __cdecl __fpclassifyl (long double x){
 /* 7.12.3.3 */
 #define isinf(x) (fpclassify(x) == FP_INFINITE)
 
-#else
-
-extern int isfinite (double x);
-extern int isinf (double x);
-
-#endif
-
 /* 7.12.3.4 */
 /* We don't need to worry about truncation here:
    A NaN stays a NaN. */
 
 #ifdef __i386__
+/* The isnan define could be implemented in terms 
+   of fpclassify.  It would compile to the same thing.  */
 __CRT_INLINE int __cdecl __isnan (double _x)
 {
   unsigned short sw;
@@ -389,15 +385,25 @@ __CRT_INLINE int __cdecl __isnanl (long double _x)
     == FP_NAN;
 }
 
-
 #define isnan(x) (sizeof (x) == sizeof (float) ? __isnanf (x)	\
 		  : sizeof (x) == sizeof (double) ? __isnan (x)	\
 		  : __isnanl (x))
 
-#else
-extern int isnan (double x);
-extern int isnanf (float x);
-#endif
+#endif /* __i386__ */
+
+#ifdef __COREDLL__
+__CRT_INLINE int __cdecl _isnanl (long double _x)
+{
+  int sw = fpclassify (_x);
+  return (sw & (FP_NAN | FP_NORMAL | FP_INFINITE | FP_ZERO | FP_SUBNORMAL))
+    == FP_NAN;  
+}
+
+#define isnan(x) (sizeof (x) == sizeof (float) ? _isnanf (x)	\
+		  : sizeof (x) == sizeof (double) ? _isnan (x)	\
+		  : _isnanl (x))
+
+#endif /* __COREDLL__ */
 
 /* 7.12.3.5 */
 #define isnormal(x) (fpclassify(x) == FP_NORMAL)

@@ -230,7 +230,8 @@ MATHCE_OBJS = \
 	s_trunc.o s_truncf.o w_acosf.o w_acosh.o w_acoshf.o w_asinf.o w_atan2f.o \
 	w_atanh.o w_coshf.o w_expf.o w_hypotf.o w_lgamma.o w_lgammaf.o w_log2.o w_log2f.o \
 	w_log10f.o w_logf.o w_powf.o w_remainder.o w_remainderf.o w_sinhf.o \
-	w_tgamma.o w_tgammaf.o
+	w_tgamma.o w_tgammaf.o fpclassify.o
+
 GDTOA_OBJS = \
 	dmisc.o dtoa.o g__fmt.o g_dfmt.o g_ffmt.o g_xfmt.o gdtoa.o \
 	gethex.o gmisc.o hd_init.o hexnan.o misc.o smisc.o \
