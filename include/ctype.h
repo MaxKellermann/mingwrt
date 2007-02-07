@@ -100,10 +100,8 @@ _CRTIMP int __cdecl _toupper(int);
 #  define MB_CUR_MAX __mb_cur_max_dll
    __MINGW_IMPORT int __mb_cur_max_dll;
 # elif defined (__COREDLL__)
-  /* No locale support, so we set it to maximum.  */
-  /* From limits.h.  */
-  /* #define MB_CUR_MAX MB_LEN_MAX 2 */
-#  define MB_CUR_MAX 2
+#  define MB_CUR_MAX __mb_cur_max()
+   _CRTIMP int __mb_cur_max (void);
 # endif	/* __CRTDLL__ */
 
 #else		/* ! __DECLSPEC_SUPPORTED */
