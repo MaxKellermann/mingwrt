@@ -397,9 +397,7 @@ inline int __cdecl ferror (FILE* __F)
 #endif
 
 _CRTIMP void __cdecl	clearerr (FILE*);
-#ifndef __COREDLL__
 _CRTIMP void __cdecl	perror (const char*);
-#endif
 
 #ifndef __STRICT_ANSI__
 #ifndef __COREDLL__

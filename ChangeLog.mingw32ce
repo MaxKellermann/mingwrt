@@ -2,6 +2,7 @@
 	
 	* mingwex/Makefile.in (STDIO_OBJS_CE): New.
 	(LIB_OBJS): Add STDIO_OBJS_CE.
+	* include/stdio.h (perror): Expose.
 
 2007-02-24  Pedro Alves  <pedro_alves@portugalmail.pt>
 	
