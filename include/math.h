@@ -392,6 +392,9 @@ __CRT_INLINE int __cdecl __isnanl (long double _x)
 #endif /* __i386__ */
 
 #ifdef __COREDLL__
+extern int __cdecl _isnanf (float _x);
+extern int __cdecl _isnan (double _x);
+
 __CRT_INLINE int __cdecl _isnanl (long double _x)
 {
   int sw = fpclassify (_x);
