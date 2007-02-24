@@ -247,8 +247,9 @@ _CRTIMP int __cdecl _setmode (int, int);
 /* MS puts remove & rename (but not wide versions) in io.h as well
    as in stdio.h. */
 _CRTIMP int __cdecl	remove (const char*);
+#endif
 _CRTIMP int __cdecl	rename (const char*, const char*);
-
+#ifndef __COREDLL__
 /* SH_... flags for nShFlags defined in share.h
  * Optional fourth argument is unsigned unPermissions */
 _CRTIMP int __cdecl _sopen (const char*, int, int, ...);

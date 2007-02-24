@@ -194,7 +194,9 @@ _CRTIMP int __cdecl	fclose (FILE*);
 #ifndef __COREDLL__
 /* MS puts remove & rename (but not wide versions) in io.h  also */
 _CRTIMP int __cdecl	remove (const char*);
+#endif
 _CRTIMP int __cdecl	rename (const char*, const char*);
+#ifndef __COREDLL__
 _CRTIMP FILE* __cdecl	tmpfile (void);
 _CRTIMP char* __cdecl	tmpnam (char*);
 #endif /* __COREDLL__ */
@@ -423,9 +425,15 @@ _CRTIMP int __cdecl	_fputchar (int);
 _CRTIMP FILE* __cdecl	_fdopen (int, const char*);
 #ifndef __COREDLL__
 _CRTIMP FILE* __cdecl	_fsopen(const char*, const char*, int);
+#endif
+#ifdef __COREDLL__
+/* We know the Microsoft defines _fileno as returning
+   a void* (HANDLE), but that is so anoying, that we
+   define it as returning int, which is ok on arm (32-bit).
+_CRTIMP void* __cdecl _fileno (FILE*); */
 _CRTIMP int __cdecl	_fileno (FILE*);
 #else
-_CRTIMP void* __cdecl _fileno (FILE*);
+_CRTIMP int __cdecl	_fileno (FILE*);
 #endif
 _CRTIMP int __cdecl	_fcloseall(void);
 #ifdef __MSVCRT__
@@ -445,7 +453,11 @@ _CRTIMP int __cdecl	fgetchar (void);
 _CRTIMP int __cdecl	fputchar (int);
 _CRTIMP int __cdecl	fileno (FILE*);
 #else
-_CRTIMP void* __cdecl	fileno (FILE*);
+/* We know the Microsoft defines _fileno as returning
+   a void* (HANDLE), but that is so anoying, that we
+   define it as returning int, which is ok on arm (32-bit).
+_CRTIMP void* __cdecl fileno (FILE*); */
+_CRTIMP int __cdecl	fileno (FILE*);
 #endif
 #endif	/* Not _NO_OLDNAMES */
 

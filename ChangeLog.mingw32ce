@@ -3,6 +3,11 @@
 	* mingwex/mathce/s_roundf.c (isinff, isnanf): Define on
 	__MINGW32CE__
 	* include/math.h (_isnanf, _isnan): Declare.
+	* include/io.h (rename): Expose.
+	* include/stdio.h (rename): Expose.
+	(_fileno, fileno): Revert to int return type.
+	* mingwex/wince/rename.c: New.
+	* mingwex/wince/chmod.c: New.
 
 2007-02-07  Pedro Alves  <pedro_alves@portugalmail.pt>
 	
