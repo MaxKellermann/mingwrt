@@ -30,7 +30,8 @@
 #include "math_private.h"
 
 #ifdef __MINGW32CE__
-#define isinff(x) isinf((float)x)
+#define isinff(x) isinf(x)
+#define isnanf(x) isnan(x)
 #endif
 
 float
