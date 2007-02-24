@@ -162,6 +162,8 @@ STDIO_OBJS = \
 	fopen64.o fseeko64.o ftello64.o lseek64.o \
 	snprintf.o  vsnprintf.o snwprintf.o vsnwprintf.o \
 	vfscanf.o vfwscanf.o vscanf.o vsscanf.o vswscanf.o vwscanf.o
+STDIO_OBJS_CE = \
+	snprintf.o vsnprintf.o snwprintf.o vsnwprintf.o
 MATH_OBJS = \
 	acosf.o acosl.o asinf.o asinl.o atan2f.o atan2l.o \
 	atanf.o atanl.o cbrt.o cbrtf.o cbrtl.o ceilf.o ceill.o \
@@ -239,7 +241,7 @@ GDTOA_OBJS = \
 
 MATHCE_FLAGS=
 ifneq (,$(findstring wince,$(target_alias)))
-LIB_OBJS = $(WINCE_OBJS) $(MATHCE_OBJS) $(Q8_OBJS)
+LIB_OBJS = $(WINCE_OBJS) $(MATHCE_OBJS) $(Q8_OBJS) $(STDIO_OBJS_CE)
 MATHCE_FLAGS=-D_IEEE_LIBM
 MATHDIR=mathce
 else
