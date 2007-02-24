@@ -1,27 +1,16 @@
-#include <time.h>
-#include <windows.h>
+#include "timeutil.h"
 
 time_t
-time (time_t * timer)
+time (time_t *timer)
 {
-  SYSTEMTIME systime;
-  struct tm tmtime;
-  time_t tt;
+  SYSTEMTIME s;
+  FILETIME f;
 
-  GetLocalTime (&systime);
+  if (timer == NULL)
+    return 0;
 
-  tmtime.tm_year = systime.wYear - 1900;
-  tmtime.tm_mon = systime.wMonth - 1;
-  tmtime.tm_mday = systime.wDay;
-  tmtime.tm_wday = systime.wDayOfWeek;
-  tmtime.tm_hour = systime.wHour;
-  tmtime.tm_min = systime.wMinute;
-  tmtime.tm_sec = systime.wSecond;
-
-  tt = mktime (&tmtime);
-
-  if (timer)
-    *timer = tt;
-
-  return tt;
+  GetSystemTime (&s);
+  SystemTimeToFileTime (&s, &f);
+  *timer = __FILETIME_to_time_t (&f);
+  return *timer;
 }

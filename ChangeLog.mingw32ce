@@ -8,7 +8,23 @@
 	(_fileno, fileno): Revert to int return type.
 	* mingwex/wince/rename.c: New.
 	* mingwex/wince/chmod.c: New.
-
+	* mingwex/Makefile.in (WINCE_OBJS): Add rename.o, stat.o,
+	chmod.o, utime.o ,futime.o, timeutil.o and ctime.o.
+	(MATHCE_OBJS): Avoid going over 80 text columns.
+	* mingwex/wince/timeutil.c: New.
+	* mingwex/wince/timeutil.h: New.
+	* mingwex/wince/gmtime.c: Reimplement.
+	* mingwex/wince/mktime.c: Likewise.
+	* mingwex/wince/time.c: Likewise.
+	* mingwex/wince/localtime.c: Likewise.
+	* mingwex/wince/utime.c: New.
+	* mingwex/wince/futime.c: New.
+	* mingwex/wince/ctime.c: New.
+	* mingwex/wince/stat.c: New.
+	* include/sys/stat.h (_fstat, _chmod, _stat, fstat,
+	chmod, stat): Expose.
+	* include/sys/utime.h (_utime, utime, _futime): Expose.
+	
 2007-02-07  Pedro Alves  <pedro_alves@portugalmail.pt>
 	
 	* include/math.h: Expose __fpclassifyf, __fpclassify,

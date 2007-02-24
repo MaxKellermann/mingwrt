@@ -213,8 +213,9 @@ WINCE_OBJS = \
 	asctime.o freopen.o gmtime.o localtime.o mktime.o strftime.o time.o \
 	tempnam.o unlink.o wcsftime.o fdopen.o read.o write.o open.o lseek.o \
 	close.o isalnum.o isalpha.o iscntrl.o isgraph.o islower.o isprint.o \
-	ispunct.o isspace.o isupper.o isxdigit.o _tolower.o _toupper.o mb_cur_max.o
-
+	ispunct.o isspace.o isupper.o isxdigit.o _tolower.o _toupper.o \
+	mb_cur_max.o rename.o stat.o chmod.o utime.o futime.o timeutil.o \
+	ctime.o
 MATHCE_OBJS = \
 	e_acosf.o e_acosh.o e_acoshf.o e_asinf.o e_atan2f.o e_atanh.o e_coshf.o \
 	e_expf.o e_gamma_r.o e_gammaf_r.o e_lgamma_r.o e_lgammaf_r.o e_log10f.o \
@@ -228,10 +229,9 @@ MATHCE_OBJS = \
 	s_modff.o s_nextafterf.o s_rint.o s_rintf.o s_round.o s_roundf.o \
 	s_scalbn.o s_scalbnf.o s_signgam.o s_sinf.o s_tanf.o s_tanh.o s_tanhf.o \
 	s_trunc.o s_truncf.o w_acosf.o w_acosh.o w_acoshf.o w_asinf.o w_atan2f.o \
-	w_atanh.o w_coshf.o w_expf.o w_hypotf.o w_lgamma.o w_lgammaf.o w_log2.o w_log2f.o \
-	w_log10f.o w_logf.o w_powf.o w_remainder.o w_remainderf.o w_sinhf.o \
-	w_tgamma.o w_tgammaf.o fpclassify.o
-
+	w_atanh.o w_coshf.o w_expf.o w_hypotf.o w_lgamma.o w_lgammaf.o w_log2.o \
+	w_log2f.o w_log10f.o w_logf.o w_powf.o w_remainder.o w_remainderf.o \
+	w_sinhf.o w_tgamma.o w_tgammaf.o fpclassify.o
 GDTOA_OBJS = \
 	dmisc.o dtoa.o g__fmt.o g_dfmt.o g_ffmt.o g_xfmt.o gdtoa.o \
 	gethex.o gmisc.o hd_init.o hexnan.o misc.o smisc.o \
