@@ -190,7 +190,8 @@ MOLD_OBJS = isascii.o iscsym.o iscsymf.o toascii.o \
 	strcasecmp.o strncasecmp.o wcscmpi.o
 
 ifneq (,$(findstring wince,$(target_alias)))
-LIBS = libmingw32.a \
+LIBS = libcoredll.a \
+       libmingw32.a \
        libceoldname.a \
        $(LIBM_A) \
        libmingwthrd.a
@@ -494,6 +495,7 @@ force:
 #
 # Dependancies
 #
+libcoredll.a: coredll.def
 libcrtdll.a: crtdll.def
 libmsvcrt.a: msvcrt.def
 libmsvcrtd.a: msvcrtd.def
