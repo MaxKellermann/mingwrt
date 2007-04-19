@@ -52,3 +52,9 @@ _tempnam (const char *dir, const char *prefix)
   mbstowcs (wprefix, prefix, MAX_PATH);
   return tempnam_imp (wdir, wprefix, wcstombs_dup);
 }
+
+char *
+tempnam (const char *dir, const char *prefix)
+{
+  return _tempnam (dir, prefix);
+}

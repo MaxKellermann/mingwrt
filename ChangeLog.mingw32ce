@@ -1,3 +1,9 @@
+2007-04-19  Pedro Alves  <pedro_alves@portugalmail.pt>
+	
+	* moldname.def.in (tempnam): Don't export on
+	coredll.dll.
+	* mingwex/wince/tempnam.c (tempnam): New.
+
 2007-03-26  Pedro Alves  <pedro_alves@portugalmail.pt>
 	
 	* mingwex/Makefile.in (LIBS): Add libcoredll.a.

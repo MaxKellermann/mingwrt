@@ -130,8 +130,8 @@ strupr
 swab
 #ifndef __COREDLL__
 tell
-#endif /* __COREDLL__ */
 tempnam
+#endif /* __COREDLL__ */
 #if  (__MSVCRT__)
 timezone DATA
 #endif
