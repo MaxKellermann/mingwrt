@@ -1,23 +1,22 @@
 2007-04-19  Pedro Alves  <pedro_alves@portugalmail.pt>
-	
-	* moldname.def.in (tempnam): Don't export on
-	coredll.dll.
+
+	* moldname.def.in (tempnam): Don't export from coredll.dll.
 	* mingwex/wince/tempnam.c (tempnam): New.
 
 2007-03-26  Pedro Alves  <pedro_alves@portugalmail.pt>
-	
+
 	* mingwex/Makefile.in (LIBS): Add libcoredll.a.
 	(libcoredll.a): Add dependencies rule.
 	* coredll.def: Add 'keep in sync' warning.
 
 2007-02-24  Pedro Alves  <pedro_alves@portugalmail.pt>
-	
+
 	* mingwex/Makefile.in (STDIO_OBJS_CE): New.
 	(LIB_OBJS): Add STDIO_OBJS_CE.
 	* include/stdio.h (perror): Expose.
 
 2007-02-24  Pedro Alves  <pedro_alves@portugalmail.pt>
-	
+
 	* mingwex/mathce/s_roundf.c (isinff, isnanf): Define on
 	__MINGW32CE__
 	* include/math.h (_isnanf, _isnan): Declare.
@@ -44,7 +43,7 @@
 	* include/sys/utime.h (_utime, utime, _futime): Expose.
 	
 2007-02-07  Pedro Alves  <pedro_alves@portugalmail.pt>
-	
+
 	* include/math.h: Expose __fpclassifyf, __fpclassify,
 	__fpclassifyl, and fpclassify.
 	(_isnanl): Implement on terms of fpclassify.
@@ -175,7 +174,7 @@
 	* mingwex/wince/isxdigit.c: New file.
 	* mingwex/wince/_tolower.c: New file.
 	* mingwex/wince/_toupper.c: New file.
-	
+
 2006-12-30  Danny Backx  <dannybackx@users.sourceforge.net>
 
 	* profile : Create a profile/profile tree as a copy of the
@@ -381,8 +380,9 @@
 	* __dllonexit.c : Likewise.
 	* dllcrt1.c : Don't include io.h on __COREDLL__.
 	* crt1.c : Likewise.
-	
+
 2006-10-15  Danny Backx  <dannybackx@sourceforge.net>
+
 	* configure.in: always configure profile subdirectory.
 	* configure: regenerated due to configure.in changes.
 	* profile/gcrt0.c profile/gmon.c profile/profil.h
@@ -399,10 +399,17 @@
 
 2006-10-05  Pedro Alves  <pedro_alves@portugalmail.pt>
 
-	* include/_mingw.h (__CRT_INLINE): Use __attribute__ ((__always_inline__))
-	on Windows CE.
+	* include/_mingw.h (__CRT_INLINE): Use
+	__attribute__ ((__always_inline__)) on Windows CE.
 
 2006-10-05  Pedro Alves  <pedro_alves@portugalmail.pt>
 
-	* include/ctype.h: Always use the inline versions of is*
-	on Windows CE.
+	* include/ctype.h: Always use the inline versions of is* on
+	Windows CE.
+
+Local Variables:
+mode: change-log
+left-margin: 8
+fill-column: 74
+version-control: never
+End:
