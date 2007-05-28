@@ -141,9 +141,6 @@ tzname DATA
 tzset
 umask
 ungetch
-#endif /* __COREDLL__ */
-unlink
-#ifndef __COREDLL__
 utime
 #endif /* __COREDLL__ */
 wcsdup
