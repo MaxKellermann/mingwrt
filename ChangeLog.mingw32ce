@@ -1,3 +1,7 @@
+2007-06-09  Pedro Alves  <pedro_alves@portugalmail.pt>
+
+	* mingwex/wince/time.c (time): Handle NULL input.
+
 2007-05-28  Pedro Alves  <pedro_alves@portugalmail.pt>
 
 	* moldname.def.in (unlink): Don't export from coredll.dll.

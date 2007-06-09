@@ -5,9 +5,10 @@ time (time_t *timer)
 {
   SYSTEMTIME s;
   FILETIME f;
+  time_t t;
 
   if (timer == NULL)
-    return 0;
+    timer = &t;
 
   GetSystemTime (&s);
   SystemTimeToFileTime (&s, &f);
