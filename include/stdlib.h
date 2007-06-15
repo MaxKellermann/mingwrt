@@ -14,6 +14,13 @@
 /* All the headers include this file. */
 #include <_mingw.h>
 
+#ifdef __COREDLL__
+/*
+ * On Windows CE, including stdio.h or stdlib.h has the same result.
+ */
+#include <stdio.h>
+#endif
+
 #define __need_size_t
 #define __need_wchar_t
 #define __need_NULL

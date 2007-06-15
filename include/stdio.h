@@ -28,6 +28,12 @@
 #include <stdarg.h>
 #endif	/* Not RC_INVOKED */
 
+#ifdef __COREDLL__
+/*
+ * On Windows CE, including stdio.h or stdlib.h has the same result.
+ */
+#include <stdlib.h>
+#endif
 
 /* Flags for the iobuf structure  */
 #define	_IOREAD	1 /* currently reading */
