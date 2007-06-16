@@ -6,7 +6,7 @@
  * No warranty is given; refer to the file DISCLAIMER within the package.
  *
  * Written by Pedro Alves <pedro_alves@portugalmail.pt> 10 Feb 2007
- *      
+ *
  */
 
 #include <windows.h>
@@ -42,7 +42,7 @@ do { \
 } while (0)
 
 static int
-__stat_by_file_info (struct stat_file_info_t *fi, struct stat* st, int exec)
+__stat_by_file_info (struct stat_file_info_t *fi, struct stat *st, int exec)
 {
   int permission = _S_IREAD;
 
@@ -52,7 +52,7 @@ __stat_by_file_info (struct stat_file_info_t *fi, struct stat* st, int exec)
   st->st_mode = _S_IFREG;
 
   if((fi->dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0)
-    st->st_mode |= _S_IFDIR | _S_IEXEC;
+    st->st_mode = _S_IFDIR | _S_IEXEC;
   else if (exec)
     permission |= _S_IEXEC;
 
@@ -62,21 +62,21 @@ __stat_by_file_info (struct stat_file_info_t *fi, struct stat* st, int exec)
   st->st_mode |= permission | (permission >> 3) | (permission >> 6);
 
   st->st_nlink = 1; /* always 1? */
-  st->st_rdev = 1; /* Where to get drive info?  */ 
+  st->st_rdev = 1; /* Where to get drive info?  */
   st->st_ino = 0; /* always 0 on Windows */
 
   st->st_mtime = __FILETIME_to_time_t (&fi->ftLastWriteTime);
   st->st_ctime = __FILETIME_to_time_t (&fi->ftCreationTime);
   st->st_atime = __FILETIME_to_time_t (&fi->ftLastAccessTime);
 
-  /* Looks like the code below is never triggered.  
+  /* Looks like the code below is never triggered.
      Windows CE always only keeps the LastWriteTime, and
 	copies it to the CreationTime and LastAccessTime fields.  */
-  if (st->st_ctime == 0) 
+  if (st->st_ctime == 0)
     st->st_ctime = st->st_mtime;
-  if (st->st_atime == 0) 
+  if (st->st_atime == 0)
     {
-	 /* On XP, at least, the st_atime is always set to the same 
+	 /* On XP, at least, the st_atime is always set to the same
 	    as the st_mtime, except the hour/min/sec == 00:00:00.  */
 	 SYSTEMTIME s;
 	 FILETIME f = fi->ftLastWriteTime;
@@ -90,18 +90,18 @@ __stat_by_file_info (struct stat_file_info_t *fi, struct stat* st, int exec)
   return 0;
 }
 
-int 
+int
 fstat (int fd, struct stat *st)
 {
   BY_HANDLE_FILE_INFORMATION fi;
   struct stat_file_info_t sfi;
- 
+
   GetFileInformationByHandle ((HANDLE)fd, &fi);
   TO_STAT_FILE_INFO (&sfi, &fi);
   return __stat_by_file_info (&sfi, st, 0);
 }
 
-int 
+int
 _stat (const char *path, struct _stat *st)
 {
   WIN32_FIND_DATAW fd;
@@ -125,14 +125,14 @@ _stat (const char *path, struct _stat *st)
   TO_STAT_FILE_INFO (&sfi, &fd);
 
   len = strlen (path);
-  exec = (len >= 4 
+  exec = (len >= 4
 		    && strcasecmp (path + len - 4, ".exe") == 0);
   ret = __stat_by_file_info (&sfi, (struct stat*)st, exec);
   FindClose (h);
   return ret;
 }
 
-int 
+int
 stat (const char *path, struct stat *st)
 {
   return _stat (path, (struct _stat *)st);
