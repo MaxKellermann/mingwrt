@@ -1,6 +1,6 @@
 2007-06-16  Pedro Alves  <pedro_alves@portugalmail.pt>
 
-	* mingwex/wince/stat.c: Fix whitespacing and formatting throught.
+	* mingwex/wince/stat.c: Fix whitespacing and formatting throughout.
 	(__stat_by_file_info): Don't set _S_IFREG on directories.
 
 2007-06-15  Pedro Alves  <pedro_alves@portugalmail.pt>
