@@ -42,7 +42,7 @@ do { \
 } while (0)
 
 static int
-__stat_by_file_info (struct stat_file_info_t *fi, struct stat *st, int exec)
+__stat_by_file_info (struct stat_file_info_t *fi, struct _stat *st, int exec)
 {
   int permission = _S_IREAD;
 
@@ -91,7 +91,7 @@ __stat_by_file_info (struct stat_file_info_t *fi, struct stat *st, int exec)
 }
 
 int
-fstat (int fd, struct stat *st)
+_fstat (int fd, struct _stat *st)
 {
   BY_HANDLE_FILE_INFORMATION fi;
   struct stat_file_info_t sfi;
@@ -99,6 +99,12 @@ fstat (int fd, struct stat *st)
   GetFileInformationByHandle ((HANDLE)fd, &fi);
   TO_STAT_FILE_INFO (&sfi, &fi);
   return __stat_by_file_info (&sfi, st, 0);
+}
+
+int
+fstat (int fd, struct stat *st)
+{
+  return _fstat (fd, (struct _stat *)st);
 }
 
 int
@@ -127,7 +133,7 @@ _stat (const char *path, struct _stat *st)
   len = strlen (path);
   exec = (len >= 4
 		    && strcasecmp (path + len - 4, ".exe") == 0);
-  ret = __stat_by_file_info (&sfi, (struct stat*)st, exec);
+  ret = __stat_by_file_info (&sfi, st, exec);
   FindClose (h);
   return ret;
 }
