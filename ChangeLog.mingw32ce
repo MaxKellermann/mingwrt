@@ -1,5 +1,13 @@
 2007-06-24  Pedro Alves  <pedro_alves@portugalmail.pt>
 
+	* mingwex/wince/findfile.c: New file.
+	* mingwex/wince/chsize.c: New file.
+	* mingwex/wince/access.c: New file.
+	* mingwex/wince/mkdir.c: New file.
+	* mingwex/wince/rmdir.c: New file.
+
+2007-06-24  Pedro Alves  <pedro_alves@portugalmail.pt>
+
 	* mingwex/wince/bsearch.c: New file.
 
 2007-06-24  Pedro Alves  <pedro_alves@portugalmail.pt>
