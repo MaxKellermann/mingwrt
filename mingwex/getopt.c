@@ -37,7 +37,9 @@
  */
 
 #include <assert.h>
+#ifndef __COREDLL__
 #include <errno.h>
+#endif
 #include <stdlib.h>
 #include <string.h>
 #include <getopt.h>
@@ -67,6 +69,10 @@ __weak_alias(getopt_long,_getopt_long)
 #define __progname __argv[0]
 #else
 extern char __declspec(dllimport) *__progname;
+#endif
+
+#ifdef __MINGW32CE__
+#define IS_POSIXLY_CORRECT 0
 #endif
 
 #define IGNORE_FIRST	(*options == '-' || *options == '+')

@@ -1,5 +1,28 @@
 2007-06-24  Pedro Alves  <pedro_alves@portugalmail.pt>
 
+	* mingwex/dirname.c (dirname) [__COREDLL__]: Don't handle drive names.
+	* mingwex/basename.c (basename) [__COREDLL__]: Likewise.
+	* mingwex/wdirent.c (UNICODE_DIRENT): New define.
+	* mingwex/dirent.c [__COREDLL__]: Don't include errno.h or direct.h.
+	(__set_errno): New.
+	(ENOTDIR, EFAULT, EINVAL): Define.
+	(_TDIR, _TCHAR, _T, _topendir, _treaddir, _tclosedir, _trewinddir,
+	_ttelldir, tseekdir, _tfindfirst, _tfindnext, _tcscat, _tcsncpy,
+	_tcslen, _tcscpy, _tcsrchr, _tdirent) [!UNICODE_DIRENT]: Redefine to
+	the non-wide counterparts.
+	(_tGetFileAttributes) [__COREDLL__]: Reimplement for Windows CE.
+	(_topendir): Use __set_errno.  Avoid _tfullpath.
+	(_treaddir, _closedir, _trewinddir, _ttelldir, _tseekdir): Use
+	__set_errno.
+	* mingwex/wcstold.c: Don't compile on WinCE.
+	* mingwex/getopt.c [__COREDLL__]: Don't include errno.h.
+	(IS_POSIXLY_CORRECT) [__MINGW32CE__]: Hardcode to 0.
+	* mingwex/gettimeofday.c (gettimeofday) [__COREDLL__]: Replace
+	the GetSystemTimeAsFileTime call with GetSystemTime and
+	SystemTimeToFileTime.
+
+2007-06-24  Pedro Alves  <pedro_alves@portugalmail.pt>
+
 	* mingwex/wince/findfile.c: New file.
 	* mingwex/wince/chsize.c: New file.
 	* mingwex/wince/access.c: New file.

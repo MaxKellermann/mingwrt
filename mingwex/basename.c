@@ -37,9 +37,10 @@ __cdecl char *basename( char *path )
     /* step over the drive designator, if present ...
      * (FIXME: maybe should confirm *path is a valid drive designator).
      */
-
+#ifndef __COREDLL__
     if( path[1] == ':' )
       path += 2;
+#endif
 
     /* check again, just to ensure we still have a non-empty path name ... */
 

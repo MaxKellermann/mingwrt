@@ -8,11 +8,13 @@
 
  /* This routine has been placed in the public domain.*/
 
+#ifdef __COREDLL__
+/* coredll.dll doesn't export strtold.  */
+#else
+
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
-#ifndef __COREDLL__
 #include <locale.h>
-#endif
 #include <wchar.h>
 #include <stdlib.h>
 #include <string.h>
@@ -51,15 +53,15 @@ long double wcstold (const wchar_t * __restrict__ wcs, wchar_t ** __restrict__ w
   char * cse;
   unsigned int i;
   long double ret;
-  const unsigned int cp = get_codepage ();   
-  
+  const unsigned int cp = get_codepage ();
+
   /* Allocate enough room for (possibly) mb chars */
   cs = (char *) malloc ((wcslen(wcs)+1) * MB_CUR_MAX);
 
   if (cp == 0) /* C locale */
     {
       for (i = 0; (wcs[i] != 0) && wcs[i] <= 255; i++)
-        cs[i] = (char) wcs[i];                                                                                                                                                                                                                                                                                                   
+        cs[i] = (char) wcs[i];
       cs[i]  = '\0';
     }
   else
@@ -90,3 +92,5 @@ long double wcstold (const wchar_t * __restrict__ wcs, wchar_t ** __restrict__ w
 
   return ret;
 }
+
+#endif /* __COREDLL__ */

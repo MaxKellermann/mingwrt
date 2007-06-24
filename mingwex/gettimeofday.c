@@ -38,7 +38,13 @@ int __cdecl gettimeofday(struct timeval *__restrict__ tp,
 
   if(tp)
     {
+#ifndef __COREDLL__
       GetSystemTimeAsFileTime (&_now.ft);
+#else
+      SYSTEMTIME st;
+      GetSystemTime (&st);
+      SystemTimeToFileTime (&st, &_now.ft);
+#endif
       tp->tv_usec=(long)((_now.ns100 / 10ULL) % 1000000ULL );
       tp->tv_sec= (long)((_now.ns100 - _W32_FT_OFFSET) / 10000000ULL);
     }

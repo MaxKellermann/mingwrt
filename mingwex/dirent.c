@@ -4,35 +4,106 @@
  * This file is a part of the mingw-runtime package.
  * No warranty is given; refer to the file DISCLAIMER within the package.
  *
- * Derived from DIRLIB.C by Matt J. Weinstein 
+ * Derived from DIRLIB.C by Matt J. Weinstein
  * This note appears in the DIRLIB.H
  * DIRLIB.H by M. J. Weinstein   Released to public domain 1-Jan-89
  *
  * Updated by Jeremy Bettis <jeremy@hksys.com>
  * Significantly revised and rewinddir, seekdir and telldir added by Colin
  * Peters <colin@fu.is.saga-u.ac.jp>
- *	
+ *
  */
 
 #include <stdlib.h>
+#ifndef __COREDLL__
 #include <errno.h>
+#endif
 #include <string.h>
 #include <io.h>
+#ifndef __COREDLL__
 #include <direct.h>
+#endif
 #include <dirent.h>
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h> /* for GetFileAttributes */
 
 #include <tchar.h>
+
 #define SUFFIX	_T("*")
 #define	SLASH	_T("\\")
 
+#ifdef __COREDLL__
+/* Pretty safe in this file, since we are only setting errno, and never
+   reading it.  */
+
+#define __set_errno(ERR) SetLastError (ERR)
+
+#define ENOTDIR ERROR_DIRECTORY
+#define EFAULT ERROR_INVALID_ADDRESS
+#define EINVAL ERROR_INVALID_PARAMETER
+
+#ifndef UNICODE_DIRENT
+
+/* Windows CE is always UNICODE - work around it.  */
+#undef _TDIR
+#undef _TCHAR
+
+#undef _T
+
+#undef _topendir
+#undef _treaddir
+#undef _tclosedir
+#undef _trewinddir
+#undef _ttelldir
+#undef _tseekdir
+
+#undef _tfindfirst
+#undef _tfindnext
+
+#undef _tcscat
+#undef _tcsncpy
+#undef _tcslen
+#undef _tcscpy
+#undef _tcsrchr
+
+#undef _tdirent
+
+#define _TDIR DIR
+#define _TCHAR CHAR
+
+#define _T(S) S
+
+#define _topendir opendir
+#define _treaddir readdir
+#define _tclosedir closedir
+#define _trewinddir rewinddir
+#define _ttelldir telldir
+#define _tseekdir seekdir
+
+#define _tfindfirst _findfirst
+#define _tfindnext _findnext
+
+#define _tcscat strcat
+#define _tcsncpy strncpy
+#define _tcslen strlen
+#define _tcscpy strcpy
+#define _tcsrchr strrchr
+
+#define _tdirent dirent
+
+#endif
+
+#else
+#define __set_errno(ERR) do { errno = (ERR); } while (0)
+#endif
+
+#if !defined (__COREDLL__)
 
 /* Helper for opendir().  */
 static inline unsigned _tGetFileAttributes (const _TCHAR * tPath)
 {
-#ifdef _UNICODE
+#ifdef (_UNICODE)
   /* GetFileAttributesW does not work on W9x, so convert to ANSI */
   if (_osver & 0x8000)
     {
@@ -42,10 +113,26 @@ static inline unsigned _tGetFileAttributes (const _TCHAR * tPath)
       return GetFileAttributesA (aPath);
     }
   return GetFileAttributesW (tPath);
-#else
+#else /* _UNICODE */
   return GetFileAttributesA (tPath);
 #endif
 }
+
+#else /* __COREDLL__ */
+
+/* Helper for opendir().  */
+static inline unsigned _tGetFileAttributes (const _TCHAR * tPath)
+{
+#ifdef UNICODE_DIRENT
+  return GetFileAttributesW (tPath);
+#else
+  WCHAR wpath[MAX_PATH];
+  mbstowcs (wpath, tPath, MAX_PATH);
+  return GetFileAttributesW (wpath);
+#endif
+}
+
+#endif
 
 /*
  * opendir
@@ -53,24 +140,24 @@ static inline unsigned _tGetFileAttributes (const _TCHAR * tPath)
  * Returns a pointer to a DIR structure appropriately filled in to begin
  * searching a directory.
  */
-_TDIR * 
+_TDIR *
 _topendir (const _TCHAR *szPath)
 {
   _TDIR *nd;
   unsigned int rc;
   _TCHAR szFullPath[MAX_PATH];
-	
-  errno = 0;
+
+  __set_errno (0);
 
   if (!szPath)
     {
-      errno = EFAULT;
+      __set_errno (EFAULT);
       return (_TDIR *) 0;
     }
 
   if (szPath[0] == _T('\0'))
     {
-      errno = ENOTDIR;
+      __set_errno (ENOTDIR);
       return (_TDIR *) 0;
     }
 
@@ -79,18 +166,31 @@ _topendir (const _TCHAR *szPath)
   if (rc == (unsigned int)-1)
     {
       /* call GetLastError for more error info */
+#ifdef __COREDLL__
+      /* GetFileAttributes already sets LastError.  */
+#else
       errno = ENOENT;
+#endif
       return (_TDIR *) 0;
     }
   if (!(rc & FILE_ATTRIBUTE_DIRECTORY))
     {
       /* Error, entry exists but not a directory. */
+#ifdef __COREDLL__
+      /* GetFileAttributes already sets LastError.  */
+#else
       errno = ENOTDIR;
+#endif
       return (_TDIR *) 0;
     }
 
+#ifdef __COREDLL__
+  /* On Windows CE paths must always be absolute.  */
+  _tcsncpy (szFullPath, szPath, MAX_PATH);
+#else
   /* Make an absolute pathname.  */
   _tfullpath (szFullPath, szPath, MAX_PATH);
+#endif
 
   /* Allocate enough space to store DIR structure and the complete
    * directory path given. */
@@ -102,7 +202,9 @@ _topendir (const _TCHAR *szPath)
   if (!nd)
     {
       /* Error, out of memory. */
+#ifndef __COREDLL__
       errno = ENOMEM;
+#endif
       return (_TDIR *) 0;
     }
 
@@ -150,12 +252,12 @@ _topendir (const _TCHAR *szPath)
 struct _tdirent *
 _treaddir (_TDIR * dirp)
 {
-  errno = 0;
+  __set_errno (0);
 
   /* Check for valid DIR struct. */
   if (!dirp)
     {
-      errno = EFAULT;
+      __set_errno (EFAULT);
       return (struct _tdirent *) 0;
     }
 
@@ -187,12 +289,12 @@ _treaddir (_TDIR * dirp)
       /* Get the next search entry. */
       if (_tfindnext (dirp->dd_handle, &(dirp->dd_dta)))
 	{
-	  /* We are off the end or otherwise error.	
+	  /* We are off the end or otherwise error.
 	     _findnext sets errno to ENOENT if no more file
-	     Undo this. */ 
+	     Undo this. */
 	  DWORD winerr = GetLastError ();
 	  if (winerr == ERROR_NO_MORE_FILES)
-	    errno = 0;	
+	    __set_errno (0);
 	  _findclose (dirp->dd_handle);
 	  dirp->dd_handle = -1;
 	  dirp->dd_stat = -1;
@@ -229,12 +331,12 @@ _tclosedir (_TDIR * dirp)
 {
   int rc;
 
-  errno = 0;
+  __set_errno (0);
   rc = 0;
 
   if (!dirp)
     {
-      errno = EFAULT;
+      __set_errno (EFAULT);
       return -1;
     }
 
@@ -258,11 +360,11 @@ _tclosedir (_TDIR * dirp)
 void
 _trewinddir (_TDIR * dirp)
 {
-  errno = 0;
+  __set_errno (0);
 
   if (!dirp)
     {
-      errno = EFAULT;
+      __set_errno (EFAULT);
       return;
     }
 
@@ -284,11 +386,11 @@ _trewinddir (_TDIR * dirp)
 long
 _ttelldir (_TDIR * dirp)
 {
-  errno = 0;
+  __set_errno (0);
 
   if (!dirp)
     {
-      errno = EFAULT;
+      __set_errno (EFAULT);
       return -1;
     }
   return dirp->dd_stat;
@@ -306,18 +408,18 @@ _ttelldir (_TDIR * dirp)
 void
 _tseekdir (_TDIR * dirp, long lPos)
 {
-  errno = 0;
+  __set_errno (0);
 
   if (!dirp)
     {
-      errno = EFAULT;
+      __set_errno (EFAULT);
       return;
     }
 
   if (lPos < -1)
     {
       /* Seeking to an invalid position. */
-      errno = EINVAL;
+      __set_errno (EINVAL);
       return;
     }
   else if (lPos == -1)

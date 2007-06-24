@@ -49,7 +49,7 @@ __cdecl char *dirname( char *path )
       if( (path[1] == *retname) && (path[2] == '\0') )
 	return retname;
     }
-
+#ifndef __COREDLL__
     /* For all other cases ...
      * step over the drive designator, if present, copying it to retfail ...
      * (FIXME: maybe should confirm *path is a valid drive designator).
@@ -60,6 +60,7 @@ __cdecl char *dirname( char *path )
       *copyptr++ = *path++;
       *copyptr++ = *path++;
     }
+#endif
 
     if( *path )
     {
