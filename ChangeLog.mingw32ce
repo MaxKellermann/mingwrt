@@ -4,7 +4,7 @@
 	(__argc, __argv): ... this.
 	(main): Declare.
 	(WinMain): Convert C++ comments into C style comments.
-	Use __argc and __argv instead of _argc nad _argv.  Pass NULL as third
+	Use __argc and __argv instead of _argc and _argv.  Pass NULL as third
 	parameter to main.
 
 2007-06-24  Pedro Alves  <pedro_alves@portugalmail.pt>
