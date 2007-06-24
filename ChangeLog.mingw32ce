@@ -1,5 +1,11 @@
 2007-06-24  Pedro Alves  <pedro_alves@portugalmail.pt>
 
+	* mingwex/Makefile.in (WINCE_OBJS): Add chsize.o, findfile.o,
+	bsearch.o, access.o, mkdir.o and rmdir.o.
+	(LIBOBJS): Also add $(POSIX_OBJS) for wince.
+
+2007-06-24  Pedro Alves  <pedro_alves@portugalmail.pt>
+
 	* winmain_ce.c (_argc, _argv): Rename to ...
 	(__argc, __argv): ... this.
 	(main): Declare.
