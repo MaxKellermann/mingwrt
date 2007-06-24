@@ -109,7 +109,12 @@ __MINGW_IMPORT char**  __argv_dll;
 
 #endif /* __DECLSPEC_SUPPORTED */
 
-#endif /* __MSVCRT, __CRTDLL__ */
+#elif defined (__COREDLL__)
+
+extern int	__argc;
+extern char**	__argv;
+
+#endif /* __MSVCRT, __CRTDLL__, __COREDLL__ */
 #endif /* __STRICT_ANSI__ */
 /*
  * Also defined in ctype.h.
@@ -381,10 +386,8 @@ _CRTIMP char* __cdecl	getenv	(const char*);
 #endif
 
 /* bsearch and qsort are also in non-ANSI header search.h  */
-#ifndef __COREDLL__
 _CRTIMP void* __cdecl	bsearch	(const void*, const void*, size_t, size_t, 
 				 int (*)(const void*, const void*));
-#endif
 _CRTIMP void __cdecl	qsort	(void*, size_t, size_t,
 				 int (*)(const void*, const void*));
 

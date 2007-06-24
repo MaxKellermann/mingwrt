@@ -361,8 +361,12 @@ struct __wfinddata64_t {
 _CRTIMP int __cdecl	_waccess (const wchar_t*, int);
 _CRTIMP int __cdecl	_wchmod (const wchar_t*, int);
 _CRTIMP int __cdecl	_wcreat (const wchar_t*, int);
+#endif
+#if defined (__MSVCRT__) || defined (__COREDLL__)
 _CRTIMP long __cdecl	_wfindfirst (const wchar_t*, struct _wfinddata_t *);
 _CRTIMP int __cdecl	_wfindnext (long, struct _wfinddata_t *);
+#endif
+#if defined (__MSVCRT__)
 _CRTIMP int __cdecl	_wunlink (const wchar_t*);
 _CRTIMP int __cdecl	_wopen (const wchar_t*, int, ...);
 _CRTIMP int __cdecl	_wsopen (const wchar_t*, int, int, ...);

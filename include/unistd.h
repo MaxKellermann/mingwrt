@@ -31,7 +31,6 @@
 extern "C" {
 #endif
 
-#ifndef __COREDLL__
 /* This is defined as a real library function to allow autoconf
    to verify its existence. */
 int ftruncate(int, off_t);
@@ -39,7 +38,6 @@ __CRT_INLINE int ftruncate(int __fd, off_t __length)
 {
   return _chsize (__fd, __length);
 }
-#endif
 
 #ifdef __cplusplus
 }

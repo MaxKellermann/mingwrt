@@ -20,8 +20,6 @@
 #include <sys/types.h>	/* To get time_t.  */
 #include <stdint.h>  /* For intptr_t.  */
 
-#ifndef __COREDLL__
-
 /*
  * Attributes of files as returned by _findfirst et al.
  */
@@ -64,6 +62,8 @@ struct _finddata_t
 	char		name[FILENAME_MAX];	/* may include spaces. */
 };
 
+#ifndef __COREDLL__
+
 struct _finddatai64_t {
     unsigned    attrib;
     time_t      time_create;
@@ -82,6 +82,8 @@ struct __finddata64_t {
          char       name[FILENAME_MAX];
 };
 
+#endif
+
 #ifndef _WFINDDATA_T_DEFINED
 struct _wfinddata_t {
     	unsigned	attrib;
@@ -91,6 +93,8 @@ struct _wfinddata_t {
     	_fsize_t	size;
     	wchar_t		name[FILENAME_MAX];	/* may include spaces. */
 };
+
+#ifndef __COREDLL__
 
 struct _wfinddatai64_t {
     unsigned    attrib;
@@ -110,10 +114,11 @@ struct __wfinddata64_t {
         wchar_t     name[FILENAME_MAX];
 };
 
+#endif /* __COREDLL__ */
+
 #define _WFINDDATA_T_DEFINED
 #endif
 
-#endif /* __COREDLL__ */
 
 #ifdef	__cplusplus
 extern "C" {
@@ -127,8 +132,6 @@ extern "C" {
  */
 /*  FIXME: Should these all use intptr_t, as per recent MSDN docs?  */
 
-#ifndef __COREDLL__
-
 _CRTIMP long __cdecl _findfirst (const char*, struct _finddata_t*);
 _CRTIMP int __cdecl _findnext (long, struct _finddata_t*);
 _CRTIMP int __cdecl _findclose (long);
@@ -139,8 +142,6 @@ _CRTIMP int __cdecl _mkdir (const char*);
 _CRTIMP char* __cdecl _mktemp (char*);
 _CRTIMP int __cdecl _rmdir (const char*);
 _CRTIMP int __cdecl _chmod (const char*, int);
-
-#endif /* __COREDLL__ */
 
 #ifdef __MSVCRT__
 _CRTIMP __int64 __cdecl _filelengthi64(int);
@@ -165,14 +166,14 @@ __CRT_INLINE off64_t lseek64 (int fd, off64_t offset, int whence)
 
 #ifndef _NO_OLDNAMES
 
-#if !defined (_UWIN) && !defined (__COREDLL__)
+#if !defined (_UWIN)
 _CRTIMP int __cdecl chdir (const char*);
 _CRTIMP char* __cdecl getcwd (char*, int);
 _CRTIMP int __cdecl mkdir (const char*);
 _CRTIMP char* __cdecl mktemp (char*);
 _CRTIMP int __cdecl rmdir (const char*);
 _CRTIMP int __cdecl chmod (const char*, int);
-#endif /* _UWIN && __COREDLL__ */
+#endif /* _UWIN */
 
 #endif /* Not _NO_OLDNAMES */
 
@@ -201,12 +202,9 @@ _CRTIMP int __cdecl chmod (const char*, int);
 extern "C" {
 #endif
 
-#ifndef __COREDLL__
 _CRTIMP int __cdecl _access (const char*, int);
 _CRTIMP int __cdecl _chsize (int, long);
-#endif /* __COREDLL__ */
 _CRTIMP int __cdecl _close (int);
-#ifndef __COREDLL__
 _CRTIMP int __cdecl _commit(int);
 
 /* NOTE: The only significant bit in unPermissions appears to be bit 7 (0x80),
@@ -230,7 +228,6 @@ _CRTIMP int __cdecl _eof (int);
 
 /* LK_... locking commands defined in sys/locking.h. */
 _CRTIMP int __cdecl _locking (int, int, long);
-#endif /* __COREDLL__ */
 
 _CRTIMP long __cdecl _lseek (int, long, int);
 
@@ -268,8 +265,12 @@ _CRTIMP int __cdecl _write (int, const void*, unsigned int);
 _CRTIMP int __cdecl _waccess(const wchar_t*, int);
 _CRTIMP int __cdecl _wchmod(const wchar_t*, int);
 _CRTIMP int __cdecl _wcreat(const wchar_t*, int);
+#endif
+#if defined (__MSVCRT__) || defined (__COREDLL__)
 _CRTIMP long __cdecl _wfindfirst(const wchar_t*, struct _wfinddata_t*);
 _CRTIMP int __cdecl _wfindnext(long, struct _wfinddata_t *);
+#endif
+#if defined (__MSVCRT__)
 _CRTIMP int __cdecl _wunlink(const wchar_t*);
 _CRTIMP int __cdecl _wopen(const wchar_t*, int, ...);
 _CRTIMP int __cdecl _wsopen(const wchar_t*, int, int, ...);
@@ -291,10 +292,8 @@ _CRTIMP intptr_t __cdecl _wfindnext64(intptr_t, struct __wfinddata64_t*);
  */
 
 #ifndef _UWIN
-#ifndef __COREDLL__
 _CRTIMP int __cdecl access (const char*, int);
 _CRTIMP int __cdecl chsize (int, long );
-#endif /* __COREDLL__ */
 _CRTIMP int __cdecl close (int);
 #ifndef __COREDLL__
 _CRTIMP int __cdecl creat (const char*, int);
@@ -302,8 +301,8 @@ _CRTIMP int __cdecl dup (int);
 _CRTIMP int __cdecl dup2 (int, int);
 _CRTIMP int __cdecl eof (int);
 _CRTIMP long __cdecl filelength (int);
-_CRTIMP int __cdecl isatty (int);
 #endif /* __COREDLL__ */
+_CRTIMP int __cdecl isatty (int);
 _CRTIMP long __cdecl lseek (int, long, int);
 _CRTIMP int __cdecl open (const char*, int, ...);
 _CRTIMP int __cdecl read (int, void*, unsigned int);

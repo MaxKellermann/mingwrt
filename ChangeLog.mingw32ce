@@ -1,5 +1,19 @@
 2007-06-24  Pedro Alves  <pedro_alves@portugalmail.pt>
 
+	* include/getopt.h [__COREDLL__]: Expose contents.
+	* include/io.h (_finddata_t, _wfinddata_t, _findfirst, _findnext)
+	(_findclose, _rmdir, _mkdir, _chmod, chdir, getcwd, mkdir, mktemp)
+	(rmdir, chmod, _wfindfirst, _wfindnext, access, chsize, isatty)
+	[__COREDLL__]: Expose.
+	* include/stdlib.h (__argc, __argv) [__COREDLL__]: Declare.
+	(bsearch) [__COREDLL__]: Expose.
+	* include/dirent.h [__COREDLL__]: Expose contents.
+	* include/wchar.h (_wfindfirst, _wfindnext) [__COREDLL__]: Expose.
+	* include/search.h (bsearch) [__COREDLL__]: Expose.
+	* include/unistd.h (ftruncate) [__COREDLL__]: Expose.
+
+2007-06-24  Pedro Alves  <pedro_alves@portugalmail.pt>
+
 	* mingwex/dirname.c (dirname) [__COREDLL__]: Don't handle drive names.
 	* mingwex/basename.c (basename) [__COREDLL__]: Likewise.
 	* mingwex/wdirent.c (UNICODE_DIRENT): New define.
