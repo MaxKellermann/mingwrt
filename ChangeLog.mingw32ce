@@ -1,5 +1,9 @@
 2007-06-24  Pedro Alves  <pedro_alves@portugalmail.pt>
 
+	* mingwex/wince/bsearch.c: New file.
+
+2007-06-24  Pedro Alves  <pedro_alves@portugalmail.pt>
+
 	* mingwex/wince/stat.c (_stat_by_file_info): Change ST param type to
 	struct _stat*.
 	(fstat): Rename to ...
