@@ -1,5 +1,14 @@
 2007-06-24  Pedro Alves  <pedro_alves@portugalmail.pt>
 
+	* winmain_ce.c (_argc, _argv): Rename to ...
+	(__argc, __argv): ... this.
+	(main): Declare.
+	(WinMain): Convert C++ comments into C style comments.
+	Use __argc and __argv instead of _argc nad _argv.  Pass NULL as third
+	parameter to main.
+
+2007-06-24  Pedro Alves  <pedro_alves@portugalmail.pt>
+
 	* include/getopt.h [__COREDLL__]: Expose contents.
 	* include/io.h (_finddata_t, _wfinddata_t, _findfirst, _findnext)
 	(_findclose, _rmdir, _mkdir, _chmod, chdir, getcwd, mkdir, mktemp)

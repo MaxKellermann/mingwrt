@@ -18,8 +18,10 @@
  * Access to a standard 'main'-like argument count and list. Also included
  * is a table of environment variables.
  */
-int _argc = 0;
-char **_argv = 0;
+int __argc = 0;
+char **__argv = 0;
+
+extern int main (int, char **, char **);
 
 static int
 _parse_tokens(char* string, char*** tokens, int length)
@@ -131,17 +133,20 @@ __mainArgs(int *argc, char ***argv, wchar_t *cmdlinePtrW)
     return;
 }
 
-// Normally, the application will define a WinMain function.  However,
-// if the main application does not, this dummy WinMain will call a
-// main() function instead.
-extern int __cdecl
-WinMain(HINSTANCE hInst, HINSTANCE hPrevInst,
-        LPWSTR szCmdLine, int nShow)
+/* Normally, the application will define a WinMain function.  However,
+ * if the main application does not, this dummy WinMain will call a
+ * main() function instead.
+ */
+int
+WinMain (HINSTANCE hInst, HINSTANCE hPrevInst,
+	 LPWSTR szCmdLine, int nShow)
 {
   /*
    * Set up __argc, __argv.
    */
-  __mainArgs(&_argc, &_argv, szCmdLine);
+  __mainArgs(&__argc, &__argv, szCmdLine);
 
-  return main(_argc, _argv);
+  /* Pass in a NULL environ for those apps that expect it.  Better
+     than stack garbage.  */
+  return main(__argc, __argv, NULL);
 }
