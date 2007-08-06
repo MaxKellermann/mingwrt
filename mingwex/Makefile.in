@@ -88,7 +88,7 @@ WINCE_DISTFILES = \
 	asctime.c freopen.c gmtime.c localtime.c mktime.c strftime.c time.c \
 	tempnam.c unlink.c wcsftime.c fdopen.c read.c write.c open.c lseek.c \
 	close.c isalnum.c isalpha.c iscntrl.c isgraph.c islower.c isprint.c \
-	ispunct.c isspace.c isupper.c isxdigit.c _tolower.c _toupper.c
+	ispunct.c isspace.c isupper.c isxdigit.c _tolower.c _toupper.c lfind.c
 
 MATHCE_DISTFILES = \
 	e_acosf.c e_acosh.c e_acoshf.c e_asinf.c e_atan2f.c e_atanh.c e_coshf.c \
@@ -217,7 +217,7 @@ WINCE_OBJS = \
 	close.o isalnum.o isalpha.o iscntrl.o isgraph.o islower.o isprint.o \
 	ispunct.o isspace.o isupper.o isxdigit.o _tolower.o _toupper.o \
 	mb_cur_max.o rename.o stat.o chmod.o utime.o futime.o timeutil.o \
-	ctime.o chsize.o findfile.o bsearch.o access.o mkdir.o rmdir.o
+	ctime.o chsize.o findfile.o bsearch.o access.o mkdir.o rmdir.o lfind.o
 MATHCE_OBJS = \
 	e_acosf.o e_acosh.o e_acoshf.o e_asinf.o e_atan2f.o e_atanh.o e_coshf.o \
 	e_expf.o e_gamma_r.o e_gammaf_r.o e_lgamma_r.o e_lgammaf_r.o e_log10f.o \

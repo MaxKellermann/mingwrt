@@ -1,3 +1,10 @@
+2007-08-06  Pedro Alves  <pedro_alves@portugalmail.pt>
+
+	* mingwex/Makefile.in (WINCE_DISTFILES): Add lfind.c.
+	(WINCE_OBJS): Add lfind.o.
+	* mingwex/wince/lfind.c: New file.
+	* include/search.h (_lfind, lfind): Expose.
+
 2007-06-24  Pedro Alves  <pedro_alves@portugalmail.pt>
 
 	* mingwex/Makefile.in (WINCE_OBJS): Add chsize.o, findfile.o,
