@@ -45,9 +45,15 @@
  * The three standard file pointers provided by the run time library.
  * NOTE: These will go to the bit-bucket silently in GUI applications!
  */
+#ifndef __COREDLL__
 #define	STDIN_FILENO	0
 #define	STDOUT_FILENO	1
 #define	STDERR_FILENO	2
+#else
+#define	STDIN_FILENO	fileno(stdin)
+#define	STDOUT_FILENO	fileno(stdout)
+#define	STDERR_FILENO	fileno(stderr)
+#endif
 
 /* Returned by various functions on end of file condition or error. */
 #define	EOF	(-1)
