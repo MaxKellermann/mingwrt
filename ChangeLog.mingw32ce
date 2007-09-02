@@ -1,5 +1,10 @@
 2007-09-03  Pedro Alves  <pedro_alves@portugalmail.pt>
 
+	* mingwex/wince/open: Include sys/stat.h.
+	(vopen): Implement PMODE parameter support.
+
+2007-09-03  Pedro Alves  <pedro_alves@portugalmail.pt>
+
 	* mingwex/wince/stat.c (_stat): Set last error to
 	ERROR_FILE_NOT_FOUND when file is not found.  Fix indenting.
 

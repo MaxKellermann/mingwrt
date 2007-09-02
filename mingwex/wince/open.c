@@ -1,6 +1,7 @@
 #include <windows.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <sys/stat.h>
 
 static int
 vopen (const char *path, int oflag, va_list ap)
@@ -59,7 +60,16 @@ vopen (const char *path, int oflag, va_list ap)
 
   mbstowcs (wpath, path, path_len + 1);
 
-  fileshare = FILE_SHARE_READ | FILE_SHARE_WRITE;
+  fileshare = 0;
+  if (oflag & O_CREAT)
+    {
+      int pmode = va_arg (ap, int);
+      if ((pmode & S_IREAD) == S_IREAD)
+	fileshare |= FILE_SHARE_READ;
+      if ((pmode & S_IWRITE) == S_IWRITE)
+	fileshare |= FILE_SHARE_WRITE;
+    }
+
   fileattrib = FILE_ATTRIBUTE_NORMAL;
 
   hnd = CreateFileW (wpath, fileaccess, fileshare, NULL, filecreate,
