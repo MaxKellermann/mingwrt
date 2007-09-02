@@ -1,3 +1,8 @@
+2007-09-03  Pedro Alves  <pedro_alves@portugalmail.pt>
+
+	* include/stdio.h (STDIN_FILENO, STDOUT_FILENO, STDERR_FILENO):
+	Define as fileno(stdin), fileno(stdout) and fileno(stderr).
+
 2007-08-06  Pedro Alves  <pedro_alves@portugalmail.pt>
 
 	* mingwex/Makefile.in (WINCE_DISTFILES): Add lfind.c.
