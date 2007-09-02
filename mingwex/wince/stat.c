@@ -123,8 +123,8 @@ _stat (const char *path, struct _stat *st)
     {
       DWORD dwError = GetLastError ();
       if(dwError == ERROR_NO_MORE_FILES)
-	   /* Convert error to something more sensible.  */
-	   SetLastError (ERROR_FILE_NOT_FOUND);
+	/* Convert error to something more sensible.  */
+	SetLastError (ERROR_FILE_NOT_FOUND);
       return -1;
     }
 
@@ -132,7 +132,7 @@ _stat (const char *path, struct _stat *st)
 
   len = strlen (path);
   exec = (len >= 4
-		    && strcasecmp (path + len - 4, ".exe") == 0);
+	  && strcasecmp (path + len - 4, ".exe") == 0);
   ret = __stat_by_file_info (&sfi, st, exec);
   FindClose (h);
   return ret;
