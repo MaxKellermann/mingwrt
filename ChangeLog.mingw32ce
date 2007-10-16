@@ -1,7 +1,6 @@
-2007-09-03  Pedro Alves  <pedro_alves@portugalmail.pt>
+2007-10-16  Erik van Pienbroek  <erik@vanpienbroek.nl>
 
-	* mingwex/wince/open: Include sys/stat.h.
-	(vopen): Implement PMODE parameter support.
+	* include/sys/time.h (gettimeofday): Expose on __COREDLL__.
 
 2007-09-03  Pedro Alves  <pedro_alves@portugalmail.pt>
 
