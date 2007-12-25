@@ -6,14 +6,14 @@
 srcdir = @srcdir@
 objdir = .
 
-target_alias = @target_alias@
+host_alias = @host_alias@
 prefix = @prefix@
 
 program_transform_name = @program_transform_name@
 exec_prefix = @exec_prefix@
 bindir = @bindir@
 libdir = @libdir@
-tooldir = $(exec_prefix)/$(target_alias)
+tooldir = $(exec_prefix)/$(host_alias)
 datadir = @datadir@
 infodir = @infodir@
 includedir = @includedir@
@@ -240,7 +240,7 @@ GDTOA_OBJS = \
 	strtodg.o strtodnrp.o strtof.o strtopx.o sum.o ulp.o
 
 MATHCE_FLAGS=
-ifneq (,$(findstring mingw32ce,$(target_alias)))
+ifneq (,$(findstring mingw32ce,$(host_alias)))
 LIB_OBJS = $(WINCE_OBJS) $(MATHCE_OBJS) $(Q8_OBJS) $(STDIO_OBJS_CE) \
 	$(POSIX_OBJS)
 MATHCE_FLAGS=-D_IEEE_LIBM

@@ -1,5 +1,13 @@
 2007-12-25  Pedro Alves  <pedro_alves@portugalmail.pt>
 
+	* Makefile.in, mingwex/Makefile.in, profile/Makefile.in: Use
+	$host_alias instead of $target_alias throughout.  Use $build,
+	$host, $target instead of the aliases to detect a native build.
+	Pass $build, $build_alias, $host, $host_alias, $target and
+	$target_alias to sub-Makefiles.
+
+2007-12-25  Pedro Alves  <pedro_alves@portugalmail.pt>
+
 	* Makefile.in: s/wince/mingw32ce/g from host matchings.
 	* mingwexlibce/Makefile.in: Likewise.
 

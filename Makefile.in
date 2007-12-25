@@ -25,8 +25,11 @@ VPATH = @srcdir@
 srcdir = @srcdir@
 objdir = .
 
-host_alias = @host_alias@
+build = @build@
 build_alias = @build_alias@
+host = @host@
+host_alias = @host_alias@
+target = @target@
 target_alias = @target_alias@
 with_cross_host = @with_cross_host@
 prefix = @prefix@
@@ -36,25 +39,25 @@ program_transform_name = @program_transform_name@
 exec_prefix = @exec_prefix@
 bindir = @bindir@
 libdir = @libdir@
-ifeq ($(target_alias),$(host_alias))
-ifeq ($(build_alias),$(host_alias))
+ifeq ($(target),$(host))
+ifeq ($(build),$(host))
 tooldir:=$(exec_prefix)
 else
-tooldir:=$(exec_prefix)/$(target_alias)
+tooldir:=$(exec_prefix)/$(host_alias)
 endif
 else
-tooldir:=$(exec_prefix)/$(target_alias)
+tooldir:=$(exec_prefix)/$(host_alias)
 endif
 datadir = @datadir@
 infodir = @infodir@
 includedir = @includedir@
-ifneq (,$(findstring cygwin,$(target_alias)))
+ifneq (,$(findstring cygwin,$(host_alias)))
 inst_bindir:=$(tooldir)/bin
 inst_includedir:=$(tooldir)/include/mingw
 inst_libdir:=$(tooldir)/lib/mingw
 inst_docdir:=$(tooldir)/share/doc/mingw-runtime
 else
-ifneq (,$(findstring mingw32ce,$(target_alias)))
+ifneq (,$(findstring mingw32ce,$(host_alias)))
 inst_bindir:=$(tooldir)/bin
 inst_includedir:=$(tooldir)/include
 inst_libdir:=$(tooldir)/lib
@@ -86,7 +89,7 @@ INSTALL_PROGRAM = @INSTALL_PROGRAM@
 mkinstalldirs = $(SHELL) @MKINSTALLDIRS@
 
 CC := @CC@
-ifneq (,$(findstring cygwin,$(target_alias)))
+ifneq (,$(findstring cygwin,$(host_alias)))
 override CC := ${filter-out -L% -B%,${shell echo $(CC) | sed -e 's%\(-isystem\|-iwithprefixbefore\)  *[^ ]*\( \|$$\)% %g'}}
 endif
 # FIXME: Which is it, CC or CC_FOR_TARGET?
@@ -164,13 +167,18 @@ FLAGS_TO_PASS:=\
 	inst_libdir="$(inst_libdir)" \
 	inst_docdir="$(inst_docdir)" \
 	prefix="$(prefix)" \
+	build="$(build)" \
+	build_alias="$(build_alias)" \
+	host="$(host)" \
+	host_alias="$(host_alias)" \
+	target="$(target)" \
 	target_alias="$(target_alias)" \
 	TAR="$(TAR)" \
 	TARFLAGS="$(TARFLAGS)" \
 	TARFILEEXT="$(TARFILEEXT)"
 
 CRT0S = CRT_noglob.o crtmt.o crtst.o
-ifneq (,$(findstring mingw32ce,$(target_alias)))
+ifneq (,$(findstring mingw32ce,$(host_alias)))
 CRT0S += crt3.o dllcrt3.o
 else
 CRT0S += crt1.o dllcrt1.o crt2.o dllcrt2.o CRT_fp8.o CRT_fp10.o txtmode.o binmode.o

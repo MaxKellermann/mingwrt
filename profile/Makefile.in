@@ -7,14 +7,14 @@ VPATH = @srcdir@
 srcdir = @srcdir@
 objdir = .
 
-target_alias = @target_alias@
+host_alias = @host_alias@
 prefix = @prefix@
 
 program_transform_name = @program_transform_name@
 exec_prefix = @exec_prefix@
 bindir = @bindir@
 libdir = @libdir@
-tooldir = $(exec_prefix)/$(target_alias)
+tooldir = $(exec_prefix)/$(host_alias)
 datadir = @datadir@
 infodir = @infodir@
 includedir = @includedir@
