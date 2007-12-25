@@ -54,7 +54,7 @@ inst_includedir:=$(tooldir)/include/mingw
 inst_libdir:=$(tooldir)/lib/mingw
 inst_docdir:=$(tooldir)/share/doc/mingw-runtime
 else
-ifneq (,$(findstring wince,$(target_alias)))
+ifneq (,$(findstring mingw32ce,$(target_alias)))
 inst_bindir:=$(tooldir)/bin
 inst_includedir:=$(tooldir)/include
 inst_libdir:=$(tooldir)/lib
@@ -170,7 +170,7 @@ FLAGS_TO_PASS:=\
 	TARFILEEXT="$(TARFILEEXT)"
 
 CRT0S = CRT_noglob.o crtmt.o crtst.o
-ifneq (,$(findstring wince,$(target_alias)))
+ifneq (,$(findstring mingw32ce,$(target_alias)))
 CRT0S += crt3.o dllcrt3.o
 else
 CRT0S += crt1.o dllcrt1.o crt2.o dllcrt2.o CRT_fp8.o CRT_fp10.o txtmode.o binmode.o
@@ -180,7 +180,7 @@ MINGW_OBJS = CRTglob.o CRTfmode.o CRTinit.o dllmain.o gccmain.o \
 	     crtst.o mthr_stub.o \
 	     pseudo-reloc.o pseudo-reloc-list.o cpu_features.o
 
-ifneq (,$(findstring wince,$(target_alias)))
+ifneq (,$(findstring mingw32ce,$(target_alias)))
 MINGW_OBJS += winmain_ce.o abort.o atexit.o assert.o
 else
 MINGW_OBJS += main.o CRT_fp10.o txtmode.o
@@ -189,7 +189,7 @@ endif
 MOLD_OBJS = isascii.o iscsym.o iscsymf.o toascii.o \
 	strcasecmp.o strncasecmp.o wcscmpi.o
 
-ifneq (,$(findstring wince,$(target_alias)))
+ifneq (,$(findstring mingw32ce,$(target_alias)))
 LIBS = libcoredll.a \
        libmingw32.a \
        libceoldname.a \

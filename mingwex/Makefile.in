@@ -240,7 +240,7 @@ GDTOA_OBJS = \
 	strtodg.o strtodnrp.o strtof.o strtopx.o sum.o ulp.o
 
 MATHCE_FLAGS=
-ifneq (,$(findstring wince,$(target_alias)))
+ifneq (,$(findstring mingw32ce,$(target_alias)))
 LIB_OBJS = $(WINCE_OBJS) $(MATHCE_OBJS) $(Q8_OBJS) $(STDIO_OBJS_CE) \
 	$(POSIX_OBJS)
 MATHCE_FLAGS=-D_IEEE_LIBM
