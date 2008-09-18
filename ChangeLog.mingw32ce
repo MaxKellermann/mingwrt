@@ -1,7 +1,3 @@
-2008-09-04  Danny Backx  <dannybackx@users.sourceforge.net>
-
-	* include/stdlib.h : Don't define getenv and system on CE.
-
 2007-12-25  Pedro Alves  <pedro_alves@portugalmail.pt>
 
 	* Makefile.in, mingwex/Makefile.in, profile/Makefile.in: Use

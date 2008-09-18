@@ -380,11 +380,9 @@ _CRTIMP void __cdecl	exit	(int) __MINGW_ATTRIB_NORETURN;
 /* Note: This is in startup code, not imported directly from dll */
 int __cdecl	atexit	(void (*)(void));
 
-#ifndef _WIN32_WCE
 #ifndef __COREDLL__
 _CRTIMP int __cdecl	system	(const char*);
 _CRTIMP char* __cdecl	getenv	(const char*);
-#endif
 #endif
 
 /* bsearch and qsort are also in non-ANSI header search.h  */
