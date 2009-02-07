@@ -1,4 +1,772 @@
-2007-01-27  Danny Smith  <dannysmith@users.sourceforge.net>
+2009-01-10 Chris Sutcliffe <ir0nh34d@users.sourceforge.net>
+
+	* include/_mingw.h: Increment version to 3.15.2.
+
+2009-01-04  Keith Marshall  <keithmarshall@users.sourceforge.net>
+
+	Fix MinGW-Bug [2445962]; (reported by Keishi Suenaga).
+	Also add tentative support for BSD specific `optreset' feature.
+
+	* include/getopt.h (optreset) [_BSD_SOURCE]: Define; map it to...
+	(__mingw_optreset): ...this new global variable.
+
+	* mingwex/getopt.c (__mingw_optreset): Instantiate it...
+	(getopt_parse) [optind < 1]: ...make it true; use it to reset argument
+	parsing context.
+
+2008-12-31  Keith Marshall  <keithmarshall@users.sourceforge.net>
+
+	Partial fix for MinGW-Bug [2457778]: (Reported by Sisyphus).
+	Correct mishandling of invalid characters in printf() format specs.
+
+	* mingwex/stdio/pformat.c (__pformat): Save `fmt' scan position in...
+	(backtrack): ...this new automatic variable, at start of each format
+	conversion specification substring; use it to backtrack, and print the
+	substring literally, if any invalid character is encountered.
+
+2008-12-16 Danny Smith <dannysmith@users.sourceforge.net>
+
+	* msvcrt.def.in (___lc_codepage_func, ___lc_collate_cp_func,
+	___lc_handle_func, ___mb_cur_max_func, ___setlc_active_func,
+	___unguarded_readlc_active_add_func, __crtCompareStringW,
+	__crtGetStringTypeW, __crtLCMapStringW, __pctype_func,
+	__pwctype_func, __iob_func, __uncaught_exception, __wcserror,
+	__CxxDetectRethrow, __CxxExceptionFilter, __CxxQueryExceptionSize,
+	__CxxRegisterExceptionObject, __CxxUnregisterExceptionObject,
+	__CxxCallUnwindDtor, __DestructExceptionObject, _aligned_free,
+	_aligned_malloc, _aligned_offset_malloc, _aligned_offset_realloc,
+	_aligned_realloc, _cgetws, _cputws, _cwprintf, _cwscanf, _getwch,
+	_getwche, _putwch, _resetstkoflw, _scprintf, _scwprintf,
+	_set_SSE2_enable, _snscanf, _snwscanf, _strtoi64, _strtoui64,
+	_ungetwch, _vscprintf, _vscwprintf, _wcserror, _wcstoi64,
+	_wcstoui64, _wctype, _wtof, _get_heap_handle): Always export.
+
+2008-12-08  Dmitry G. Gorbachev  <d.g.gorbachev@gmail.com>
+
+	* cpu_features.c (__cpu_features_init): Remove erroneous ';'.
+
+2008-10-28  Keith Marshall  <keithmarshall@users.sourceforge.net>
+
+	Correct some binary distribution packaging defects.
+
+	* Makefile.in (bindist): Remove `make' conditionals; segregate into...
+	(bindist-common, bindist-mingwrt, bindist-mingw-runtime): ...these new
+	intermediate goals; they make packages of files, as specified by...
+	(BINDIST_FILES, DEVDIST_FILES, DLLDIST_FILES): ...these new macros.
+	(dist_prefix) [target_alias !~ cygwin]: Leave it undefined.
+
+2008-10-18  Keith Marshall  <keithmarshall@users.sourceforge.net>
+
+	Fix MinGW-Bug [2136252]: (Reported by Roumen Petrov).
+	Remove extraneous radix point in printf( "%.0f", v ) for v < 0.5
+
+	* mingwex/stdio/pformat.c (__pformat_emit_float): Always make output
+	of radix point conditional on precision != 0 or `#' flag specified.
+
+2008-10-13  Keith Marshall  <keithmarshall@users.sourceforge.net>
+
+	Fix MinGW-Bug [2160227]
+	Eliminate conflicting declarations and implementations of scalb().
+
+	* moldname.def.in (scalb): Comment out of EXPORTS list.
+	* include/math.h (scalb): Comment out OLDNAMES prototype; it conflicts
+	with GCC's built-in declaration.
+
+2008-10-12  Christopher Faylor  <me+cygwin@cgf.cx>
+
+	* Makefile.in: Use a different method to invoke gcc in a cygwin-hosted
+	environment.
+	* mingwex/Makefile.in: Ditto.
+	* profile/Makefile.in: Ditto.
+	* configure.in: Record mingw front-end for building under Cygwin.
+	* mingwex/configure.in: Ditto.
+	* profile/configure.in: Ditto.
+	* configure: Regenerate.
+	* mingwex/configure: Ditto.
+	* profile/configure: Ditto.
+
+2008-10-11  Keith Marshall  <keithmarshall@users.sourceforge.net>
+
+	Use de-facto standard Makefile goals to invoke test suite.
+
+	* Makefile.in: Some minor formatting adjustments.
+	(test_headers): Unconventionally named goal renamed to...
+	(check-headers): ...this; make it a prerequisite of...
+	(check): ...this new conventionally named goal.
+
+2008-10-11  Keith Marshall  <keithmarshall@users.sourceforge.net>
+
+	Make strtod() inline definition C89 compliant.
+	(Issue reported by Ilya Shestopalov and Ian Puleston)
+	(Correction identified by Danny Smith)
+
+	* include/stdlib.h (strtod): Declare as `__inline__', not `inline';
+	reformat inline function definition.
+
+2008-10-04 Chris Sutcliffe <ir0nh34d@users.sourceforge.net>
+
+	* include/_mingw.h: Increment version to 3.15.1 and introduce
+	__MINGW32_PATCHLEVEL variable.
+
+2008-10-03  Keith Marshall  <keithmarshall@users.sourceforge.net>
+
+	Fix MinGW-Bug [2144266]: getopt() sets `optind' incorrectly.
+	(Reported by Christian Franke)
+
+	* mingwex/getopt.c (optind): Make global variable value conform to
+	behaviour specified by POSIX; do not use it for internal state in...
+	(getopt_parse): ...this static function; use...
+	(optbase): ...this new static local variable instead.
+	(getopt_resolved): Update `optind' as required.
+
+2008-10-03  Keith Marshall  <keithmarshall@users.sourceforge.net>
+
+	Improve package identification in configure script.
+
+	* configure.ac (AC_INIT): Redefine parameters...
+	(PACKAGE_NAME): Set to `MinGW Runtime'.
+	(PACKAGE_BUGREPORT): Set to `http://mingw.org/reporting_bugs'
+	(PACKAGE_TARNAME): Set to `mingwrt'.
+	(PACKAGE_VERSION): Set generically to `v3.x'; reassigned by...
+	(MINGW_AC_CONFIG_SRCDIR): ...this macro, which extracts...
+	(__MINGW32_VERSION): ...this, from file `include/_mingw.h'.
+
+	* aclocal.m4 (MINGW_AC_CONFIG_SRCDIR): Do not redefine...
+	(PACKAGE_TARNAME): ...this.
+
+	* configure: Regenerated.
+
+2008-09-25  Keith Marshall  <keithmarshall@users.sourceforge.net>
+
+	Fix MinGW-Bug [2125708].
+	(Reported by Alexandr Zamaraev).
+
+	* include/stdlib.h (intptr_t) [!_INTPTR_T_DEFINED]: Unused typedef;
+	not wanted here; remove it; replace it by...
+	(uintptr_t) [!_UINTPTR_T_DEFINED]: ...this typedef; needed by...
+	(_invalid_parameter_handler): ...this function typedef.
+
+2008-09-23  Chris Sutcliffe  <ir0nh34d@users.sf.net>
+
+	* Makefile.in: Don't include host_os as part of snapshot filename.
+
+2008-09-19  Keith Marshall  <keithmarshall@users.sourceforge.net>
+
+	Fix MinGW-Bug [2119504].
+	(Reported by Peiyuan Song).
+
+	* mingwex/getopt.c (getopt_resolved): Do not overwrite...
+	(*retindex): ...this already correctly assigned return variable...
+	(opt[index].val): ...with this; this should have been assigned to...
+	(*opt[index].flag) [opt[index].flag != NULL]: ...this instead.
+
+2008-09-19  Keith Marshall  <keithmarshall@users.sourceforge.net>
+
+	Fix MinGW-Bug [2117379].
+	(Reported by Peiyuan Song).
+
+	* include/stdio.h (__argv): Replace all references in function
+	prototype argument lists and inline function local variables, with ...
+	(__local_argv): ...this, to avoid potential conflict with ...
+	* include/stdlib (__argv): ...this #defined macro.
+
+2008-09-07 Chris Sutcliffe <ir0nh34d@users.sourceforge.net>
+
+	* include/_mingw.h: Increment version to 3.15.
+
+2008-09-06  Chris Sutcliffe  <ir0nh34d@users.sourceforge.net>
+
+	* Makefile.in: Adjust to new naming standard for MinGW while maintaining old
+	naming standard for Cygwin.
+
+2008-08-31  Keith Marshall  <keithmarshall@users.sourceforge.net>
+
+	Reimplement getopt.c to add getopt_long_only() function.
+
+	(N.B. this reimplementation removes support for BSD/Mac-OS-X
+	`optreset' nonsense; user code should set `optind = 0' instead,
+	to reinitialise option scanning).
+
+	* mingwex/getopt.c: Delete all content; reimplement it.
+	* include/getopt.h: Likewise.
+
+	* include/unistd.h (__UNISTD_H_SOURCED__): New macro; define it.
+	(__UNISTD_GETOPT__): This macro is no longer required; remove it.
+
+2008-08-30  Keith Marshall  <keithmarshall@users.sourceforge.net>
+
+	Implement conditional replacement for printf() family functions.
+
+	* include/_mingw.h (__USE_MINGW_ANSI_STDIO): New macro; define it.
+	(__MINGW_ANSI_STDIO__): New manifest constant; define as bitmapped
+	flag for use in user specified __MINGW_FEATURES__ attribute.
+	(__MINGW_LC_MESSAGES__, __MINGW_LC_ENVVARS__): New manifest constants;
+	currently unused: reserved as components of...
+	(__MINGW_LC_EXTENSIONS__): ...this new manifest constant; earmarked as
+	a __MINGW_FEATURES__ enhancement to setlocale().
+
+	* include/stdio.h (__mingw_printf, __mingw_vprintf): Prototype them.
+	(__mingw_fprintf, __mingw_vfprintf): Likewise.
+	(__mingw_sprintf, __mingw_vsprintf): Likewise.
+	(__msvcrt_printf, __msvcrt_vprintf): Likewise.
+	(__msvcrt_fprintf, __msvcrt_vfprintf): Likewise.
+	(__msvcrt_sprintf, __msvcrt_vsprintf): Likewise.
+	(printf, vprintf) [!__USE_MINGW_ANSI_STDIO]: Prototype for default
+	usage; link to DLL import stub, importing from MSVCRT.
+	(fprintf, vfprintf) [!__USE_MINGW_ANSI_STDIO]: Likewise.
+	(sprintf, vsprintf) [!__USE_MINGW_ANSI_STDIO]: Likewise.
+	(printf) [__USE_MINGW_ANSI_STDIO]: Redirect to __mingw_printf; use
+	locally defined static stub implementation.
+	(fprintf, sprintf) [__USE_MINGW_ANSI_STDIO]: Likewise; redirect to
+	__mingw_fprintf and __mingw_sprintf respectively.
+	(vprintf) [__USE_MINGW_ANSI_STDIO]: Redirect to __mingw_vprintf; use
+	static inline implementation for C++ and GNU C, or locally defined
+	static stub otherwise. 
+	(vfprintf, vsprintf) [__USE_MINGW_ANSI_STDIO]: Likewise; redirect to
+	__mingw_vfprintf and __mingw_vsprintf respectively.
+
+2008-08-27  Keith Marshall  <keithmarshall@users.sourceforge.net>
+
+	Avoid access violations, passing NULL to printf( "...%s..." );
+	(inconsistencency with MSVCRT and glibc, reported by Colin Harrison).
+
+	* mingwex/stdio/pformat.c (__pformat_puts): Substitute "(null)"
+	for argument value, if caller passes a NULL pointer.
+	(__pformat_wcputs): Likewise, substitute L"(null)".
+
+2008-08-14  Keith Marshall  <keithmarshall@users.sourceforge.net>
+
+	Add missing dependencies for building libmingwex.a.
+
+	* mingwex/Makefile.in (printf.o, fprintf.o, sprintf.o): Make them...
+	(vprintf.o, vfprintf.o, vsprintf.o): ...and also these, depend on...
+	(pformat.h): ...this.
+
+2008-08-11  Keith Marshall  <keithmarshall@users.sourceforge.net>
+
+	Add replacements for remaining members of printf() family.
+	
+	* mingwex/stdio/printf.c: New file.
+	* mingwex/stdio/fprintf.c: New file.
+	* mingwex/stdio/sprintf.c: New file.
+	* mingwex/stdio/vprintf.c: New file.
+	* mingwex/stdio/vfprintf.c: New file.
+	* mingwex/stdio/vsprintf.c: New file.
+
+	* mingwex/Makefile.in (STDIO_DISTFILES): Add them.
+	(STDIO_OBJS): Add their corresponding object files.
+
+2008-07-29  Keith Marshall  <keithmarshall@users.sourceforge.net>
+
+	Replace __mingw_snprintf() with new generic family implementation;
+	likewise, replace __mingw_vsnprintf().
+
+	* mingwex/stdio/pformat.c mingwex/stdio/pformat.h: New files.
+	* mingwex/stdio/snprintf.c mingwex/stdio/vsnprintf.c: New files.
+	* mingwex/Makefile.in (STDIO_DISTFILES): Add them.
+	(GDTOA_DISTFILES): Remove mingw_snprintf.c
+	(STDIO_OBJS): Add pformat.o, snprintf.o and vsnprintf.o
+	(GDTOA_OBJS): Remove mingw_snprintf.o
+	(PFORMAT_CFLAGS): New macro; define it, as required by...
+	(pformat.o): ...this new explicit build target.
+	(snprintf.o, vsnprintf.o): Declare prerequisites.
+
+	* mingwex/gdtoa/mingw_snprintf.c: Redundant file; delete it.
+
+2008-07-28  Keith Marshall  <keithmarshall@users.sourceforge.net>
+
+	Lay foundations for new printf() function family implementation.
+
+	* ofmt_stub.s: New file; implement forward compatibility stub for...
+	(_get_output_format): ...this MSVCR80.DLL and later function.
+
+	* Makefile.in (SRCDIST_FILES): Add ofmt_stub.s.
+	(NM, OBJCOPY): New macros; define them with AC_SUBSTed values.
+	(sym_prefix, NM_LOOKUP, MINGW_REPL_FUNCS): New macros; define them.
+	(lib%.a): Include ofmt_stub.o when import library does not already
+	advertise availability of the _get_output_format() function;
+	Add alias stubs for MINGW_REPL_FUNCS, such that...
+	(__msvcrt_printf): ...is an alias for Microsoft's printf().
+	(__msvcrt_fprintf): ...is an alias for Microsoft's fprintf().
+	(__msvcrt_sprintf): ...is an alias for Microsoft's sprintf().
+	(__msvcrt_vprintf): ...is an alias for Microsoft's vprintf().
+	(__msvcrt_vfprintf): ...is an alias for Microsoft's vfprintf().
+	(__msvcrt_vsprintf): ...is an alias for Microsoft's vsprintf().
+	(clean): Add msvcr*.def.
+
+	* configure.in (NM, OBJCOPY): Use AC_CHECK_TOOL to specify them.
+	* configure: Regenerated.
+
+2008-07-06  Gregory McGarry   <gregorymcgarry@users.sourceforge.net>
+
+	* include/ctype.h (_imp____mb_cur_max): Correct spelling.
+	(_imp____mb_cur_max_dll): Likewise.
+
+2008-07-04  Danny Smith  <dannysmith@users,sourceforge.net>
+
+	* include/stdio.h (swprintf, vswprintf): Guard with  #ifndef __STRICT_ANSI__ 
+	* include/wchar.h (swprintf, vswprintf): Likewise.
+
+2008-07-01  Keith Marshall  <keithmarshall@users.sourceforge.net>
+
+	* msvcrt.def.in [__msvcr80__, __msvcr80d__, __msvcr90__, __msvcr90d__]
+	(_get_output_format, _set_output_format): Add references.
+
+	* include/stdio.h [__MSVCRT_VERSION__ >= 0x800]
+	(_get_output_format, _set_output_format): Declare prototypes.
+	(_TWO_DIGIT_EXPONENT): Define.
+	Some other minor formatting adjustments.
+
+2008-06-14  Danny Smith  <dannysmith@users.sourceforge.net>
+
+	[mingw-Bugs-1801641]
+	* include/wchar.h (_wfdopen): Const-ify second arg.
+	* include/stdio.h (_wfdopen): Likewise.
+	Thanks to <tdragon at users dot sourceforge net>
+
+2008-06-02  Keith Marshall  <keithmarshall@users.sourceforge.net>
+
+	Avoid precision errors in round(), lround() and llround() functions.
+
+	* mingwex/math/round_generic.c: New file; it replaces...
+	* mingwex/math/round.c: ...this; delete it.
+	* mingwex/math/roundf.c: ...and this; ditto.
+	* mingwex/math/roundl.c: ...and this; ditto.
+
+	* mingwex/math/lround_generic.c: New file; it replaces...
+	* mingwex/math/lround.c: ...this; delete it.
+	* mingwex/math/lroundf.c: ...and this; ditto.
+	* mingwex/math/lroundl.c: ...and this; ditto.
+	* mingwex/math/llround.c: ...and this; ditto.
+	* mingwex/math/llroundf.c: ...and this; ditto.
+	* mingwex/math/llroundl.c: ...and this; ditto.
+
+	* mingwex/math/round_internal.h: New file; it provides generic common
+	code, which is shared by `round_generic.c' and `lround_generic.c'; the
+	implementation is based on techniques suggested by Danny Smith and
+	Greg Chicares.
+
+	* mingwex/Makefile.in (MATH_DISTFILES): Remove `round.c', `roundf.c',
+	`roundl.c', `lround.c', `lroundf.c', `lroundl.c', `llround.c',
+	`llroundf.c' and `llroundl.c'; replace by `round_internal.h',
+	`round_generic.c' and `lround_generic.c'.
+	(MATH_OBJS): Factor out files listed in...
+	(MATH_ROUND_OBJS, MATH_LROUND_OBJS, MATH_LLROUND_OBJS): ...these new
+	macros; define them; specify dependencies and build rules; add to...
+	(LIB_OBJS): ...this list.
+
+2008-05-22  Danny Smith  <dannysmith@users.sourceforge.net>
+
+	[ mingw-Bugs-1961893 ]
+	* mingwex/gdtoa/mingw_snprint.c (x_sprintf): Always set __ldtoa
+	mode to 2 for E format.
+
+2008-05-15 Ramiro Polla <ramiro@lisha.ufsc.br>
+
+	* include/stdlib.h: Fix strtod under C++.
+
+2008-05-06 Ramiro Polla <ramiro@lisha.ufsc.br>
+
+	* mingwex/gdtoa/strtodnrp.c: Remove alias from strtod to __strtod.
+	* include/stdlib.h: Define strtod to __strtod when __NO_ISOCEXT is not set.
+
+2008-05-04 Ramiro Polla <ramiro@lisha.ufsc.br>
+
+	* include/sys/types.h (useconds_t): typedef.
+	* include/unistd.h (usleep): Add prototype.
+	* mingwex/usleep.c: New file.
+	* mingwex/makefile.in: Add usleep source and object.
+
+2008-05-02 Ramiro Polla <ramiro@lisha.ufsc.br>
+
+	Make strtod() conform to C99.
+
+	* include/stdlib.h (strtod): Declare this mingwex function, and...
+	(_strtod): rename this MSVCRT counterpart.
+
+	* mingwex/gdtoa/strtodnrp.c (strtod): Alias to __strtod.
+
+2008-04-26  Chuck Wilson  <cwilso11@users.sourceforge.net>
+
+	* Makefile.in: correct issues with mingw10.dll having multiple relocs.
+
+2008-04-25  Danny Smith  <dannysmith@users.sourceforge.net>
+
+	* include/process.h: Include stdint.h for intptr_t definition.
+	(_execl, _execle, _execlp, _execlpe, _execv, _execve, _execvp, _execvpe,
+	_spawnl, _spawnle, _spawnlp, _spawnlpe, _spawnv, _spawnve, _spawnvp,
+	_spawnvpe): Return intptr_t.
+	(execl, execle, execlp, execlpe, execv, execve, execvp, execvpe, spawnl,
+	spawnle, spawnlp, spawnlpe, spawnv, spawnve, spawnvp, spawnvpe): Return
+	intptr_t.
+	* include/wchar.h: Guard wide process.h functions with !__STRICT_ANSI__.
+
+	[!_WPROCESS_DEFINED]: Include stdint.h for intptr_t definition.
+	(_wexecl, _wexecle, _wexeclp, _wexeclpe, _wexecv, _wexecve, _wexecvp,
+	_wexecvpe, _wspawnl, _wspawnle, _wspawnlp, _wspawnlpe, _wspawnv, _wspawnve,
+	_wspawnvp, _wspawnvpe): Return intptr_t.
+
+2008-04-25  Danny Smith  <dannysmith@users.sourceforge.net>
+
+	* include/wchar.h (fwide): Return success code rather than failure in inline
+	definition.
+	* mingwex/fwide.c (fwide): ANSI-fy. Get rid of Q8 comments.  Return success
+	code rather than failure.
+
+2008-03-21  Danny Smith
+
+	* include/math.h (float_t, double_t): Define.
+
+2008-02-08  Danny Smith  <dannysmith@users.sourceforge.net>
+
+	* mingwex/gdtoa/gdtoaimp.h (USE_LOCALE): Define.
+	* mingwex/gdtoa/mingw_snprintf.c: [USE_LOCALE] Include locale.h.
+	(x_sprintf): [USE_LOCALE] Use  *localeconv()->decimal_point.
+
+2008-02-28  Joseph Myers  <joseph@codesourcery.com>
+
+	* include/complex.h: Don't condition contents on C99 or not
+	__STRICT_ANSI__.
+
+2008-02-01  Brian Dessent  <brian@dessent.net>
+
+	* Makefile.in: Add rules to generate multiple versions of libmoldname.a for
+	the different runtime versions.
+
+2008-01-19 Danny Smith <dannysmithusers.sourceforge.net
+
+	* inclue/wchar.h (fwide): Add prototype and guard inline definition.
+	(mbsinit): Likewise.
+
+2007-12-27 Chris Sutcliffe <ir0nh34d@users.sourceforge.net>
+
+	* include/_mingw.h: Increment version to 3.14.
+
+2007-11-26  Chris Sutcliffe <ir0nh34d@users.sourceforge.net>
+
+	* Makefile.in: Add libmsvcr90.a and libmsvcr90d.a targets.
+	* msvcrt.def.in: Add support for __msvcr90__ and __msvcr90d__ defines.
+	* mingwex/math/log10f.S: Correct issue with comments.
+	* mingwex/math/log10l.S: Ditto.
+	* mingwex/math/log1p.S: Ditto.
+	* mingwex/math/log1pf.S: Ditto.
+	* mingwex/math/log1pl.S: Ditto.
+	* mingwex/math/log2.S: Ditto.
+	* mingwex/math/log2f.S: Ditto.
+	* mingwex/math/log2l.S: Ditto.
+	* mingwex/math/logf.S: Ditto.
+	* mingwex/math/logl.S: Ditto.
+
+2007-10-03  Danny Smith  <dannysmith@users.sourceforge.net>
+
+	* mingwex/gdtoa/mingw_snprintf.c: fixed warning during compile.
+
+2007-10-03  Bernd Becker <hugin@users.sourceforge.net>
+
+	* include/io.h (__finddata64_t, __wfinddata64_t): changed member 'size'
+	from '_fsize_t' to '__int64' to be consistent with the other ...64
+	structures and the value set there is 8 bytes not 4.  Add guard for both
+	as the are only used by functions available from 6.1 on.
+
+	* include/malloc.h (_HEAP_MAXREQ): Define.
+	(_aligned_offset_recalloc): Define.
+	(_aligned_recalloc()): Define.
+
+	* include/math.h: fixed a typo in a comment.
+	(atanhf): Fixed declaration.
+
+	* include/wchar.h (__wfinddata64_t): changed member 'size' from '_fsize_t'
+	to '__int64' to be consistent with the other ...64 structures and the value
+	set there is 8 bytes not 4.  Added guard as this function is only used by
+	functions available from 6.1 on.
+
+	* include/sys/stat.h: some members of 'stat' were declared with types with
+	a prefixed underscore, while the ones without the underscore should have
+	been used.  Added guard to '__stat64' as it is only used by functions
+	available from 6.1 on.  Added the wide character versions of the
+	exec()/spawn() family for completion
+	(_stati64): changed the type of the 'st_mode' member from 'unsigned int' to
+	'_mode_t'
+
+	* include/sys/timeb.h (timeb, _timb): changed the type of the 'time' member
+	from 'long' to 'time_t'
+	(__timeb64): moved declaration of structure directly before the declaration
+	of the function '_ftime64()', so it is guarded as well
+
+	* include/sys/utime.h (__utimbuf64): moved declaration of structure directly
+	before the declaration of the functions using it, so it is guarded as well
+
+2007-09-24  David C. Daeschler <daveregs@rsaisp.com>
+
+	* mingwex/gdtoa/mingw_snprintf.c (x_sprintf): Correct LEN_L typo in 'l'
+	case.  Add missing break in 's'/LEN_S case.
+
+2007-08-25 Keith Marshall <keithmarshall@users.sourceforge.net>
+
+	Make snprintf() and vsnprintf() conform to C99.
+
+	* include/stdio.h: Add note about incompatibility between...
+	(snprintf, vsnprintf): These two mingwex functions, and...
+	(_snprintf, _vsnprintf): these MSVCRT counterparts.
+
+	* mingwex/Makefile.in (STDIO_OBJS): Remove snprintf.o and vsnprintf.o
+	(STDIO_DISTFILES): Remove snprintf.c and vsnprintf.c
+
+	* mingwex/stdio/snprintf.c: Delete.
+	* mingwex/stdio/vsnprintf.c: Delete.
+
+	* mingwex/gdtoa/mingw_snprintf.c (snprintf): Alias to __mingw_snprintf
+	(vsnprintf): Alias to __mingw_vsnprintf.
+
+2007-07-25 Chris Sutcliffe <ir0nh34d@users.sourceforge.net>
+
+	* include/_mingw.h: Increment version to 3.13.
+	* Makefile.in: Reset CYGRELEASE to 1
+
+2007-07-23 Keith Marshall <keithmarshall@users.sourceforge.net>
+
+	* Makefile.in (SUBDIRS): Delete stray line continuation artifact,
+	resulting from incomplete removal of enclosing `for ...; do ...; done'
+	loop from compound command; (reported by Greg Chicares).
+
+2007-07-19  Danny Smith  <dannysmith@users.sourceforge.net>
+
+	* include/fcntl.h (_O_WTEXT, _O_U16TEXT, _O_U8TEXT) Define for
+	Vista.
+
+2007-07-12  Danny Smith  <dannysmith@users.sourceforge.net>
+
+	[mingw-Bugs-1734142]
+	* include/wchar.h (_wsystem) Declare.
+	(_wputenv) Declare.
+	(_wgetenv): Declare.
+	(_wsearchenv): Declare.
+	(_wmakepath): Declare.
+	(_wsplitpath): Declare.
+	(_wfullpath): Declare.
+	* include/stdlib.h (_wsystem) Declare.
+	(_wputenv, _wgetenv, _wsearchenv, _wmakepath, _wsplitpath,
+	_wfullpath): Move into _WSTDLIB_DEFINED guard.
+	* include/tchar.h (_tsystem): New UNICODE mapping define.
+
+2007-06-29  Danny Smith  <dannysmith@users.sourceforge.net>
+
+	* mingwex/gdtoa/mingw_snprintf.c: New file.
+	* mingwex/Makefile.in (GDTOA_DISTFILES): Add mingw_snprintf.c.
+	(GDTOA_OBJS): Add mingw_snprintf.o.
+
+2007-06-28  Danny Smith  <dannysmith@users.sourceforge.net>
+
+	* msvcrt.def.in: Update comment.
+	Exclude _ctype stub if using msvcr71.dll or newer.
+	* include/ctype.h: Don't declare _ctype if using msvcr71.dll or newer.
+	* include/wctype.h: Likewise.
+
+2007-06-23  Danny Smith  <dannysmith@users.sourceforge.net>
+
+	*include/wctype.h: Qualify all functions with __MINGW_NOTHROW.
+	*include/dirent.h: Likewise.
+
+2007-06-23  Danny Smith  <dannysmith@users.sourceforge.net>
+
+	* include/assert.h: Qualify all  functions with __MINGW_NOTHROW.
+	* include/conio.h: Likewise.
+	* include/ctype.h: Likewise.
+	* include/direct.h: Likewise.
+	* include/dos.h: Likewise.
+	* include/errno.h: Likewise.
+	* include/fenv.h: Likewise.
+	* include/float.h: Likewise.
+	* include/inttypes.h: Likewise.
+	* include/io.h: Likewise.
+	* include/libgen.h: Likewise.
+	* include/locale.h: Likewise.
+	* include/malloc.h: Likewise.
+	* include/mbctype.h: Likewise.
+	* include/mbstring.h: Likewise.
+	* include/process.h: Likewise.
+	* include/search.h: Likewise.
+	* include/setjmp.h: Likewise.
+	* include/signal.h: Likewise.
+	* include/stdio.h: Likewise.
+	* include/stdlib.h: Likewise.
+	* include/string.h: Likewise.
+	* include/time.h: Likewise.
+	* include/wchar.h: Likewise.
+	* include/sys/stat.h: Likewise.
+	* include/sys/time.h: Likewise.
+	* include/sys/timeb.h: Likewise.
+	* include/sys/utime.h: Likewise.
+
+2007-06-22 Danny Smith <dannysmith@users.sourceforge.net>
+
+	* mingwex/Makefile.in (LIB_OBJS): Revert accidental removal.
+
+2007-06-22 Danny Smith <dannysmith@users.sourceforge.net>
+
+	Add POSIX binary tree search API.
+
+	* mingwex/tfind.c: New file.
+	* mingwex/tdelete.c: New file.
+	* mingwex/tsearch.c: New file.
+	* mingwex/twalk.c: New file.
+	* mingwex/Makefile.in (DISTFILES): Add tsearch.c twalk.c tdelete.c tfind.c.
+	* mingwex/Makefile.in (POSIX_OBJS): Add tsearch.o twalk.o tdelete.o tfind.o.
+	* include/search.h (tfind): Declare.
+	(tdelete): Declare.
+	(tsearch): Declare.
+	(twalk): Declare.
+	(ENTRY): Define.
+	(ACTION): Define.
+	(VISIT): Define.
+	(node_t): Define, on condition of _SEARCH_PRIVATE.
+
+2007-06-22 Danny Smith <dannysmith@users.sourceforge.net>
+
+	* include/_mingw.h (__MINGW_NOTHROW): Define.
+
+2007-06-18 Danny Smith <dannysmith@users.sourceforge.net>
+
+	* include/stdio.h (vsnprintf): Remove inline definition.
+	Add prototype.
+
+2007-06-16 Danny Smith <dannysmith@users.sourceforge.net>
+
+	* CRTfmode.c: Nit-pick comment fix.
+
+2007-06-16 Christopher Faylor <me+cygwin@cgf.cx>
+
+	* CRTfmode.c: Fix nested comment.
+
+2007-06-16 Christopher Faylor <me+cygwin@cgf.cx>
+
+	* include/string.h (strcasecmp): Fix typo in declaration prototype.
+
+2007-06-14 Danny Smith <dannysmith@users.sourceforge.net>
+
+	* include/io.h (lseek64) : Add prototype.
+
+2007-06-14 Danny Smith <dannysmith@users.sourceforge.net>
+
+	* include/string.h (strcasecmp): Add prototype.
+	(strncasecmp): Add prototype.
+
+2007-06-13 Danny Smith <dannysmith@users.sourceforge.net>
+
+	* Makefile.in (CRT0S): Revert last change.
+	* CRTfmode.c. Correct comment.
+
+2007-06-13 Danny Smith <dannysmith@users.sourceforge.net>
+
+	* Makefile.in (CRT0S): Add back CRTfmode.o.
+
+2007-06-13 Danny Smith <dannysmith@users.sourceforge.net>
+
+	* include/stdlib.h: Don't include stdint.h. Conditionally define intptr_t.
+	* include/io.h: Likewise.
+
+2007-06-11 Danny Smith <dannysmith@users.sourceforge.net>
+
+	* crt1.c (__mingw_CRTStartup): Add explicit call to gcc's __main.
+
+2007-05-08 Danny Smith <dannysmith@users.sourceforge.net>
+
+	* include/stdint.h (intptr_t): Fix typo.
+	Thanks to Charles Wilson for report.
+
+2007-05-07 Danny Smith <dannysmith@users.sourceforge.net>
+
+	* include/stdint.h (intptr_t): Protect with _INTPTR_T_DEFINED.
+	 Condition on _WIN64.
+	(uintptr_t): Protect with _UINTPTR_T_DEFINED. Condition on _WIN64.
+	(INTPTR_MIN, INTPTR_MAX, UINTPTR_MAX): Condition on _WIN64.
+	(PTRDIFF_MIN): Define as INTPTR_MIN.
+	(PTRDIFF_MAX): Define as INTPTR_MAX.
+	(SIG_ATOMIC_MIN): Define as INTPTR_MIN.
+	(SIG_ATOMIC_MAX): Define as INTPTR_MAX.
+
+2007-04-07 Chris Sutcliffe <ir0nh34d@users.sourceforge.net>
+
+	* Makefile.in: Removed mansuffix variable. Changed mansection to support
+	Cygwin man page location.
+
+2007-04-05 Chris Sutcliffe <ir0nh34d@users.sourceforge.net>
+
+	* Makefile.in: Added mansection and mansuffix variables. Changed mandir to
+	support Cygwin man page location.
+
+2007-03-25 Chris Sutcliffe <ir0nh34d@users.sourceforge.net>
+
+	* Include/_mingw.h: Increment version to 3.12.
+
+2007-03-22  Brian Ripley <ripleybd@users.sourceforge.net>
+
+	* include/_mingw.h (__CRT_INLINE): Make conditional on __GNUC_STDC_INLINE__.
+
+2007-03-20 Chris Sutcliffe <ir0nh34d@users.sourceforge.net>
+
+	* Makefile.in: Tweak srcdist to fix build issue.
+
+2007-03-20 Keith Marshall <keithmarshall@users.sourceforge.net>
+
+	Add --enable-mingw-manpage-transform configure option.
+
+	* aclocal.m4 (MINGW_AC_MANPAGE_TRANSFORM): New macro.
+	* configure.in, Makefile.in: Use it.
+	* configure: Regenerated.
+
+2007-03-18 Danny Smith <dannysmith@users.sourceforge.net>
+
+	* include/_mingw.h (__CRT_INLINE): Use __gnu_inline__ for gcc 4.2.x too.
+
+2007-03-10 Keith Marshall <keithmarshall@users.sourceforge.net>
+
+	Add manpages for dirname and basename functions.
+
+	* man: New directory.
+	* man/dirname.man: New file; it sources both manpages.
+	* Makefile.in: Add provisional rules to distribute them.
+
+2007-03-08 Keith Marshall <keithmarshall@users.sourceforge.net>
+
+	* mingwex/basename.c: Make it work with path names containing
+	multibyte character strings.
+	* mingwex/dirname.c: Likewise.
+
+2007-03-05 Danny Smith <dannysmith@users.sourceforge.net>
+
+	* include/io.h (__mingw_access): New static inline wrapper to restore
+	pre-Vista 'access (fname, X_OK)' behaviour.
+	(__USE_MINGW_ACCESS): Use to map access() to __mingw_access().
+
+2007-03-05 Danny Smith <dannysmith@users.sourceforge.net>
+
+	* mingwex/fesetround.c (fesetround): Use unsigned int as operand
+	to stmxcsr.
+	Thanks to Alexey Kuznetsov <ring0_mipt at users dot sf dot net>
+
+2007-02-27 Thorsten Dahlheimer <tdahlheim@gmx.net>
+
+	* include/stdio.h (_unlink, unlink): Add prototypes.
+
+2007-02-18 Aurimas Cernius <aurisc4@gmail.com>
+
+	* include/excpt.h: Replace "_try1" in comments with "__try1".
+
+2007-02-15 Danny Smith <dannysmith@users.sourceforge.net>
+
+	* Makefile.in (ALL_CFLAGS): Put W32API_INCLUDE after INCLUDES.
+	(ALL_CXXFLAGS): Likewise.
+	* mingwex/Makefile.in (ALL_CFLAGS): Put W32API_INCLUDE after INCLUDES.
+	(ALL_CXXFLAGS): Likewise.
+	* profile/Makefile.in (ALL_CFLAGS): Put W32API_INCLUDE after INCLUDES.
+	(ALL_CXXFLAGS): Likewise.
+
+2007-02-08 Danny Smith <dannysmith@users.sourceforge.net>
+
+	* include/io.h (X_OK): Revert 2007-01-24 change, but leave comment.
+
+2007-01-27 Danny Smith <dannysmith@users.sourceforge.net>
 
 	Expose some more msvcr80.dll functions.
 	* include/stdio.h (_fseek_nolock. _ftell_nolock, _fseeki64,
@@ -6,7 +774,7 @@
 	* msvcrt.def.in (_fseek_nolock. _ftell_nolock, _fseeki64,
 	_ftelli64, _fseeki64_nolock, _ftelli64_nolock) Add stubs.
 
-2007-01-26  Danny Smith  <dannysmith@users.sourceforge.net>
+2007-01-26 Danny Smith <dannysmith@users.sourceforge.net>
 
 	Expose some msvcr80.dll functions.
 	* include/stdlib.h (_set_abort_behavior): Add prototype.
@@ -19,24 +787,24 @@
 	* msvcrt.def.in (_get_printf_count_output,_set_printf_count_output,
 	_set_abort_behavior, _set_invalid_parameter_handler): Add stubs.
 
-2007-01-26  Danny Smith  <dannysmith@users.sourceforge.net>
+2007-01-26 Danny Smith <dannysmith@users.sourceforge.net>
 
-	* include/_mingw.h (CRT_INLINE):  Correct typo.
+	* include/_mingw.h (CRT_INLINE): Correct typo.
 
-2007-01-24  Danny Smith  <dannysmith@users.sourceforge.net>
+2007-01-24 Danny Smith <dannysmith@users.sourceforge.net>
 
-	* include/io.h (X_OK):  Define to F_OK.
+	* include/io.h (X_OK): Define to F_OK.
 
-2007-01-19  Danny Smith  <dannysmith@users.sourceforge.net>
+2007-01-19 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/stdio.h (SEEK_SET, SEEK_CUR, SEEK_END): Define
-	unconditionally.  Change comment.
+	unconditionally. Change comment.
 	* include/unistd.h (SEEK_SET, SEEK_CUR, SEEK_END): Define
 	here too.
 	* include/io.h (rename): Declare.
 	(remove): Declare.
 
-2006-12-31  Keith Marshall  <keithmarshall@users.sourceforge.net>
+2006-12-31 Keith Marshall <keithmarshall@users.sourceforge.net>
 
 	* include/libgen.h: New file; required by...
 	* mingwex/basename.c, mingwex/dirname.c: New files.
@@ -44,7 +812,7 @@
 	(POSIX_OBJS): ...with corresponding basename.o, dirname.o
 	(Dependencies): Typo; s/Dependancies/Dependencies/
 
-2006-11-25  Keith Marshall  <keithmarshall@users.sourceforge.net>
+2006-11-25 Keith Marshall <keithmarshall@users.sourceforge.net>
 
 	* Makefile.in (VERSION): Let configure define it.
 
@@ -58,34 +826,34 @@
 
 	* configure: Regenerated.
 
-2006-11-21  Danny Smith  <dannysmith@users.sourceforge.net>
+2006-11-21 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* Makefile.in: Add aclocal.m4 to source release.
 	* mingwex/Makefile.in: Ditto.
 	* profile/Makefile.in: Ditto.
 
-2006-11-18  Chris Sutcliffe  <ir0nh34d@users.sourceforge.net>
+2006-11-18 Chris Sutcliffe <ir0nh34d@users.sourceforge.net>
 
 	* Include/_mingw.h: Increment version to 3.11.
 	* Makefile.in: Ditto.
 
-2006-11-09  Danny Smith  <dannysmith@users.sourceforge.net>
+2006-11-09 Danny Smith <dannysmith@users.sourceforge.net>
 
-	[ mingw-Bugs-1590623 ] 
+	[ mingw-Bugs-1590623 ]
 	* include/_mingw.h (__CRT_INLINE): Use __gnu_inline__ attribute
 	in C99 mode.
 
-2006-10-04  Corinna Vinschen  <corinna@vinschen.de>
+2006-10-04 Corinna Vinschen <corinna@vinschen.de>
 
 	* Makefile.in: Semi-revert semi-reversion of 2006-08-30 change, now
 	correctly parenthesized.
 
-2006-09-19  Danny Smith  <dannysmith@users.sourceforge.net>
+2006-09-19 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* mingwex/mb_wc_common.h (get_codepage): Get it
 	from __lc_codepage.
 
-2006-09-18  Danny Smith  <dannysmith@users.sourceforge.net>
+2006-09-18 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* mingwex/gdtoa/g_xfmt.c (g_xfmt): Fix representation of infinity.
 	Use fpclassify.
@@ -94,23 +862,23 @@
 	* mingwex/gdtoa/gdtoa.h (__g_fmt): Make declaration consistent with
 	others.
 
-2006-09-16  Danny Smith  <dannysmith@users.sourceforge.net>
+2006-09-16 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* mingwex/gdtoa/strtopx.c (strtopx): Fix long double representation
 	of infinity.
 
-2006-09-11  Christopher Faylor  <cgf@timesys.com>
+2006-09-11 Christopher Faylor <cgf@timesys.com>
 
 	* Makefile.in: Semi-revert 2006-08-30 change.
 
-2006-09-10  Danny Smith  <dannysmith@users.sourceforge.net>
+2006-09-10 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/_mingw.h (__MINGW_ATTRIB_DEPRECATED): Define.
 	(__MINGW_IMPORT): Ansify.
 	* include/stdlib.h (_sleep, _beep, _seterrormode): Add
 	__MINGW_ATTRIB_DEPRECATED.
 
-2006-09-10  Keith Marshall  <keithmarshall@users.sourceforge.net>
+2006-09-10 Keith Marshall <keithmarshall@users.sourceforge.net>
 
 	* aclocal.m4 (LIB_AC_PROG_CC, LIB_AC_PROG_CC_GNU, LIB_AC_PROG_CXX):
 	Redundant macros; deleted.
@@ -120,13 +888,13 @@
 
 	* configure: Regenerated.
 
-2006-09-06  Danny Smith  <dannysmith@users.sourceforge.net>
+2006-09-06 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* mingwex/gdtoa/misc.c (pow5mult): Restore original code.
 	* mingwex/gdtoa/gdtoa.h. Add comment that files have been modified.
 	* mingwex/gdtoa/gdtoaimp.h: Include system headers with <> brackets.
 
-2006-09-01  Danny Smith  <dannysmith@users.sourceforge.net>
+2006-09-01 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* mingwex/gdtoa/(arithchk.c, dmisc.c, dtoa.c, g__fmt.c, g_dfmt.c,
 	g_ffmt.c, g_xfmt.c, gd_arith.h, gd_qnan.h, gdtoa.c, gdtoa.h,
@@ -136,7 +904,7 @@
 	* mingwex/(strtof.c, strtold.c, ldtoa.c): Remove files.
 	* mingwex/math/(cephes-emath.c, cephes-emath.h): Remove files.
 	* mingwex/mb_wc_common.h (get_cp_from_locale); Rename to get_codepage().
-        * mingwex/(btowc.c, wctob.c, mbrtowc.c, wcrtomb.c): Adjust call to get_codepage().
+    * mingwex/(btowc.c, wctob.c, mbrtowc.c, wcrtomb.c): Adjust call to get_codepage().
 	* mingwex/wcstold.c: Avoid using strtold internals.
 	* mingwex/wcstof.c: Rewrite.
 	* mingwex/Makefile.in (GDTOA_DISTFILES): Add to distribution.
@@ -149,31 +917,31 @@
 	(wcstof): Likewise.
 	* include/wchar.h (wcstof): Remove inline definition.
 
-2006-08-30  Corinna Vinschen  <corinna@vinschen.de>
+2006-08-30 Corinna Vinschen <corinna@vinschen.de>
 
 	* Makefile.in: Add with_cross_host to allow more granular checks.
-	Set installation directories accordingly.  Override CC setting only
+	Set installation directories accordingly. Override CC setting only
 	if building a Cygwin target.
 	* aclocal.m4: Regenerate.
-	* configure.in: Move AC_CANONICAL_SYSTEM check up.  Add
-	GCC_NO_EXECUTABLES.  Substitute with_cross_host in depending files.
+	* configure.in: Move AC_CANONICAL_SYSTEM check up. Add
+	GCC_NO_EXECUTABLES. Substitute with_cross_host in depending files.
 	Test AC_ALLOCA only if building on a native system.
 	* configure: Regenerate.
 
-2006-08-27  Chris Sutcliffe  <ir0nh34d@users.sourceforge.net>
+2006-08-27 Chris Sutcliffe <ir0nh34d@users.sourceforge.net>
 
 	* include/ctype.h: Fix typo.
 
-2006-08-25  Danny Smith  <dannysmith@users.sourceforge.net>
+2006-08-25 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/ctype.h: Expose iswblank if __cplusplus.
 	* include/wctype.h: Expose iswblank if __cplusplus.
 
-2006-08-03  Danny Smith  <dannysmith@users.sourceforge.net>
+2006-08-03 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/ctype.h: Remove stray ')';
 
-2006-08-03  Danny Smith  <dannysmith@users.sourceforge.net>
+2006-08-03 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/ctype.h (_BLANK): Expand comment.
 	(isblank): Add prototype and inline definition.
@@ -183,24 +951,24 @@
 	* mingwex/iswblank.c: New file.
 	* mingwex/Makefile.in: Add isblank, iswblank to libmingwex.a
 
-2006-07-06  Danny Smith  <dannysmith@users.sourceforge.net>
+2006-07-06 Danny Smith <dannysmith@users.sourceforge.net>
 
-	* include/math.h (__INFF,__INFL): Remove '#'. 
+	* include/math.h (__INFF,__INFL): Remove '#'.
 
-2006-07-04  Danny Smith  <dannysmith@users.sourceforge.net>
+2006-07-04 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* mingwex/Makefile.in: Add -I$(srcdir)/.. to INCLUDES.
 
-2006-07-03  Danny Smith  <dannysmith@users.sourceforge.net>
+2006-07-03 Danny Smith <dannysmith@users.sourceforge.net>
 
-	Support SSE float environment in fenv.h functions.  
+	Support SSE float environment in fenv.h functions.
 	* cpu_features.c: New file.
 	* cpu_features.h: New file.
 	* crt1.c: Include "cpu_features.h".
-	(__mingw_CRTStartup): Call cpu_features_init().	
+	(__mingw_CRTStartup): Call cpu_features_init().
 	* Makefile.in (MING_OBJS): Add cpu_features.c.
 	(SRCDIST_FILES): Add cpu_features.c, cpu_features.h.
-	* include/fenv,h ( fenv_t;): Append  __mxcsr field.
+	* include/fenv,h ( fenv_t;): Append __mxcsr field.
 	(__MXCSR_EXCEPT_FLAG_SHIFT): New define.
 	(__MXCSR_EXCEPT_MASK_SHIFT): New define.
 	(__MXCSR_ROUND_FLAG_SHIFT): New define.
@@ -215,57 +983,57 @@
 	* mingwex/feupdateenv.c: Likewise.
 	* mingwex/fegetround.c: Add comment.
 
-2006-06-25  Chris Sutcliffe  <ir0nh34d@users.sourceforge.net>
+2006-06-25 Chris Sutcliffe <ir0nh34d@users.sourceforge.net>
 
 	* Include/_mingw.h: Increment version to 3.10.
 	* Makefile.in: Ditto.
 
-2006-06-26 Danny Smith  <dannysmith@users.sourceforge.net>
+2006-06-26 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* mingwex/math/tgamma.c (SQTPI): Add braces.
 
-2006-06-26 Danny Smith  <dannysmith@users.sourceforge.net>
+2006-06-26 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* mingwex/wcrtomb.c (wcsrtombs): Fix src end-pointer thinko.
 	* mingwex/math/lgamma.c: (LOGPI) Avoid type punning.
 	(LS2PI): Likewise.
-        * mingwex/math/sf_erf.c (erff): Initialize z.
-        (erfcf): Likewise.
+    * mingwex/math/sf_erf.c (erff): Initialize z.
+    (erfcf): Likewise.
 	* mingwex/math/tgamma.c (SQTPI): Avoid type punning.
 
-2006-06-25  Chris Sutcliffe  <ir0nh34d@users.sourceforge.net>
+2006-06-25 Chris Sutcliffe <ir0nh34d@users.sourceforge.net>
 
 	* Include/_mingw.h: Increment version to 3.10.
 	* Makefile.in: Ditto.
 
-2006-06-23 Danny Smith  <dannysmith@users.sourceforge.net>
+2006-06-23 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/sys/time.h (struct timezone): Define.
 	* include/time.h: Correct comment about timezone.
 
-2006-06-18  Danny Smith  <dannysmith@users.sourceforge.net>
+2006-06-18 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* configure.in (AC_CONFIG_AUX_DIR): Remove.
 	* configure: Regenerate.
 
-2006-06-18  Chris Sutcliffe  <ir0n3h4d@users.sourceforge.net>
+2006-06-18 Chris Sutcliffe <ir0n3h4d@users.sourceforge.net>
 
 	* configure: add srcdir as a possible location for install-sh.
 
-2006-06-18  Danny Smith  <dannysmith@users.sourceforge.net>
+2006-06-18 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* mingwex/dirent.c (_tGetFileAttributes): New helper function.
 	(_topendir): Use it.
 
-2006-06-18  Danny Smith  <dannysmith@users.sourceforge.net>
+2006-06-18 Danny Smith <dannysmith@users.sourceforge.net>
 
-	* include/sys/time.h: Add header guard.  Add extern "C" bracketing
+	* include/sys/time.h: Add header guard. Add extern "C" bracketing
 	for __cplusplus.
 	(gettimeofday): Add prototype.
 	* mingwex/gettimeofday.c: New file.
 	* mingwex/makefile.in: Add gettimeofday source and object.
 
-2006-06-13  Danny Smith  <dannysmith@users.sourceforge.net>
+2006-06-13 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/math.h (HUGE_VAL): Define as builtin if __GNUC__ >= 3.3,
 	else global library variable.
@@ -274,15 +1042,15 @@
 	(INFINITY): Likewise.
 	(NAN): LiKewise.
 
-2006-06-13  Danny Smith  <dannysmith@users.sourceforge.net>
+2006-06-13 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* mingwex/wcrtomb.c (wcrtomb_cp): Correct typo.
 
-2006-06-13  Danny Smith  <dannysmith@users.sourceforge.net>
+2006-06-13 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* Makefile.in (SUBDIRS): Change to lowercase for autoconf 2.59.
 
-2006-05-24  Christopher Faylor  <cgf@timesys.com>
+2006-05-24 Christopher Faylor <cgf@timesys.com>
 
 	* configure.in: Update to newer autoconf.
 	(thanks to Steve Ellcey)
@@ -295,77 +1063,77 @@
 	* mingwex/aclocal.m4: Ditto.
 	* profile/aclocal.m4: Ditto.
 
-2006-05-17  Danny Smith  <dannysmith@users.sourceforge.net>
+2006-05-17 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* mingwex/wcrtomb.c (wcrtomb_cp): Test (wc > 255) only if C locale.
 	Use supplied codepage as arg to WideCharToMultiByte.
 
-2006-02-13  Earnie Boyd  <earnie@users.sf.net>
+2006-02-13 Earnie Boyd <earnie@users.sf.net>
 
 	* Makefile.in (libmsvcr80.a): Add import lib.
 	(libmsvcr80d.a): Ditto.
 
-2006-01-18  Chris Sutcliffe  <ir0nh34d@users.sourceforge.net>
+2006-01-18 Chris Sutcliffe <ir0nh34d@users.sourceforge.net>
 
 	* Makefile.in: Bump cygwin build number.
 
-2005-10-27  Chris Sutcliffe  <ir0nh34d@users.sourceforge.net>
+2005-10-27 Chris Sutcliffe <ir0nh34d@users.sourceforge.net>
 
 	* Include/_mingw.h: Increment version to 3.9.
 	* Makefile.in: Ditto.
 
-2005-10-14  Danny Smith  <dannysmith@users.sourceforge.net>
+2005-10-14 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/limits.h (SSIZE_MAX): Define.
 	(LLONG_MAX, LLONG_MIN, ULLONG_MAX): Separate from non-ISO names.
 
-2005-10-13  Wu Yongwei  <adah@users.sourceforge.net>
+2005-10-13 Wu Yongwei <adah@users.sourceforge.net>
 
 	* include/tchar.h: Include <wchar.h> when _UNICODE is defined.
 	(_TEOF): New macro definition for _UNICODE and non_UNICODE cases.
 
-2005-10-12  Danny Smith  <dannysmith@users.sourceforge.net>
+2005-10-12 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/stddef.h: Remove.
 	* include/stdarg.h: Remove.
 
-2005-10-12  Danny Smith  <dannysmith@users.sourceforge.net>
+2005-10-12 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* mingwex/complex/csqrt.c (csqrt): The sign of real part
 	of result is positive when real part of arg == 0;
 	* mingwex/complex/csqrtf.c (csqrtf): Ditto.
 	* mingwex/complex/csqrtl.c (csqrtl): Ditto.
 
-2005-10-12  Danny Smith  <dannysmith@users.sourceforge.net>
+2005-10-12 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/time.h (_time64): Correct prototype.
 
-2005-10-08  Danny Smith  <dannysmith@users.sourceforge.net>
+2005-10-08 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* mingwex/fegetenv.c (fegetenv): Restore exception masks.
 	* mingwex/feholdexcept.c (feholdexcept): Don't set exceptions
 	to non-stop. Use "fnclex" to clear exception flags.
 
-2005-09-24  Danny Smith  <dannysmith@users.sourceforge.net>
+2005-09-24 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/math.h (HUGE_VALF, HUGE_VALL, INFINITY, NAN)
 	Avoid raising FP exceptions.
 
-2005-09-19  Danny Smith  <dannysmith@users.sourceforge.net>
+2005-09-19 Danny Smith <dannysmith@users.sourceforge.net>
 
-	* include/stdlib.h (strtof): Add prototype.  Uglify
+	* include/stdlib.h (strtof): Add prototype. Uglify
 	parameter names in inline definition.
 	(wcstof): Likewise.
 	(_Exit): Uglify	parameter names in inline definition.
 	(llabs): Add prototype.
 	(_set_error_mode): Add prototype and input defines.
 
-2005-08-25  Danny Smith  <dannysmith@users.sourceforge.net>
+2005-08-25 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* mingwex/fe*.c: Revert previous changes.
 	* include/fenv.h: Revert previous changes.
 
-2005-08-25  Danny Smith  <dannysmith@users.sourceforge.net>
+2005-08-25 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* mingwex/feclearexcept.c (feclearexcept): Change declaration.
 	Do not return a value.
@@ -379,70 +1147,70 @@
 	fesetexceptflag, fegetenv, fesetenv, feupdateenv): Correct
 	prototypes.
 
-2005-08-25  Danny Smith  <dannysmith@users.sourceforge.net>
+2005-08-25 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* mingwex/stdio/fseeko64.c (fseeko64): Flush stream before
 	getting filelength for SEEK_END.
 
-2005-08-13  Chris Sutcliffe  <ir0nh34d@users.sourceforge.net>
+2005-08-13 Chris Sutcliffe <ir0nh34d@users.sourceforge.net>
 
 	* Include/_mingw.h: Increment version to 3.8.
 	* Makefile.in: Ditto.
 
-2005-08-10  Danny Smith  <dannysmith@users.sourceforge.net>
+2005-08-10 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/wctype.h (towupper, towlower): Change arg and return value
 	types to wint_t.
 	* include/ctype.h (towupper, towlower): Likewise.
 
-2005-08-10  Danny Smith  <dannysmith@users.sourceforge.net>
+2005-08-10 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* mthr_stub.c (__mingwthr_key_dtor): Replace assert(0) with
 	a diagnostic, guarded by #ifdef DEBUG.
 	(__mingwthr_remove_key_dtor): Likewise.
 
-2005-08-08  Danny Smith  <dannysmith@users.sourceforge.net>
+2005-08-08 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* moldname.def.in (sleep, beep, seterrormode): Remove.
 
-2005-06-16  Danny Smith  <dannysmith@users.sourceforge.net>
+2005-06-16 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* profile/profile.h (_MCOUNT_CALL): Define as regparm(2)
 	(_MCOUNT_DECL): Use it.
 	(MCOUNT): Save and restore eax, ecx, edx registers.
 	* profile/mcount.c (_mcount): ANSI-fy.
 
-2005-06-16  Danny Smith  <dannysmith@users.sourceforge.net>
+2005-06-16 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/_mingw.h (__MINGW_GNUC_PREREQ): Define. Use to
 	guard __MINGW_ATTRIB macro definitions.
-	* include/math.h (logb[fl]):  Don't define inlines for
+	* include/math.h (logb[fl]): Don't define inlines for
 	GCC-4.0+ && __FAST_MATH__.
-	(rint[fl], lrint[fl], llrint[fl]); Likewise.  Clean up
+	(rint[fl], lrint[fl], llrint[fl]); Likewise. Clean up
 	line-continuation backslashes.
 
-2005-06-06  Danny Smith  <dannysmith@users.sourceforge.net>
+2005-06-06 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/_mingw.h (__MINGW_ATTRIBUTE_NONNULL): Fix typo
 	in GNUC version guard.
 
-2005-05-20  Danny Smith  <dannysmith@users.sourceforge.net>
+2005-05-20 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* crt1.c (_gnu_exception_handler): Handle illegal instruction
 	OS exception as a signal if user has defined a SIGILL handler.
 
-2005-05-10  Danny Smith  <dannysmith@users.sourceforge.net>
+2005-05-10 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* mingwex/math/nexttoward.c: New file.
 	* mingwex/math/nexttowardf.c: New file.
 	* mingwex/math/nextafterl.c: Add nexttowardl alias.
 	* mingwex/Makefile.in (MATH_DISTFILES): Add nexttoward.c,
 	mexttowardf.c,
-	(MATH_OBJS):  Add nexttoward.o,	nexttowardf.o,
+	(MATH_OBJS): Add nexttoward.o,	nexttowardf.o,
 	* include/math.h (nexttoward, nextowardf, nexttowardl): Add
 	prototypes.
 
-2005-05-09  Danny Smith  <dannysmith@users.sourceforge.net>
+2005-05-09 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* mingwex/math/nextafterf.c (nextafterf): Correct
 	handling of -0.0.
@@ -451,37 +1219,37 @@
 	(MATH_OBJS): Add nextafterl.o.
 	* include/math.h (nextafterl): Uncomment prototype.
 
-2005-05-08  Danny Smith  <dannysmith@users.sourceforge.net>
+2005-05-08 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* mingwex/math/erfl.c: New file.
 	* mingwex/Makefile.in (MATH_DISTFILES): Add erfl.c.
 	(MATH_OBJS): Add erfl.o.
 	* include/math.h (erfl, erfcl): Uncomment prototypes.
 
-2005-05-04  Danny Smith  <dannysmith@users.sourceforge.net>
+2005-05-04 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/wchar.h (WCHAR_MAX): Define as 0xffff, so preprocessor
 	#if (WCHAR_MAX <= WCHAR_MIN) is false.
 	* include/stdint.h (WCHAR_MAX): Likwise.
 	(WINT_MAX): Likewise.
 
-2005-05-03  Danny Smith  <dannysmith@users.sourceforge.net>
+2005-05-03 Danny Smith <dannysmith@users.sourceforge.net>
 
-	* mingwex/math/signbit.c (__signbit):  Make return value
+	* mingwex/math/signbit.c (__signbit): Make return value
 	consistent with GCC's __builtin_signbit.
-	* mingwex/math/signbitf.c (__signbitf):  Likewise.
-	* mingwex/math/signbitf.c (__signbitl):  Likewise.
+	* mingwex/math/signbitf.c (__signbitf): Likewise.
+	* mingwex/math/signbitf.c (__signbitl): Likewise.
 	* include/math.h (__signbit, __signbitf, __signbitl): Likewise
 	for inlines.
 
-2005-05-02  Danny Smith  <dannysmith@users.sourceforge.net>
+2005-05-02 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/_mingw.h (__MINGW_ATTRIB_NONNULL): Don't define as
 	variadic macro.
 	* mingwex/mbrtowc.c (__mbrtowc_cp): Use __MINGW_ATTRIB_NONNULL.
 	Remove unused MBTOWC_FLAGS define.
 
-2005-04-23  Danny Smith  <dannysmith@users.sourceforge.net>
+2005-04-23 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* mingwex/mbrtowc.c: New file.
 	* mingwex/wcrtomb.c: New file.
@@ -495,54 +1263,54 @@
 	(wmemset. wmemchr, wmemcpy, wmemmove, wcstoll, wcstoull): Remove
 	arg names from protototypes.
 
-2005-04-23  Wu Yongwei  <adah@sh163.net>
+2005-04-23 Wu Yongwei <adah@sh163.net>
 
 	* mingwex/dirent.c: Formatting changes.
 	* mingwex/dirent.c (_topendir): Make the end-of-path slash check
 	MBCS-safe.
 
-2005-03-31  Danny Smith  <dannysmith@users.sourceforge.net>
+2005-03-31 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/_mingw.h (__MINGW_ATTRIB_NONNULL): Define.
 
-2005-03-24  Danny Smith  <dannysmith@users.sourceforge.net>
+2005-03-24 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/stdio.h (__mingw_fwrite): Change return value to
 	size_t.
 	* mingwex/mingw-fseek.c (__mingw_fwrite): Likewise.
 
-2005-03-15  Hans Leidekker  <hans@it.vu.nl>
+2005-03-15 Hans Leidekker <hans@it.vu.nl>
 
 	* include/malloc.h (_FREEENTRY, _USEDENTRY): Correct defines.
 
-2005-02-25  Danny Smith  <dannysmith@users.sourceforge.net>
+2005-02-25 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/wctype.h (wctrans): Remove _CRTIMP.
 	(towctrans): Likewise.
 	(wctype): Likewise,
 
-2005-02-25  Danny Smith  <dannysmith@users.sourceforge.net>
+2005-02-25 Danny Smith <dannysmith@users.sourceforge.net>
 
-	* include/wctype.h:  Add comment on wctrans, towctrans, wctype.
+	* include/wctype.h: Add comment on wctrans, towctrans, wctype.
 
-2005-02-25  Danny Smith  <dannysmith@users.sourceforge.net>
+2005-02-25 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* mingwex/wctype.c: New file.
 	* mingwex/wctrans.c: New file.
 	* mingwex/Makefile.in (DISTFILES): Add wctype.c, wctrans.c.
 	* mingwex/Makefile.in (Q8_OBJS): Add wctype.o, wctrans.o.
 
-2005-02-11  Danny Smith  <dannysmith@users.sourceforge.net>
+2005-02-11 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/tchar.h (_tstat64, _tstati64): Add Unicode/ANSI mappings.
 
-2005-02-11  Danny Smith  <dannysmith@users.sourceforge.net>
+2005-02-11 Danny Smith <dannysmith@users.sourceforge.net>
 
-	* include/assert.h: Remove header guard.  #undef assert macro.
+	* include/assert.h: Remove header guard. #undef assert macro.
 	(_assert): Use __MINGW_ATTRIB_NORETURN define.
 
-2005-02-11  Gregory W. Chicares  <chicares@cox.net>
-            Danny Smith  <dannysmith@users.sourceforge.net>
+2005-02-11 Gregory W. Chicares <chicares@cox.net>
+      Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/math.h (expm1, expm1f, expmll): Add prototypes.
 	* mingwex/Makefile.in (MATH_DISTFILES): Add expm1.c,
@@ -552,31 +1320,31 @@
 	* mingwex/math/expm1f.c: New file.
 	* mingwex/math/expm1l.c: New file.
 
-2005-02-07  Danny Smith  <dannysmith@users.sourceforge.net>
+2005-02-07 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/sys/stat.h (struct stat): Guard with _NO_OLDNAMES.
 	* include/wchar.h (struct stat): Likwwise.
-	Bug reported to Debian by Anand Kumria  <wildfire@progsoc.org>
+	Bug reported to Debian by Anand Kumria <wildfire@progsoc.org>
 
 	* include/sys/stat.h: Remove empty __STRICT_ANSI__ guard.
 
-2005-02-01  Danny Smith  <dannysmith@users.sourceforge.net>
+2005-02-01 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* mingwex/strtold.c (__asctoe64): Set endptr to 'e' if exponent
 	string is not valid.
 
-2005-01-26  Oliver Stoeneberg  <oliverst@online.de>
+2005-01-26 Oliver Stoeneberg <oliverst@online.de>
 
 	* include/malloc.h: Add missing return code defines for
 	_heapwalk()
 
-2005-01-17  Danny Smith  <dannysmith@users.sourceforge.net>
+2005-01-17 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/sys/stat.h (struct __stat64): Change st_size type to
 	 __int64.
 	* include/wchar.h (struct __stat64): Change st_size type to __int64.
 
-2005-01-13  Earnie Boyd  <earnie@users.sf.net>
+2005-01-13 Earnie Boyd <earnie@users.sf.net>
 
 	* include/sys/stat.h (_S_IFLNK, S_IFLNK, _S_ISLNK, S_ISLNK, _lstat,
 	lstat): Remove.
@@ -584,20 +1352,20 @@
 	* include/_mingw.h: Increment version to 3.7.
 	* Makefile.in: Ditto.
 
-2005-01-11  Danny Smith  <dannysmith@users.sourceforge.net>
+2005-01-11 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/tchar.h (_tfreopen): Add UNICODE mappings.
 
-2005-01-11  Earnie Boyd  <earnie@users.sf.net>
+2005-01-11 Earnie Boyd <earnie@users.sf.net>
 
 	* include/sys/stat.h (_S_IFLNK, S_IFLNK, _S_ISLNK, S_ISLNK, _lstat,
 	lstat): Conditionalize defines for __STRICT_ANSI__.
 
-2005-01-10  Earnie Boyd  <earnie@users.sf.net>
+2005-01-10 Earnie Boyd <earnie@users.sf.net>
 
 	* include/errno.h (ELOOP): Add definition.
 
-2005-01-10  Danny Smith  <dannysmith@users.sourceforge.net>
+2005-01-10 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* mingwex/complex/(cabsl.c cacosl.c cacoshl.c cargl.c casinl.c
 	casinhl.c catanl.c catanhl.c ccosl.c ccoshl.c cexpl.c cimagl.c
@@ -610,25 +1378,25 @@
 	cpowl, cprojl, creall, csinl, csinhl, csqrtl, ctanl, ctanhl):
 	Declare.
 
-2005-01-06  Danny Smith  <dannysmith@users.sourceforge.net>
+2005-01-06 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/_mingw.h (__int16): Define as short.
-	Thanks to: Leo Yuriev  <leoyuriev at users dot sf dot net>
+	Thanks to: Leo Yuriev <leoyuriev at users dot sf dot net>
 
-2005-01-06  Danny Smith  <dannysmith@users.sourceforge.net>
+2005-01-06 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/stdio.h (P_tmpdir): Add define.
 
-2005-01-03  Earnie Boyd  <earnie@users.sf.net>
+2005-01-03 Earnie Boyd <earnie@users.sf.net>
 
 	* Makefile.in (inst_docdir): For Cygwin target set to share/doc/.
 
-2005-01-02  Earnie Boyd  <earnie@users.sf.net>
+2005-01-02 Earnie Boyd <earnie@users.sf.net>
 
 	* include/_mingw.h: Increment version to 3.6
 	* Makefile.in: Ditto
 
-2004-12-26  Danny Smith  <dannysmith@users.sourceforge.net>
+2004-12-26 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* mingwex/complex/(cabsf.c cacosf.c cacoshf.c cargf.c casinf.c
 	casinhf.c catanf.c catanhf.c ccosf.c ccoshf.c cexpf.c cimagf.c
@@ -641,16 +1409,16 @@
 	cpowf, cprojf, crealf, csinf, csinhf, csqrtf, ctanf, ctanhf):
 	Declare.
 
-2004-12-20  Danny Smith  <dannysmith@users.sourceforge.net>
+2004-12-20 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/wchar.h (wcsdup): Correct prototype.
 	* include/string.h (wcsdup): Correct prototype.
 
-2004-10-14  Danny Smith  <dannysmith@users.sourceforge.net>
+2004-10-14 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/sys/stat.h: Make S_ISLNK comment comply with ISO C90.
 
-2004-10-07  Danny Smith  <dannysmith@users.sourceforge.net>
+2004-10-07 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* mingwex/math/fastmath.h: New file.
 	* mingwex/math/asinh.c: New file.
@@ -667,7 +1435,7 @@
 	(MATH_DISTFILES): Add sources for above and fastmath.h to list.
 	Specify dependency on fastmath.h for new objects.
 
-2004-09-08  Earnie Boyd  <earnie@users.sf.net>
+2004-09-08 Earnie Boyd <earnie@users.sf.net>
 
 	* include/sys/stat.h (_S_IFLNK): Add definition.
 	(S_IFLNK) Ditto.
@@ -676,18 +1444,18 @@
 	(_S_ISLNK) Recode.
 	(S_ISLNK) Ditto.
 
-2004-09-08  Earnie Boyd  <earnie@users.sf.net>
+2004-09-08 Earnie Boyd <earnie@users.sf.net>
 
 	* include/sys/stat.h (_S_ISLNK): Add definition.
 	(S_ISLNK): Ditto.
 
-2004-09-05  Earnie Boyd  <earnie@users.sf.net>
+2004-09-05 Earnie Boyd <earnie@users.sf.net>
 
 	* include/_mingw.h: Increment minor version for 3.5 release.
 	* Makefile.in: Ditto.
 	* mingwex/Makefile.in: Correct typo in list of DISTFILES.
 
-2004-08-24  Danny Smith  <dannysmith@users.sourceforge.net>
+2004-08-24 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/malloc.h (__mingw_aligned_offset_malloc,
 	__mingw_aligned_offset_realloc, __mingw_aligned_malloc,
@@ -697,26 +1465,26 @@
 	tst-aligned-malloc.c.
 	(REPLACE_OBJS): Add mingw-aligned-malloc.o.
 
-2004-08-24  Steven G. Johnson  <stevenj@alum.mit.edu>
+2004-08-24 Steven G. Johnson <stevenj@alum.mit.edu>
 
 	* mingwex/mingw-aligned-malloc.c: New file.
 	* mingwex/tst-aligned-malloc.c: New file.
 
-2004-08-24  Danny Smith  <dannysmith@users.sourceforge.net>
+2004-08-24 Danny Smith <dannysmith@users.sourceforge.net>
 
-	* crt1.c: (__mingw_CRTStartup): Change return to void.  Add
+	* crt1.c: (__mingw_CRTStartup): Change return to void. Add
 	noreturn attribute. Align stack to 16 bytes before passing args
 	to main.
 	(mainCRTStartup): Change return to void.
 	(WinMainCRTStartup): Likewise.
 
-2004-08-15  Danny Smith  <dannysmith@users.sourceforge.net>
+2004-08-15 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* profile/COPYING: New file.
 	* profile/CYGWIN_LICENSE: New file.
 	* profile/Makefile.in (DISTFILES): Add COPYING, CYGWIN_LICENSE.
 
-2004-08-15  Danny Smith  <dannysmith@users.sourceforge.net>
+2004-08-15 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* mingwex/fopen64.c: Move.
 	* mingwex/fseeko64.c: Move.
@@ -727,61 +1495,61 @@
 	* mingwex/stdio/ftello64.c: To here.
 	* mingwex/stdio/lseek64.c: To here.
 
-2004-08-15  Danny Smith  <dannysmith@users.sourceforge.net>
+2004-08-15 Danny Smith <dannysmith@users.sourceforge.net>
 
-	* profile/gmon.c [__MINGW32__]: Include  string.h for
+	* profile/gmon.c [__MINGW32__]: Include string.h for
 	memset prototype.
 
-2004-08-08  Christopher Faylor  <cgf@timesys.com>
+2004-08-08 Christopher Faylor <cgf@timesys.com>
 
 	* mingwex/stdio/vwscanf.c: Add stdio.h needed after 2004-08-07 change.
 
-2004-08-07  Danny Smith  <dannysmith@users.sourceforge.net>
+2004-08-07 Danny Smith <dannysmith@users.sourceforge.net>
 
-	* include/complex.h:  Remove __attribute__ ((const)) from
-	transcendantal and trig functions.  Replace __attribute__ ((const))
+	* include/complex.h: Remove __attribute__ ((const)) from
+	transcendantal and trig functions. Replace __attribute__ ((const))
 	with __MINGW_ATTRIB_CONST on other declarations.
 
-2004-08-07  Danny Smith  <dannysmith@users.sourceforge.net>
+2004-08-07 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/wchar.h: Reorganize, avoid including other headers.
 
-2004-08-07  Danny Smith  <dannysmith@users.sourceforge.net>
+2004-08-07 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/string.h (memchr, memcmp, strchr, strcmp, strcspn)
 	(strlen, strncmp, strpbrk, strrchr, strspn, strstr): Add pure
 	attribute.
 
-2004-07-30  Danny Smith  <dannysmith@users.sourceforge.net>
+2004-07-30 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/dirent.h (struct _wdirent): Remove obsolete comment.
 
-2004-07-30  Danny Smith  <dannysmith@users.sourceforge.net>
+2004-07-30 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/string.h: Revert 2004-07-26 additions of
 	__ATTRIBUTE_PURE.
 
-2004-07-28  Danny Smith  <dannysmith@users.sourceforge.net>
+2004-07-28 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* mingwex/math/powl.c (powl): Revert change of 2004-02-01.
 	(__convert_inf_to_maxnum): New.static inline.
 	(reducl): Use it to protect against Inf - Inf.
-	(__fast_ldexpl): New function.  Use in lieu of ldexpl.
+	(__fast_ldexpl): New function. Use in lieu of ldexpl.
 
-2004-07-27  Danny Smith  <dannysmith@users.sourceforge.net>
+2004-07-27 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* mingwex/math/expl.c (expl): Move body of code to new static
 	function __expl, removing tests for +/-Inf. Extern function
 	expl calls __expl after testing for max, min log thresholds.
 
-2004-07-26  Danny Smith  <dannysmith@users.sourceforge.net>
+2004-07-26 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* mingwex/stdio/vsscanf.c: Add "edi" to registers-modified field
 	* mingwex/stdio/vfscanf.c: Likewise.
 	* mingwex/stdio/vswscanf.c: Likewise.
 	* mingwex/stdio/vfwscanf.c: Likewise.
 
-2004-07-26  Danny Smith  <dannysmith@users.sourceforge.net>
+2004-07-26 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/_mingw.h: Use only two underscores to uglify
 	__MINGW_ATTRIB_* macros.
@@ -792,14 +1560,14 @@
 	string functions.
 	(_strdup, strdup): Add __MINGW_ATTRIB_MALLOC.
 
-2004-07-25  Danny Smith  <dannysmith@users.sourceforge.net>
+2004-07-25 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/string.h: Group wide string functions together,
 	and protect with _WSTRING_DEFINED.
 
-2004-07-25  Danny Smith  <dannysmith@users.sourceforge.net>
+2004-07-25 Danny Smith <dannysmith@users.sourceforge.net>
 
-	* include/_mingw.h (__MINGW_ATTR_*):  Replace with
+	* include/_mingw.h (__MINGW_ATTR_*): Replace with
 	__MINGW_ATTRIB_*.
 	* include/stdlib.h (_ATTRIB_NORETURN): Replace with
 	__MINGW_ATTRIB_NORETURN, throughout.
@@ -816,7 +1584,7 @@
 	(_lrotr): Likewise.
 	* include/setjmp.h (longjmp): Add __MINGW_ATTRIB_NORETURN.
 
-2004-07-21  Danny Smith  <dannysmith@users.sourceforge.net>
+2004-07-21 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/_mingw.h: Undefine __attribute__.
 	(__MINGW_ATTR_NORETURN): New define.
@@ -826,46 +1594,46 @@
 	(_CRTIMP, __cdecl, __stdcall, __UNUSED_PARAM): Ansi-fy
 	expansions.
 
-2004-07-19  Danny Smith  <dannysmith@users.sourceforge.net>
+2004-07-19 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/time.h (__time64_t): Add missing ';'.
 
-2004-07-17  Danny Smith  <dannysmith@users.sourceforge.net>
+2004-07-17 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/time.h (wcsftime): Move out of !__STRICT_ANSI
  	block.
 	(struct tm): Protect with _TM_DEFINED.
 
-2004-07-17  Christopher Faylor  <cgf@timesys.com>
+2004-07-17 Christopher Faylor <cgf@timesys.com>
 
 	* Makefile.in (CC): Strip inappropriate include file settings from any
 	passed-in CC.
 
-2004-07-15  "dgun"  <dgun@umpire.com>
+2004-07-15 "dgun" <dgun@umpire.com>
 
 	* include/complex.h (conj): Correct typo in prototype.
 
-2004-07-15  Danny Smith  <dannysmith@users.sourceforge.net>
+2004-07-15 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/math.h: Add pragma GCC system_header.
 
-2004-07-15  Danny Smith  <dannysmith@users.sourceforge.net>
+2004-07-15 Danny Smith <dannysmith@users.sourceforge.net>
 
-	* mingwex/complex/cargs.c: New file.
+	* mingwex/complex/carg.c: New file.
 	* mingwex/Makefile.in: Really add carg.o to libmingwex.a.
 
-2004-07-15  Corinna Vinschen  <corinna@vinschen.de>
+2004-07-15 Corinna Vinschen <corinna@vinschen.de>
 
 	* Makefile.in (INCLUDES): Temporarily revert previous change.
 	* mingwex/Makefile,in (INCLUDES): Ditto.
 	* profile/Makefile,in (INCLUDES): Ditto.
 	* mingwex/Makefile,in: Drop carg.o dependency.
 
-2004-07-14  Christopher Faylor  <cgf@timesys.com>
+2004-07-14 Christopher Faylor <cgf@timesys.com>
 
 	* mingwex/fwide.c: Include <stdio.h> to resolve FILE usage.
 
-2004-07-14  Danny Smith  <dannysmith@users.sourceforge.net>
+2004-07-14 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* Makefile.in (INCLUDES): Designate $(srcdir)/../include as a
 	system dir.
@@ -874,7 +1642,7 @@
 
 	* mingwex/Makefile,in: Add carg.o to libmingwex.a.
 
-2004-07-13  Earnie Boyd  <earnie@users.sourcefourge.net>
+2004-07-13 Earnie Boyd <earnie@users.sourcefourge.net>
 
 	* Makefile.in: Move use of --nostdinc++ as GCC3.4 warns to use it
 	for C modules.
@@ -884,35 +1652,35 @@
 	* include/_mingw.h: Increment minor version for 3.4 release.
 	* Makefile.in: Ditto.
 
-2004-07-12  Danny Smith  <dannysmith@users.sourceforge.net>
+2004-07-12 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* mingwex/math/cephes_emath.h (__etens): Remove declaration.
 
-2004-07-11  Danny Smith  <dannysmith@users.sourceforge.net>
+2004-07-11 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/unistd.h (ftruncate): Add inline definition.
 	* mingwex/ftruncate.c: New file.
 	* mingwex/Makefile.in: Add ftruncate.o to libmingwex.a.
 
-2004-07-10  Danny Smith  <dannysmith@users.sourceforge.net>
+2004-07-10 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/time.h: Do not include sys/types.h.
 
-2004-07-02  Danny Smith  <dannysmith@users.sourceforge.net>
+2004-07-02 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* mingwex/Makefile.in (MATH_DISTFILES): Remove pow.c,
 	(MATH_OBJS): Remove pow,o.
 	* include/math.h (pow): Declare with _CRTIMP.
 	Add comment on how to avoid excess precision problems.
 
-2004-06-30  Danny Smith  <dannysmith@users.sourceforge.net>
+2004-06-30 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/stdio.h (__mingw_fseeko64): Add prototype.
 	* mingwex/mingw-fseek.c (__mingw_fseeko64): Add definition.
 	(__mingw_fwrite): Handle huge files.
 
-2004-06-30  Kees Zeelenberg  <kzlg@users.sourceforge.net>
-	    Danny Smith  <dannysmith@users.sourceforge.net>
+2004-06-30 Kees Zeelenberg <kzlg@users.sourceforge.net>
+	  Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/stdio.h (fopen64): Add inline function.
 	(fseeko64): Add prototype.
@@ -928,11 +1696,11 @@
 	fseeko.64.c, ftello64.c, lseek64.c.
 	(STDIO_OBJS): Add fopen64.o, fseeko.64.o, ftello64.o, lseek64.o.
 
-2004-04-24  Luke Dunstan  <infidel@users.sourceforge.net>
+2004-04-24 Luke Dunstan <infidel@users.sourceforge.net>
 
 	* include/limits.h (_I64_MIN, _I64_MAX, _UI64_MAX): Add defines.
 
-2004-04-22  Earnie Boyd  <earnie@users.sf.net>
+2004-04-22 Earnie Boyd <earnie@users.sf.net>
 
 	* DISCLAIMER: Add words about "free to use".
 	* README: Modify "Win32 runtime" to "Microsoft C Runtime".
@@ -942,10 +1710,10 @@
 	(FLAGS_TO_PASS): Include inst_docdir.
 	(install-dirs): Add inst_docdir.
 	(install): Add loop for INSTDOCS.
-	* strncasecmp.c: Reword copyright and disclaimer.  Move Contributors
-	section to CONTRIBUTORS file.  Remove RCS tags.
+	* strncasecmp.c: Reword copyright and disclaimer. Move Contributors
+	section to CONTRIBUTORS file. Remove RCS tags.
 
-2004-04-22  Danny Smith  <dannysmith@users.sourceforge.net>
+2004-04-22 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* mingwex/math/lround.c: Rewrite.
 	* mingwex/math/lroundf.c: Rewrite.
@@ -954,12 +1722,12 @@
 	* mingwex/math/llroundf.c: Rewrite.
 	* mingwex/math/llroundl.c: Rewrite.
 
-2004-04-20  Earnie Boyd  <earnie@users.sf.net>
+2004-04-20 Earnie Boyd <earnie@users.sf.net>
 
 	* CONTRIBUTORS: New file.
 	* DISCLAIMER: Ditto.
-	* CRT_noglob.c: Reword copyright and disclaimer.  Move Contributors
-	section to CONTRIBUTORS file.  Remove RCS tags.
+	* CRT_noglob.c: Reword copyright and disclaimer. Move Contributors
+	section to CONTRIBUTORS file. Remove RCS tags.
 	* CRTFmode.c: Ditto.
 	* CRTglob.c: Ditto.
 	* CRTinit.c: Ditto.
@@ -1010,36 +1778,36 @@
 	* include/sys/utime.h: Ditto.
 	* mingwex/dirent.c: Ditto.
 
-2004-04-19  Earnie Boyd  <earnie@users.sf.net>
+2004-04-19 Earnie Boyd <earnie@users.sf.net>
 
 	* include/_mingw.h: Revert to primary release 3 and increment minor
 	release to 3.
 	* Makefile.in (VERSION): Ditto.
 
-2004-04-01  Danny Smith  <dannysmith@users.sourceforge.net>
+2004-04-01 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* crt1.c (_mingw32_init_fmode): Set *_imp___fmode_dll to
 	_fmode if not __MSVCRT__.
 
-2004-03-30  Danny Smith  <dannysmith@users.sourceforge.net>
+2004-03-30 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/io.h: (_findfirst): Correct prototype.
 
-2004-03-30  Hans Leidekker  <hans@it.vu.nl>
+2004-03-30 Hans Leidekker <hans@it.vu.nl>
 
 	* include/io.h: (_findnext, _findclose): Correct prototype.
 
-2004-03-28  Hans Leidekker  <hans@it.vu.nl>
+2004-03-28 Hans Leidekker <hans@it.vu.nl>
 
 	* include/math.h (FP_*): Add defines.
 
-2004-03-29  Danny Smith  <dannysmith@users.sourceforge.net>
+2004-03-29 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* mingwex/math/round.c: Rewrite.
 	* mingwex/math/roundf.c: Rewrite.
 	* mingwex/math/roundl.c: Rewrite.
 
-2004-03-25  Danny Smith  <dannysmith@users.sourceforge.net>
+2004-03-25 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/_mingw.h (__MSVCRT_VERSION__): Define default as 0x0600.
 	* include/time.h (__time64_t): Add typedef.
@@ -1063,11 +1831,11 @@
 	(_utime64): Add prototype for __MSVCRT_VERSION__ >= 0x0601.
 	(_futime64): Likewise.
 	(_wutime64): Likewise.
-	* include/sys/stat.h (__stat64):  Add struct definition.
+	* include/sys/stat.h (__stat64): Add struct definition.
 	(_fstat64): Add prototype for __MSVCRT_VERSION__ >= 0x0601.
 	(_stat64): Likewise.
 	(_wstat64): Likwise.
-	* include/sys/types.h (__time64_t):  Add typedef.
+	* include/sys/types.h (__time64_t): Add typedef.
 	* include/wchar.h (__wfinddata64_t): Add structure definition.
 	(__stat64): Likewise.
 	(_wctime64): Add prototype for __MSVCRT_VERSION__ >= 0x0601.
@@ -1087,102 +1855,102 @@
 	* include/math.h (_set_SSE2_enable): Add prototype for
 	__MSVCRT_VERSION__ >= 0x0701.
 
-2004-03-25  Danny Smith  <dannysmith@users.sourceforge.net>
+2004-03-25 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/stdio.h (_fsopen): Add prototype.
 	* include/tchar.h (_tfsopen): Add defines.
 	Thanks to "Gerik" <gerikr at users dot sourceforge dot net>
 
-2004-03-19  Danny Smith  <dannysmith@users.sourceforge.net>
+2004-03-19 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* msvcrt.def.in: Add stubs for msvcrt.dll (version 6.10),
 	msvcr70.dll, and msvcr71.dll.
-	* Makefile.in (msvcr*.def): Define preprocessor  __msvcr*__ constant
+	* Makefile.in (msvcr*.def): Define preprocessor __msvcr*__ constant
 	using basename of output def file.
 
-2004-03-13  Danny Smith  <dannysmith@users.sourceforge.net>
+2004-03-13 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/malloc.h: Remove __STRICT_ANSI__ guard.
 
-2004-03-11  Brian Keener  <bkeener@thesoftwaresource.com>
+2004-03-11 Brian Keener <bkeener@thesoftwaresource.com>
 
 	* include/process.h: Remove the #endif associated with removal of
 	__STRICT_ANSI__ guard from non-ANSI header.
 
-2004-03-10  Danny Smith  <dannysmith@users.sourceforge.net>
+2004-03-10 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/conio.h: Remove __STRICT_ANSI__ guard from non-ANSI header.
-	* include/direct.h:  Ditto.
-	* include/dirent.h:  Ditto.
-	* include/dos.h:  Ditto.
-	* include/excpt.h:  Ditto.
+	* include/direct.h: Ditto.
+	* include/dirent.h: Ditto.
+	* include/dos.h: Ditto.
+	* include/excpt.h: Ditto.
 	* inlude/fcntl,h
-	* include/io.h:  Ditto.
-	* inlude/mem.h:  Ditto.
-	* include/memory.h:  Ditto.
-	* include/process.h:  Ditto.
-	* inlude/search.h:  Ditto.
-	* include/share.h:  Ditto.
-	* include/unistd.h:  Ditto.
-	* include/sys/fcntl.h:  Ditto.
-	* include/file.h:  Ditto.
-	* include/sys/locking.h:  Ditto.
-	* include/sys/param.h:  Ditto.
+	* include/io.h: Ditto.
+	* inlude/mem.h: Ditto.
+	* include/memory.h: Ditto.
+	* include/process.h: Ditto.
+	* inlude/search.h: Ditto.
+	* include/share.h: Ditto.
+	* include/unistd.h: Ditto.
+	* include/sys/fcntl.h: Ditto.
+	* include/file.h: Ditto.
+	* include/sys/locking.h: Ditto.
+	* include/sys/param.h: Ditto.
 	* include/sys/stat,h
-	* include/sys/time.h:  Ditto.
-	* include/sys/timeb.h:  Ditto.
-	* include/sys/types.h:  Ditto.
-	* include/sys/unistd.h:  Ditto.
-	* include/sys/utime.h:  Ditto.
+	* include/sys/time.h: Ditto.
+	* include/sys/timeb.h: Ditto.
+	* include/sys/types.h: Ditto.
+	* include/sys/unistd.h: Ditto.
+	* include/sys/utime.h: Ditto.
 
-2004-02-21  Danny Smith  <dannysmith@users.sourceforge.net>
+2004-02-21 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/_mingw.h (__UNUSED_PARAM): Define macro.
 	* include/wchar.h (fwide): Use it.
 	(mbsinit): Ditto.
 
-2004-02-05  Danny Smith  <dannysmith@users.sourceforge.net>
+2004-02-05 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* mingwex/getopt.c: Define IS_POSIXLY_CORRECT as per
 	NetBSD getopt_long.c.
 
-2004-02-05  Danny Smith  <dannysmith@users.sourceforge.net>
+2004-02-05 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* mingwex/strtold.c (__asctoe64) Reorganise. Fix setting error
 	codes and handling of special chars.
 
-2004-02-02  Danny Smith  <dannysmith@users.sourceforge.net>
+2004-02-02 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/stdio.h (feof): Add inlined definition.
 	(ferror): Ditto.
 
-2004-02-01  Danny Smith  <dannysmith@users.sourceforge.net>
+2004-02-01 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* mingwex/math/ldexpl.c (ldexpl): Call __asm__("fscale")
 	directly, rather than via scabnl.
 
-2004-02-01  Danny Smith  <dannysmith@users.sourceforge.net>
+2004-02-01 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* mingwex/math/powl.c (powl): Return infinity if
 	extended precision multiplication of x by log2(y)
 	overflows.
 
-2004-01-31  Danny Smith  <dannysmith@users.sourceforge.net>
+2004-01-31 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* mingwex/math/cephes_emath.h (__enan_64): Fix thinko.
 	(__enan_NI16): Fix another one.
 	(__enan_NBITS): Tidy.
 
-2004-01-16  Danny Smith  <dannysmith@users.sourceforge.net>
+2004-01-16 Danny Smith <dannysmith@users.sourceforge.net>
 
-	* include/stdint.h  Fix __STDC_CONSTANT_MACROS for 8 and 16 bit
+	* include/stdint.h Fix __STDC_CONSTANT_MACROS for 8 and 16 bit
 	types. (Thanks to John Maddock for report.)
 
-2004-01-14  Greg Chicares  <chicares@users.sourceforge.net>
+2004-01-14 Greg Chicares <chicares@users.sourceforge.net>
 
 	* include/tchar.h (_puttchar): Define.
 
-2003-12-13  Danny Smith  <dannysmith@users.sourceforge.net>
+2003-12-13 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/stdio.h:(_fileno): Define macro version after both
 	fileno and _fileno functions declared.
@@ -1190,21 +1958,21 @@
 	* include/stdio.h (_rmtmp, rmtmp): Add prototypes.
 	* moldnames.def.in (rmtmp) Add stub.
 
-2003-11-27  Dimitry Sibiryakov  <aafemt@users.sourceforge.net>
+2003-11-27 Dimitry Sibiryakov <aafemt@users.sourceforge.net>
 
 	* include/signal.h (SIG_SGE, SIG_ACK): Add defines.
 
-2003-10-27  Danny Smith  <dannysmith@users.sourceforge.net>
+2003-10-27 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/math.h: Guard ISO C99 additions with __cplusplus
 	not __GLIBCPP__.
 
-2003-10-21  Danny Smith  <dannysmith@users.sourceforge.net>
+2003-10-21 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/_mingw.h: Define __attribute__((x)) to nothing
 	if not __GNUC__.
 
-2003-10-21  Danny Smith  <dannysmith@users.sourceforge.net>
+2003-10-21 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/complex.h: New file.
 	* mingwex/complex: New directory.
@@ -1234,45 +2002,45 @@
 	(COMPLEX_OBJS): New list of objects.
 	(LIB_OBJS): Include it in the library.
 
-2003-10-21  Danny Smith  <dannysmith@users.sourceforge.net>
+2003-10-21 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/math.h (cabs): Remove non-ISO prototype.
 
-2003-10-21  Danny Smith  <dannysmith@users.sourceforge.net>
+2003-10-21 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* mingwex/math/cephes_mconf.h (NAN, NANF, NANL):
 	Use GCC __builtin's if available.
 	(INFINITY, INFINITYF, INFINITYL): Likewise.
 
-2003-10-21  Danny Smith  <dannysmith@users.sourceforge.net>
+2003-10-21 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* mingwex/math/s_erf.c (erf): Set errno to ERANGE if
 	beyond approximation limit.
 	* mingwex/math/sf_erf.c (erff): Likewise.
 
-2003-10-17  Danny Smith  <dannysmith@users.sourceforge.net>
+2003-10-17 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/stdio.h (getc): Cast result to unsigned char before
 	return.
 	(putc): Likewise
 	(getchar): Likewise.
 	(putchar): Likewise.
-	Thanks to M.Fujii  <boochang@m4.kcn.ne.jp>
+	Thanks to M.Fujii <boochang@m4.kcn.ne.jp>
 
-2003-10-10  Earnie Boyd  <earnie@users.sf.net>
+2003-10-10 Earnie Boyd <earnie@users.sf.net>
 
 	* include/_mingw.h: Increment version to 3.2.
 	* Makefile.in: Ditto.
 
-2003-10-10  Earnie Boyd  <earnie@users.sourceforge.net>
+2003-10-10 Earnie Boyd <earnie@users.sourceforge.net>
 
 	* include/sys/types.h: Revert last change.
 
-2003-10-10  Earnie Boyd  <earnie@users.sourceforge.net>
+2003-10-10 Earnie Boyd <earnie@users.sourceforge.net>
 
 	* include/sys/types.h (ssize_t): Correct the definition.
 
-2003-10-03  Danny Smith  <dannysmith@users.sourceforge.net>
+2003-10-03 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/stdio.h (_filbuf): Add prototype.
 	(_flsbuf): Add prototype.
@@ -1281,17 +2049,17 @@
 	(getchar): Likewise.
 	(putchar): Likewise.
 
-2003-10-03  Danny Smith  <dannysmith@users.sourceforge.net>
+2003-10-03 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* mingwex/dirent.c (_treaddir): Reset errno to 0 if end
 	of directory.
 
-2003-09-29  Danny Smith  <dannysmith@users.sourceforge.net>
+2003-09-29 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/stdlib.h: Guard non-ISO functions with
 	!__STRICT_ANSI__, throughout.
 
-2003-09-24  Danny Smith  <dannysmith@users.sourceforge.net>
+2003-09-24 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/io.h (_fileno): Remove prototype.
 	(fileno): Likewise.
@@ -1302,11 +2070,11 @@
 	(_fileno): Define macro implementation.
 	(fileno): Likewise.
 
-2003-09-24  Danny Smith  <dannysmith@users.sourceforge.net>
+2003-09-24 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/inttypes.h: Include _mingw.h.
 
-2003-09-24  Danny Smith  <dannysmith@users.sourceforge.net>
+2003-09-24 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/_mingw.h (__CRT_INLINE): Define.
 	* include/ctype.h: Replace 'extern inline' with __CRT_INLINE,
@@ -1319,21 +2087,21 @@
 	* include/wchar.h: Likewise.
 	* include/wctype.h: Likewise.
 
-2003-09-22  Roland Schwingel  <rolandschwingel@users.sourceforge.net>
+2003-09-22 Roland Schwingel <rolandschwingel@users.sourceforge.net>
 
 	* mingwex/dirent.c (_topendir): Allocate enough memory for
 	DIR struct in UNICODE case too.
 
-2003-09-15  Earnie Boyd  <earnie@users.sf.net>
+2003-09-15 Earnie Boyd <earnie@users.sf.net>
 
 	* include/_mingw.h: Increment version to 3.2.
 	* Makefile.in: Ditto.
 
-2003-07-03  Earnie Boyd  <earnie@users.sf.net>
+2003-07-03 Earnie Boyd <earnie@users.sf.net>
 
 	* config.guess, config.sub: Update with versions from ftp.gnu.org.
 
-2003-07-03  Danny Smith  <dannysmith@users.sourceforge.net>
+2003-07-03 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* mingwex/math/trunc.c (trunc): Provide lvalue for memory input constraint.
 	* mingwex/math/truncf.c (truncf): Likewise.
@@ -1341,7 +2109,7 @@
 	* mingwex/math/modff.c (modff): Likewise.
 	* mingwex/math/modfl.c (modfl): Likewise.
 
-2003-07-03  Danny Smith  <dannysmith@users.sourceforge.net>
+2003-07-03 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/search.h: New file.
 	* include/stdlib.h: Add comment about qsort, bsearch in
@@ -1349,25 +2117,25 @@
 	* test_headers.c: Include search.h.
 	* moldname.def.in (lfind, lsearch): Add.
 
-2003-07-03  Danny Smith  <dannysmith@users.sourceforge.net>
+2003-07-03 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/process.h (_execv, _execvp, _spawnv, _spawnvp, _execve,
 	_execvpe, _spawnve, _spawnvpe, execv, execvp, spawnv, spawnvp,
 	execve, execvpe, spawnve, spawnvpe): Const-ify all the char params.
 
-2003-07-01  Earnie Boyd  <earnie@users.sf.net>
+2003-07-01 Earnie Boyd <earnie@users.sf.net>
 
 	* include/_mingw.h (small, hyper): Change to __small and __hyper to
 	avoid user space name conflicts.
 
-2003-07-01  Earnie Boyd  <earnie@users.sf.net>
+2003-07-01 Earnie Boyd <earnie@users.sf.net>
 
 	* include/_mingw.h (__int32, __int16, __int8, small, hyper): Define.
 	Note: Also added to w32api/include/basetyps.h.
 	* mingwex/math/tgamma.c, tgammaf.c, tgammal.c (small):
 	Rename to Small (case difference).
 
-2003-06-18  Earnie Boyd  <earnie@users.sf.net>
+2003-06-18 Earnie Boyd <earnie@users.sf.net>
 
 	* include/dirent.h (dirent): Make d_name and array instead of a pointer.
 	* mingwex/dirent.c: Modifications througout to fill d_name array.
@@ -1375,23 +2143,23 @@
 	libmsvcr71, including debug versions.
 	(msvcr70.def, msvcr70d.def, msvcr71.def, msvcr71.def): New targets.
 
-2003-06-17  Danny Smith  <dannysmith@users.sourceforge.net>
+2003-06-17 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* msvcrt.def.in (__badioinfo, __lc_codepage, __lc_handle,
 	__pioinfo, __setlc_active, _unguarded_readlc_active, _dstbias):
 	Mark as DATA.
-	Thanks to: Aaron W  LaFramboise   <AWLaFramboise@aol.com>
+	Thanks to: Aaron W LaFramboise  <AWLaFramboise@aol.com>
 
-2003-05-30  Sascha Sommer  <saschasommer@freenet.de>
+2003-05-30 Sascha Sommer <saschasommer@freenet.de>
 
-	* include/sys/types.h (_ssize_t, ssize_t):  Add typedefs.
+	* include/sys/types.h (_ssize_t, ssize_t): Add typedefs.
 
-2003-05-15  Danny Smith  <dannysmith@users.sourceforge.net>
+2003-05-15 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/stdlib.h (_Exit): Move out of __STRICT_ANSI__ block,
 	but still protect inline definition with __STRICT_ANSI__.
 
-2003-05-14  Danny Smith  <dannysmith@users.sourceforge.net>
+2003-05-14 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* string_old.c: Remove, splitting into...
 	* strcasecmp.c: New file.
@@ -1405,27 +2173,27 @@
 	* Makefile.in (MOLD_OBJS): Adjust.
 	(SRCDIST_FILES): Adjust.
 
-2003-05-13  Danny Smith  <dannysmith@users.sourceforge.net>
+2003-05-13 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/math.h (fabs) : Remove inline definition.
 	(fabsf): Likewise.
 	(fabsl): Likewise.
 
-2003-05-06  Earnie Boyd  <earnie@users.sf.net>
+2003-05-06 Earnie Boyd <earnie@users.sf.net>
 
 	* include/_mingw.h: Change version to 3.0
 	* Makefile.in: Ditto.
 
-2003-05-06  Earnie Boyd  <earnie@users.sf.net>
+2003-05-06 Earnie Boyd <earnie@users.sf.net>
 
 	* configure.in (W32API_INCLUDE): Need the -I switch in the value.
 	* mingwex/configure.in (W32API_INCLUDE): Ditto.
 	* profile/configure.in (W32API_INCLUDE): Ditto.
 
-2003-05-06  Earnie Boyd  <earnie@users.sf.net>
+2003-05-06 Earnie Boyd <earnie@users.sf.net>
 
 	* configure.in (CFLAGS): Remove -D__USE_CRTIMP=1 due to possibilites
-	of multiply defined symbols if the symbols is defined locally.  E.G.:
+	of multiply defined symbols if the symbols is defined locally. E.G.:
 	A local definition of malloc causes this problem.
 	* configure: Regenerate.
 	* profile/Makefile.in (W32API_INCLUDE): New variable.
@@ -1441,7 +2209,7 @@
 	* mingwex/configure.in (W32API_INCLUDE): Set default value.
 	* mingwex/configure: Regenerate.
 
-2003-05-05  Earnie Boyd  <earnie@users.sf.net>
+2003-05-05 Earnie Boyd <earnie@users.sf.net>
 
 	* Makefile.in (W32API_INCLUDE): New variable.
 	(ALL_CFLAGS): Use W32API_INCLUDE value.
@@ -1450,20 +2218,20 @@
 	(W32API_INCLUDE): Set default value.
 	* configure: Regenerate.
 
-2003-04-11  Earnie Boyd  <earnie@users.sf.net>
+2003-04-11 Earnie Boyd <earnie@users.sf.net>
 
 	* configure.in (LIBM_A): Define for cygwin target.
 	* configure (LIBM_A): Ditto.
 
-2003-04-07  Danny Smith  <dannysmith@users.sourceforge.net>
+2003-04-07 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/time.h (strftime): Remove duplicate declaration.
 
-2003-04-01  Danny Smith  <dannysmith@users.sourceforge.net>
+2003-04-01 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/_mingw.h (_CRTIMP): Make conditional on __USE_CRTIMP.
 
-2003-03-16  Danny Smith  <dannysmith@users.sourceforge.net>
+2003-03-16 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* mingwex/dirent.c (_topendir): Eliminate signed/unsigned warning.
 	* mingwex/strtoimax.c (strtoimax): Likewise.
@@ -1476,35 +2244,35 @@
 	constants.
 	* mingwex/math/tgammal.c: Likewise.
 
-2003-03-16  Danny Smith  <dannysmith@users.sourceforge.net>
+2003-03-16 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/utime.h: New file, forwarding to sys/utime.h.
 
-2003-03-16  Danny Smith  <dannysmith@users.sourceforge.net>
+2003-03-16 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/sys/param.h (MAXPATHLEN): Define.
 
-2003-03-16  Danny Smith  <dannysmith@users.sourceforge.net>
+2003-03-16 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/tchar.h: Ansi-fy a comment.
 
-2003-03-16  Danny Smith  <dannysmith@users.sourceforge.net>
+2003-03-16 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* profile/profile.h (mcount): Use __builtin_return_address
 	rather than inline __asm statements.
 	* profile/Makefile.in: Remove special rule for mcount.o
 	Specify dependencies for mcount.o profil.o gmon.o.
 
-2003-03-10  Danny Smith  <dannysmith@users.sourceforge.net>
+2003-03-10 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/stdlib.h (qsort): Remove const from first parm.
-	Thanks to: Tien-Ren Chen  <trchen@sourceforge.users.net>
+	Thanks to: Tien-Ren Chen <trchen@sourceforge.users.net>
 
-2003-03-03  Christopher Faylor  <cgf@redhat.com>
+2003-03-03 Christopher Faylor <cgf@redhat.com>
 
 	* mingwex/getopt.c: Refresh from NetBSD sources.
 
-2003-03-03  Danny Smith  <dannysmith@users.sourceforge.net>
+2003-03-03 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* mingwex/getopt.c: New file, copied from cygwin srcs.
 	* include/getopt.h: New file, copied from cygwin srcs.
@@ -1512,7 +2280,7 @@
 	* mingwex/Makefile.in (DISTFILES): Add getopt.c.
 	(POSIX_OBJS): Add getopt.o.
 
-2003-03-02  Danny Smith  <dannysmith@users.sourceforge.net>
+2003-03-02 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/stdio.h (vscanf): Add prototype.
 	(vfscanf): Ditto.
@@ -1534,22 +2302,22 @@
 	(LIB_OBJS): Adjust.
 	(dist): Adjust.
 
-2003-03-02  Aaron W  LaFramboise   <AWLaFramboise@aol.com>
+2003-03-02 Aaron W LaFramboise  <AWLaFramboise@aol.com>
 
 	* mingwex/stdio: New directory
 	* mingwex/stdio/vfscanf.c: New file.
-	* mingwex/stdio/vfwscanf.c:  New file.
-	* mingwex/stdio/vscanf.c:  New file.
-	* mingwex/stdio/vsscanf.c:  New file.
-	* mingwex/stdio/vswscanf.c:  New file.
-	* mingwex/stdio/vwscanf.c:  New file.
+	* mingwex/stdio/vfwscanf.c: New file.
+	* mingwex/stdio/vscanf.c: New file.
+	* mingwex/stdio/vsscanf.c: New file.
+	* mingwex/stdio/vswscanf.c: New file.
+	* mingwex/stdio/vwscanf.c: New file.
 
-2003-02-25  Earnie Boyd  <earnie@users.sf.net>
+2003-02-25 Earnie Boyd <earnie@users.sf.net>
 
 	* Makefile.in (libmsvcrt20.a): Remove target and dependencies.
 	(libmsvcrt40.a): Ditto.
 
-2003-02-21  Earnie Boyd  <earnie@users.sf.net>
+2003-02-21 Earnie Boyd <earnie@users.sf.net>
 
 	Thanks to David Frasier <davidf@sjsoft.com> who inspired portions of
 	this patch.
@@ -1562,33 +2330,33 @@
 	msvcrt20.def, msvcrt40.def: Remove.
 	* msvcrt.def.in: New file (Copy of previous msvcrt.def).
 
-2003-02-20  Corinna Vinschen  <corinna@vinschen.de>
+2003-02-20 Corinna Vinschen <corinna@vinschen.de>
 
 	* Makefile.in: Make sure libmingwex.a from current build tree is used.
 
-2003-02-14  Christopher Faylor  <cgf@redhat.com>
+2003-02-14 Christopher Faylor <cgf@redhat.com>
 
 	* profile/Makefile.in (mcount.o): Use ALL_CFLAGS for compilation to
-	ensure -mno-cygwin where appropriate.  Filter out -O2.
+	ensure -mno-cygwin where appropriate. Filter out -O2.
 
-2003-02-13  Danny Smith  <dannysmith@users.sourceforge.net>
+2003-02-13 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* profile/Makefile.in (mcount.o): Use -O1 optimization
 	switch to compile.
 
-2003-02-10  Danny Smith  <dannysmith@users.sourceforge.net>
+2003-02-10 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/math.h: Remove _CRTIMP from pow() prototype,
 	unless __NO_ISOCEXT.
 
-2003-02-10  Danny Smith  <dannysmith@users.sourceforge.net>
+2003-02-10 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* mingwex/math/cephes_emath.h: Don't redefine INFINITY.
 
-2003-02-10  Danny Smith  <dannysmith@users.sourceforge.net>
+2003-02-10 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/_mingw.h (_CRTIMP): Define for __GNUC__ if
-	__declspec(dllimport)  supported.
+	__declspec(dllimport) supported.
 	(__cdecl): Define if not already defined.
 	(__stdcall): Likewise.
 	* include/dirent.h: Qualify fuctions with __cdecl.
@@ -1626,48 +2394,48 @@
 
 	* include/stdio.h (__VALIST): Guard against prior definition.
 
-2003-02-08  Earnie Boyd  <earnie@users.sf.net>
+2003-02-08 Earnie Boyd <earnie@users.sf.net>
 
 	* include/_mingw.h: Change version to 3.0
 	* Makefile.in: Ditto.
 
-2003-02-08  Earnie Boyd  <earnie@users.sf.net>
+2003-02-08 Earnie Boyd <earnie@users.sf.net>
 
 	* include/stdlib.h: Make words after #endif a comment.
 
-2003-02-07  Danny Smith  <dannysmith@users.sourceforge.net>
+2003-02-07 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/locale.h: Include stddef.h for definition of NULL.
 
-2003-01-26  Danny Smith  <dannysmith@users.sourceforge.net>
+2003-01-26 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/math.h (tgamma): Correct typo in comment.
 
-2003-01-26  Danny Smith  <dannysmith@users.sourceforge.net>
+2003-01-26 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* mingwex/mingw-fseek.c (INLINE): Remove define.
 	(__mingw_is_win9x): Remove static inline function.
 	(_mingw_fwrite): Use _osver instead of __mingw_is_win9x.
 
-2003-01-11  Danny Smith  <dannysmith@users.sourceforge.net>
+2003-01-11 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* mingwex/math/llround.c: Correct function name and
 	change return value to long long.
 
-2003-01-07  Danny Smith  <dannysmith@users.sourceforge.net>
+2003-01-07 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/ctype.h (__isascii): Don't cast arg to unsigned.
-	(iswascii): Likewise.  Correct mask.
+	(iswascii): Likewise. Correct mask.
 	* include/wctype.h (iswascii): Don't cast arg to unsigned.
 	Correct mask
 
-2003-01-03  Danny Smith  <dannysmith@users.sourceforge.net>
+2003-01-03 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/stdlib.h (_osver, _winver, _winmajor,
 	_winminor): Declare as direct imports from dll if
 	__DECLSPEC_SUPPORTED.
 
-2003-01-01  Danny Smith  <dannysmith@users.sourceforge.net>
+2003-01-01 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* pseudo-reloc.c (do_pseudo_reloc): Make static.
 	* pseudo-reloc-list.c: New file.
@@ -1678,21 +2446,21 @@
 	* Makefile.in: Add pseudo-reloc.o pseude-reloc-list.o to
 	libmingw32.a.
 
-2003-01-01  Egor Duda  <deo@logos-m.ru>
+2003-01-01 Egor Duda <deo@logos-m.ru>
 
 	* pseudo-reloc.c: New file.
 
-2002-12-20  Earnie Boyd  <earnie@users.sf.net>
+2002-12-20 Earnie Boyd <earnie@users.sf.net>
 
 	* include/_mingw.h: Increment version to 2.4.
 	Makefile.in: Ditto.
 
-2002-12-12  Earnie Boyd  <earnie@users.sf.net>
+2002-12-12 Earnie Boyd <earnie@users.sf.net>
 
 	* include/malloc.h (_alloca): Add definition.
 	(alloca): Ditto.
 
-2002-12-08  Danny Smith  <dannysmith@users.sourceforge.net>
+2002-12-08 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* mingwex/math/s_erf.c: New file.
 	* mingwex/math/sf_erf.c: New file.
@@ -1701,11 +2469,11 @@
 	* include/math.h (erf[f]): Add prototypes.
 	(erfc[f]): Add prototypes.
 
-2002-12-07  Danny Smith  <dannysmith@users.sourceforge.net>
+2002-12-07 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/math.h: Add traditional/XOPEN math constants.
 
-2002-11-27  Danny Smith  <dannysmith@users.sourceforge.net>
+2002-11-27 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* mingwex/math/lgamma.c: New file.
 	* mingwex/math/lgammaf.c: New file.
@@ -1721,7 +2489,7 @@
 	* include/math.h (lgamma[fl]): Add prototypes.
 	(tgamma[fl]): Add prototypes.
 
-2002-11-26  Danny Smith  <dannysmith@users.sourceforge.net>
+2002-11-26 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* mingwex/strtold.c: New file.
 	* mingwex/wcstold.c: New file.
@@ -1736,7 +2504,7 @@
 	* include/stdlib.h (strtold, wcstold): Add prototypes.
 	* include/wchar.h (wcstold): Add prototype.
 
-2002-11-09  Danny Smith  <dannysmith@users.sourceforge.net>
+2002-11-09 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/math.h (sqrt): Remove inline definition.
 	(sqrtf): Replace inline definition with prototype.
@@ -1745,16 +2513,16 @@
 	argument less than zero.
 	* mingwex/math/sqrtf.c (sqrtl): Likewise.
 
-2002-10-30  Guido Serassio  <serassio@libero.it>
+2002-10-30 Guido Serassio <serassio@libero.it>
 
 	* include/stdio.h (_getmaxstdio): Add prototype.
 	 (_setmaxstdio): Likewise.
 
-2002-10-19  Kang Li  <rubylith@users.sourceforge.net>
+2002-10-19 Kang Li <rubylith@users.sourceforge.net>
 
 	* include/fcntl.h (O_SEQUENTIAL): Correct typo.
 
-2002-10-19  Danny Smith  <dannysmith@users.sourceforge.net>
+2002-10-19 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* crt1.c: Define new macro __IN_MINGW_RUNTIME before including
 	stdlib.h.
@@ -1762,11 +2530,11 @@
 	* include/stdlib.h (_fmode): Protect declaration as dllimported
 	variable with __IN_MINGW_RUNTIME.
 
-2002-10-19  Igor Pechtchanski  <pechtcha@cs.nyu.edu>
+2002-10-19 Igor Pechtchanski <pechtcha@cs.nyu.edu>
 
 	* crt1.c: Include stdlib.h.
 
-2002-10-19  Danny Smith  <dannysmith@users.sourceforge.net>
+2002-10-19 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* Makefile.in (CRT0S): Add txtmode.o binmode.o.
 	(MINGW_OBJS): Add txtmode.o.
@@ -1781,25 +2549,25 @@
 	* samples/fmode/test2.c: New file.
 	* samples/fmode/jamfile: Add test2.exe target.
 
-2002-10-11  Danny Smith  <dannysmith@users.sourceforge.net>
+2002-10-11 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/stdint.h (INT64_C, UINT64_C ): Append suffix to let
 	macros work with C89.
 	(INTMAX_C, UINTMAX_C): Likewise.
 
-2002-10-11  Danny Smith  <dannysmith@users.sourceforge.net>
+2002-10-11 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/string.h (strcasecmp): Make extern __inline__.
 	(strncasecmp): Likewise.
 	(wcscmpi): Likewise.
 
-2002-10-08  Heiko Gerdau  <hg@technosis.de>
+2002-10-08 Heiko Gerdau <hg@technosis.de>
 
 	* include/tchar.h (_tchdir. _tgetcwd, _tgetdcwd.
 	_tmkdir, _trmdir, _tstat): Add ASCII and UNICODE
 	mappings.
 
-2002-10-07  Danny Smith  <dannysmith@users.sourceforge.net>
+2002-10-07 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* mingwex/math/powil.c: Rename powil to __powil.
 	* mingwex/math/powl.c: Adjust declaration and call
@@ -1815,18 +2583,18 @@
 	powi.c, powif.c.
 	(MATH_OBJS): Add pow.o,	powi.o, powif.o.
 
-2002-10-03  Danny Smith  <dannysmith@users.sourceforge.net>
+2002-10-03 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/cytpe.h (_imp____mbcur_max): Add missing ';'.
 	(_imp____mbcur_max_dll): Likewise.
 
-2002-10-03  Danny Smith  <dannysmith@users.sourceforge.net>
+2002-10-03 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/fcntl.h (_fmode): Remove declarations and
 	compatibility defines.
 	(_setmode, setmode): Remove prototypes.
 	* include/stdlib (_fmode): Add declarations and
-	compatibility defines.  Change type to int.
+	compatibility defines. Change type to int.
 	* include/io.h (_setmode, setmode): Add prototypes.
 	* samples/fmode/all.c: Adjust includes.
 	* samples/fmode/test.c: Likewise.
@@ -1835,103 +2603,103 @@
 
 	* include/stdlib: Remove comment about MB_CUR_MAX.
 
-2002-10-02  Danny Smith  <dannysmith@users.sourceforge.net>
+2002-10-02 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/stdlib.h (_imp____mbcur_max): Add missing ';'.
 	(_imp____mbcur_max_dll): Likewise.
 
-2002-09-18  Danny Smith  <dannysmith@users.sourceforge.net>
+2002-09-18 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* mingwex/math/files.txt: Remove inadvertantly added file.
 
-2002-09-18  Danny Smith  <dannysmith@users.sourceforge.net>
+2002-09-18 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/string.h (_strerror): Move into #ifndef
 	__STRICT_ANSI__ block.
 
-2002-09-17  Danny Smith  <dannysmith@users.sourceforge.net>
+2002-09-17 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/time.h (__need_NULL): Define before including
-	stddef.h.  Thanks to: Rüdiger Dehmel  <de@lmnet.de>.
+	stddef.h. Thanks to: Rüdiger Dehmel <de@lmnet.de>.
 
-2002-09-16  Ranjit Matthew  <rmathew@hotmail.com>
+2002-09-16 Ranjit Matthew <rmathew@hotmail.com>
 
 	* include/stdio.h: Correct comment about directory separator.
 
-2002-09-12  Danny Smith  <dannysmith@users.sourceforge.net>
+2002-09-12 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/sys/time.h (timeval): Add struct definition and
 	associated macros (copied from w32api/include/winsock.h).
 
-2002-09-05  Earnie Boyd  <earnie@users.sf.net>
+2002-09-05 Earnie Boyd <earnie@users.sf.net>
 
 	* include/_mingw.h: Increment version to 2.3.
 	Makefile.in: Ditto.
 
-2002-09-05  Earnie Boyd  <earnie@users.sf.net>
+2002-09-05 Earnie Boyd <earnie@users.sf.net>
 
 	* mingwex/fegetenv.c: Change to \n line endings.
 	* mingwex/vsnprintf.c: Ditto.
 	* mingwex/vsnwprintf.c: Ditto.
 
-2002-09-02  Danny Smith  <dannysmith@users.sourceforge.net>
+2002-09-02 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* mingwex/math/hypotl.c: Replace with version based on cephes
 	library.
 
-2002-08-28  Danny Smith  <dannysmith@users.sourceforge.net>
+2002-08-28 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/sys/param.h: Add ENDIAN defines.
 	* test_headers.c: Include sys/param.h.
 
-2002-08-28  Danny Smith  <dannysmith@users.sourceforge.net>
+2002-08-28 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* test_headers.c: Don't include varargs.h.
 	* Makefile.in (test_headers): Don't use -std=xx
 	with -xc++.
 
-2002-08-21  Earnie Boyd  <earnie@users.sf.net>
+2002-08-21 Earnie Boyd <earnie@users.sf.net>
 
 	* include/sys/param.h: New File.
 
-2002-08-21  Danny Smith  <dannysmith@users.sourceforge.net>
+2002-08-21 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/math.h (asm): Change to __asm__ throughout.
 	Expose ISO C99 functions if __GLIPCPP__.
 	(hypotf): Use hypot, not _hypot in stub.
 
-2002-08-20  Danny Smith  <dannysmith@users.sourceforge.net>
+2002-08-20 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/tchar.h: Ansi-fy another comment.
 
-2002-08-20  Danny Smith  <dannysmith@users.sourceforge.net>
+2002-08-20 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/tchar.h: Ansi-fy comment.
 
-2002-08-20  Danny Smith  <dannysmith@users.sourceforge.net>
+2002-08-20 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* test_headers.c : New file.
 	* Makefile.in (test_headers): New target, using it,
 	(SRCDIST_FILES): Distribute it.
 
-2002-08-20  Earnie Boyd  <earnie@users.sf.net>
+2002-08-20 Earnie Boyd <earnie@users.sf.net>
 
 	* include/_mingw.h: Increment version to 2.2.
 	Makefile.in: Ditto.
 
-2002-08-14  Earnie Boyd  <earnie@users.sf.net>
+2002-08-14 Earnie Boyd <earnie@users.sf.net>
 
 	* include/unistd.h: Add include of process.h.
 
-2002-08-03  Danny Smith  <dannysmith@users.sourceforge.net>
+2002-08-03 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/stdio.h (_fcloseall): Add prototype.
 
-2002-07-29  Danny Smith  <dannysmith@users.sourceforge.net>
+2002-07-29 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/tchar.h (_tfdopen): Correct typo.
 
-2002-07-29  Danny Smith  <dannysmith@users.sourceforge.net>
+2002-07-29 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* moldname.def.in (chgsign,scalb,finite,fpclass,logb,
 	nextafter): Add non-underscored stubs.
@@ -1977,8 +2745,8 @@
 	definitions.
 	* mingwex/math_stubs.c: Remove.
 	* mingwex/log2.c: Remove. Replaced by math/log2.S
-	* mingwex/log2f.c: Remove.  Replaced by math/log2f.S
-	* mingwex/log2l.c: Remove.  Replaced by math/log2l.S
+	* mingwex/log2f.c: Remove. Replaced by math/log2f.S
+	* mingwex/log2l.c: Remove. Replaced by math/log2l.S
 	* mingwex/math/acosf.c : New file.
 	* mingwex/math/acosl.c: New file.
 	* mingwex/math/asinf.c: New file.
@@ -2084,17 +2852,17 @@
 	* include/ math.h: Add protypes for new functions and
 	reorganise to reflect ANSI,C99 status.
 
-2002-06-19  Danny Smith  <dannysmith@users.sourceforge.net>
+2002-06-19 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/tchar.h (_getts): Define as _getws for _UNICODE.
 	(_putts): Define as _putws for _UNICODE.
-	Thanks to: Tomasz Pona  <cochisek@poczta.onet.pl>  for report.
+	Thanks to: Tomasz Pona <cochisek@poczta.onet.pl> for report.
 
-2002-06-18  Danny Smith  <dannysmith@users.sourceforge.net>
+2002-06-18 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/float.h: #include_next<float.h> before header guard.
 
-2002-06-18  Casper S. Hornstrup  <chorns@users.sourceforge.net>
+2002-06-18 Casper S. Hornstrup <chorns@users.sourceforge.net>
 
 	* include/_mingw.h (__MINGW_IMPORT): Check for prior definition before
 	defining.
@@ -2118,25 +2886,25 @@
 	* include/wchar.h (_wfindfirst): Correct prototype.
 	* include/tchar.h (_tfdopen): Add _UNICODE mappings.
 
-2002-06-15  Earnie Boyd  <earnie@users.sf.net>
+2002-06-15 Earnie Boyd <earnie@users.sf.net>
 
 	* include/_mingw.h: Increment to version 2.1.
 	* Makefile.in: Ditto.
 
-2002-06-15  Earnie Boyd  <earnie@users.sf.net>
+2002-06-15 Earnie Boyd <earnie@users.sf.net>
 
 	* Makefile.in (conf_prefix): New variable.
 	(dist_prefix): Ditto. Conditionally set to $(conf_prefix).
 	(bindist): Use dist_prefix.
 
-2002-06-13  Danny Smith  <dannysmith@users.sourceforge.net>
+2002-06-13 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/_mingw.h: Increment version to 2.0.
 	* Makefile.in: Ditto.
 
 	Merge in mingwex branch.
 
-	2002-06-11  Danny Smith  <dannysmith@users.sourceforge.net>
+	2002-06-11 Danny Smith <dannysmith@users.sourceforge.net>
 	* include/math.h (fdim, fdimf, fdiml): Add prototypes.
 	* mingwex/fdim.c: New file.
 	* mingwex/fdimf.c: New file.
@@ -2145,37 +2913,37 @@
 	fdiml.c.
 	(MATHOBJS):Add fdim.o, fdimf.o. fdiml.o.
 
-	2002-05-23  Danny Smith  <dannysmith@users.sourceforge.net>
+	2002-05-23 Danny Smith <dannysmith@users.sourceforge.net>
 	* mingwex/Makefile.in (DISTFILES): Add truncf.c, truncl.c.
 
-	2002-05-22  Danny Smith  <dannysmith@users.sourceforge.net>
+	2002-05-22 Danny Smith <dannysmith@users.sourceforge.net>
 	* mingwex/isnanl.c: New file.
 
-	2002-05-21  Danny Smith  <dannysmith@users.sourceforge.net>
+	2002-05-21 Danny Smith <dannysmith@users.sourceforge.net>
 	* include/stdint.h: Include stddef.h to get
 	wchar_t and wint_t.
 	(WINT_MAX): Define to ((wint_t)-1).
 
-	2002-05-21  Danny Smith  <dannysmith@users.sourceforge.net>
+	2002-05-21 Danny Smith <dannysmith@users.sourceforge.net>
 	* include/wctype.h: Replace 'inline' with '__inline__'.
 	* include/inttypes.h: Likewise.
 
-	2002-05-16  Danny Smith  <dannysmith@users.sourceforge.net>
+	2002-05-16 Danny Smith <dannysmith@users.sourceforge.net>
 	* include/_mingw.h (__MINGW_IMPORT): Put extern at start
-	to avoid warnings.  Thanks to: Oscar Fuentes  <ofv@wanadoo.es>.
+	to avoid warnings. Thanks to: Oscar Fuentes <ofv@wanadoo.es>.
 
-	2002-05-16  Danny Smith  <dannysmith@users.sourceforge.net>
+	2002-05-16 Danny Smith <dannysmith@users.sourceforge.net>
 	* mingwex/snprintf.c: Split out vsnprintf to....
 	* mingwex/vsnprintf.c: New file.
 	* mingwex/snwprintf.c: Split out vsnwprintf to...
 	* mingwex/vsnwprintf.c: New file.
 	* mingwex/Makefile.in: Adjust DISTFILES and STDIO_STUB_OBJS.
 
-	2002-05-15  Pascal Obry  <obry@gnat.com>
+	2002-05-15 Pascal Obry <obry@gnat.com>
 	* include/dirent.h (DIR): Change dd_stat type to int.
 	(_WDIR): Likewise.
 
-	2002-05-07  Danny Smith  <dannysmith@users.sourceforge.net>
+	2002-05-07 Danny Smith <dannysmith@users.sourceforge.net>
 	* include/stdio.h (vsnprintf): Change inline to __inline__;
 	(vsnwprintf): Likewise.
  	* include/wchar.h (vsnwprintf): Likewise.
@@ -2183,7 +2951,7 @@
 	(fwide): Likewise.
 	(mbsinit): Likewise.
 
-	2002-04-29  Danny Smith  <dannysmith@users.sourceforge.net>
+	2002-04-29 Danny Smith <dannysmith@users.sourceforge.net>
 	Change FP default precison from 53 to 64-bit mantissa.
 	* Makefile.in (CRT0S): Add CRT_fp8.o.
 	(MINGW_OBJS): Replace CRT_fp8.o with CRT_fp10.o.
@@ -2191,8 +2959,8 @@
 	#include_next<float.h> to use GCC's defines. Adjust comments
 	to reflect change.
 
-	2002-04-26  Danny Smith  <dannysmith@users.sourceforge.net>
-	* include/dos.h: Change  prefix "__imp_"  to "_imp__" for
+	2002-04-26 Danny Smith <dannysmith@users.sourceforge.net>
+	* include/dos.h: Change prefix "__imp_" to "_imp__" for
 	__GNUC__ without __DECLSPEC_SUPPORTED.
 	* include/fnctl.h: Likewise.
 	* include/math.h: Likewise.
@@ -2202,7 +2970,7 @@
 	* include/wctype.h: Likewise.
 	* include/ctype.h: Likewise.
 
-	2002-04-26  Danny Smith  <dannysmith@users.sourceforge.net>
+	2002-04-26 Danny Smith <dannysmith@users.sourceforge.net>
 	Add atexit support for dlls.
 	* crt1.c (atexit): Force thunk to _imp__atexit.
 	(_onexit): Force thunk to _imp___onexit.
@@ -2220,7 +2988,7 @@
 	* msvcrt40.def: Likewise.
 	* crtdll.def: Likewise.
 
-	2002-04-26  Danny Smith  <dannysmith@users.sourceforge.net>
+	2002-04-26 Danny Smith <dannysmith@users.sourceforge.net>
 	* include/fenv.h: Change header guard macro to _FENV_H_.
 	(fenv_t, fexcept_t): Move into block protected by
 	#ifndef RC_INVOKED.
@@ -2228,19 +2996,19 @@
 	* include/inttypes.h: Change header guard macro to
 	_INTTYPES_H_.
 
-	2002-04-26  Danny Smith  <dannysmith@users.sourceforge.net>
+	2002-04-26 Danny Smith <dannysmith@users.sourceforge.net>
 	* include/math.h (copysignl): Declare.
 	* mingwex/Makefile.in (DISTFILES): Add copysignl.S.
 	(MATHOBJS):Add copysignl.o.
 
-	2002-04-24  Danny Smith  <dannysmith@users.sourceforge.net>
+	2002-04-24 Danny Smith <dannysmith@users.sourceforge.net>
 	* include/math.h (__signbitl, __isnanl): Declare.
 
-	2002-04-24  Danny Smith  <dannysmith@users.sourceforge.net>
+	2002-04-24 Danny Smith <dannysmith@users.sourceforge.net>
 	* include/math.h (nanl, __fpcassifyl, fminl, fmaxl, rintl,
 	roundl, truncl, fmal, log2l): Declare.
 	Protect C99 declarations with _STDC_VERSION__ >= 199901L)
-	|| !defined  __STRICT_ANSI__.
+	|| !defined __STRICT_ANSI__.
  	* mingwex/fmax.c (fmax): Call __isnan, not _isnan.
 	* mingwex/fmin.c (fmin): Likewise.
 	* mingwex/fmaxf.c (fmaxf): Call __isnanf, not _isnan.
@@ -2277,7 +3045,7 @@
 	log2l.o.
 	* mingwex/snwprintf.c (snwprintf, vsnwprintf): Correct typo.
 
-	2002-04-23  Danny Smith  <dannysmith@users.sourceforge.net>
+	2002-04-23 Danny Smith <dannysmith@users.sourceforge.net>
 	Make wide char versions of opendir and friends.
 	* include/dirent.h (_wdirent, _WDIR): Define wide versions of
 	struct dirent, DIR.
@@ -2295,7 +3063,7 @@
 	wdirent.c.
 	* samples/dirent/wtest.c: New file, wide version of test.c.
 
-	2002-04-17  Danny Smith  <dannysmith@users.sourceforge.net>
+	2002-04-17 Danny Smith <dannysmith@users.sourceforge.net>
 	* Makefile.in (INCLUDES): Add "-iwithprefixbefore include" to
 	ensure gcc include dir is searched despite -nostdinc.
 	* profile/Makefile.in (INCLUDES): Likewise.
@@ -2309,7 +3077,7 @@
 	(__VALIST): Define as __gnuc_va_list if __GNUC__, else char*.
 	Replace va_list with __VALIST throughout.
 
-	2002-04-17  Danny Smith  <dannysmith@users.sourceforge.net>
+	2002-04-17 Danny Smith <dannysmith@users.sourceforge.net>
 	* crt1.c: Revert changes of 2002-04-16. Use _fpreset again.
 	* msvcrt.def (_fpreset): Mark as DATA so that only
 	_imp___fpreset is exported.
@@ -2320,7 +3088,7 @@
 	that calls fninit.
 	(fpreset): Add alias.
 	(__CRT_PC): Delete definition. _fpreset does it now.
-	*  CRT_fp8.c (_fpreset): Force use of library _imp___fpreset.
+	* CRT_fp8.c (_fpreset): Force use of library _imp___fpreset.
 	(fpreset): Add alias.
 	(__CRT_PC): Delete definition.
 	* moldname.def.in: Comment out fpreset.
@@ -2330,7 +3098,7 @@
 	* mingwex/fesetenv.c (FE_DFL_ENV): Use it to set environment
 	with the _fpreset determined by startup CRT_fp object.
 
-	2002-04-16  Danny Smith  <dannysmith@users.sourceforge.net>
+	2002-04-16 Danny Smith <dannysmith@users.sourceforge.net>
 	* CRT_fp8.c: New file.
 	* CRT_fp10.c: New file.
 	* crt1.c (__CRT_PC) Declare.
@@ -2338,7 +3106,7 @@
 	(__mingw_CRTStartup):Use __CRT_fesetenv instead of _fpreset.
 	(_gnu_exception_handler): Likewise.
 	* Makefile.in (CRT0S): Add CRT_fp10.o.
-	(MINGW_OBJS): Add  CRT_fp8.o.
+	(MINGW_OBJS): Add CRT_fp8.o.
 	(SRCDIST_FILES): Add CRT_fp8.c, CRT_fp10.c.
 	Add CRT_fp8.o, CRT_fp10.o dependancies.
 	* include/float.h (_fpreset): Expand comment.
@@ -2354,13 +3122,13 @@
 	for mingw.
 	* profile/configure: Regenerate.
 
-	2002-04-12  Danny Smith  <dannysmith@users.sourceforge.net>
+	2002-04-12 Danny Smith <dannysmith@users.sourceforge.net>
 	* mingwex/Makefile.in (DISTFILES): Add suffix to wcstof.c.
 
-	2002-04-10  Danny Smith  <dannysmith@users.sourceforge.net>
+	2002-04-10 Danny Smith <dannysmith@users.sourceforge.net>
 	* mingwex/mingw-fseek.c: New file, based on Mumit Khan
 	mingw-local patch to binutils.
-	Sun Nov  7 04:27:07 1999  Mumit Khan  <khan@xraylith.wisc.edu>
+	Sun Nov 7 04:27:07 1999 Mumit Khan <khan@xraylith.wisc.edu>
 	(__mingw_fseek): New function to work around Win9x f/lseek bug.
 	(__mingw_fwrite): Likewise.
 	(__mingw_is_win9x): New helper function.
@@ -2371,7 +3139,7 @@
 	* moldname-crtdll.def: Remove CR from end of line.
 	* moldname-msvcrt.def: Ditto.
 
-	2002-04-09  Danny Smith  <dannysmith@users.sourceforge.net>
+	2002-04-09 Danny Smith <dannysmith@users.sourceforge.net>
 	* profile/configure.in (CRT0S): Configure name of gcrt?.o
 	based on target, building gcrt0.o for cygwin -mno-cygwin.
 	* profile/configure: Regenerate.
@@ -2379,7 +3147,7 @@
 	(gcrt0.o): New rule.
 	(ALL_CRT0S): New define, used to cleanup all gcrt?.o's.
 
-	2002-04-04  Danny Smith  <dannysmith@users.sourceforge.net>
+	2002-04-04 Danny Smith <dannysmith@users.sourceforge.net>
 	* include/math.h (_controlfp, _control87, _clearfp, _statusfp, _fpreset,
 	_fpecode): Remove prototypes copied from float.h.
 	(nan, nanf): Move into block protected against RC_INVOKED
@@ -2389,9 +3157,9 @@
 	* mingwex/_Exit.c : New file.
 	* mingwex/Makefile.in: Add _Exit.o to libmingwex.a.
 
-	2002-04-04  Danny Smith  <dannysmith@users.sourceforge.net>
+	2002-04-04 Danny Smith <dannysmith@users.sourceforge.net>
 	Add libgmon.a and libmingwex.a for cygwin -mno-cygwin.
-	* configure.in (SUBDIRS): Add  profile and mingwex to cygwin target.
+	* configure.in (SUBDIRS): Add profile and mingwex to cygwin target.
 	(configdirs): Likewise.
 	(LIBGMON_A): Define for cygwin target as well.
 	* configure: Regenerate.
@@ -2407,7 +3175,7 @@
 	(ALL_CXXFLAGS): Same.
 	(.c.o:): Remove ALL_CXXFLAGS.
 
-	2002-03-29  Danny Smith  <dannysmith@users.sourceforge.net>
+	2002-03-29 Danny Smith <dannysmith@users.sourceforge.net>
 	* include/stdint.h: Add missing newline at eof.
 	* include/stdio.h (snprintf): Add prototype.
 	(vsnprintf): Add prototype and inline definition.
@@ -2420,7 +3188,7 @@
 	* mingwex/snprintf.c: New file.
 	* mingwex/snwprintf.c: New file.
 
-	2002-03-22  Danny Smith   <dannysmith@users.sourceforge.net>
+	2002-03-22 Danny Smith  <dannysmith@users.sourceforge.net>
 	* configure.in: Add mingwex as SUBDIRS and configdirs.
 	* configure: Regenerate.
 	* Makefile.in (MINGW_OBJS): Remove dirent.o.
@@ -2514,17 +3282,17 @@
 	* mingwex/wmemset.c: New file.
 	* mingwex/wtoll.c: New file.
 
-2002-04-20  Danny Smith  <dannysmith@users.sourceforge.net>
+2002-04-20 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/mbstring.h: New file.
 	* include/mbctype.h: New file.
 
-2002-04-20  Danny Smith  <dannysmith@users.sourceforge.net>
+2002-04-20 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/tchar.h (__TEXT): Make same as define in
 	w32api/include/winnt.h.
 
-2002-04-20  Danny Smith  <dannysmith@users.sourceforge.net>
+2002-04-20 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/tchar.h (_tputenv): Add UNICODE mappings.
 	(_tsearchenv): Likewise.
@@ -2532,36 +3300,36 @@
 	(_tsplitpath): Likewise.
 	(_tfullpath): Likewise.
 
-2002-04-18  Pascal Obry  <obry@gnat.com>
+2002-04-18 Pascal Obry <obry@gnat.com>
 
 	* dirent.c (opendir): Convert given pathname to
 	absolute pathname.
 
-2002-04-09  Earnie Boyd  <earnie@users.sf.net>
+2002-04-09 Earnie Boyd <earnie@users.sf.net>
 
 	* include/_mingw.h: Increment version.
 	* Makefile.in: Ditto.
 
-2002-04-09  Earnie Boyd  <earnie@users.sf.net>
+2002-04-09 Earnie Boyd <earnie@users.sf.net>
 
 	* moldname-crtdll.def: Remove CR from end of line.
 	* moldname-msvcrt.def: Ditto.
 	* Makefile.in: Use bzip2 compression for Cygwin target.
 
-2002-04-04  Danny Smith  <dannysmith@sourceforge.users.net>
+2002-04-04 Danny Smith <dannysmith@sourceforge.users.net>
 
 	* include/math.h (DOMAIN, SING, OVERFLOW, UNDERFLOW,
 	TLOSS, PLOSS): Move oldname defines back, following
 	the underscored names.
 
-2002-03-29  Danny Smith  <dannysmith@sourceforge.users.net>
+2002-03-29 Danny Smith <dannysmith@sourceforge.users.net>
 
 	* include/stdio.h (_snwprintf): Correct spelling.
 	(_vsnwprintf): Likewise.
 	* include/wchar.h (_snwprintf): Correct spelling.
 	(_vsnwprintf): Likewise.
 
-2002-03-26  Danny Smith  <dannysmith@users.sourceforge.net>
+2002-03-26 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* moldname.def.in (__MSVCRT__): Replace with !(__CRTDLL__).
 	(wpopen): Add if !(__CRTDLL__).
@@ -2578,7 +3346,7 @@
 	(_vswnprintf): Likewise.
 	Tidy up whitespace.
 
-2002-01-28  Danny Smith  <dannysmith@users.sourceforge.net>
+2002-01-28 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/malloc.h (_heapinfo): Correct structure definition.
 	(_USEDENTRY,_FREEENTRY): Add defines.
@@ -2587,56 +3355,56 @@
 	(_set_sbh_threshold): Likewise.
 	(_expand): Likewise.
 
-2002-01-25  Danny Smith  <dannysmith@users.sourceforge.net>
+2002-01-25 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* profile/profil.c: Update copyright info.
 	* profile/profil.h: Likewise.
 	* profile/gcrt0.c: Likewise.
 
-2002-01-25  Pascal Obry  <obry@gnat.com>
+2002-01-25 Pascal Obry <obry@gnat.com>
 
 	* profile/profil.h (PROFADDR): Cast idx to unsigned long long to
 	avoid overflow.
 	* profile/gmon.c: Define bzero as memset if mingw32.
 	(monstartup): Use it.
 
-2002-01-25  Danny Smith  <dannysmith@users.sourceforge.net>
+2002-01-25 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/tchar.h (_TCHAR): Add missing ;.
 
-2002-01-25  Danny Smith  <dannysmith@users.sourceforge.net>
+2002-01-25 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/tchar.h (_TCHAR): Add typedefs.
 
-2002-01-16  Danny Smith  <dannysmith@users.sourceforge.net>
+2002-01-16 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/stdlib.h (_onexit_t): Add typedef.
 	(_onexit): Add prototype.
 
-2002-01-12  Danny Smith  <dannysmith@users.sourceforge.net>
+2002-01-12 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* msvcrt.def: Revert accidental change.
 	* include/stdlib.h: Ditto.
 
-2001-12-07  Earnie Boyd  <earnie@users.sf.net>
+2001-12-07 Earnie Boyd <earnie@users.sf.net>
 
 	* Makefile.in: Increment VERSION.
 	* include/_mingw.h: Ditto.
 
-2001-12-05  Earnie Boyd  <earnie@users.sf.net>
+2001-12-05 Earnie Boyd <earnie@users.sf.net>
 
 	* include/strings.h: New File.
 
-2001-12-02  Danny Smith  <dannysmith@users.sourceforge.net>
+2001-12-02 Danny Smith <dannysmith@users.sourceforge.net>
 
 	Apply patches from:
-	2001-06-21  Mumit Khan  <khan@nanotech.wisc.edu>
+	2001-06-21 Mumit Khan <khan@nanotech.wisc.edu>
 
 	* include/math.h (_FPCLASS* ): Add defines from float.h.
 	(IEEE recommended functions): Add declarations from float.h.
 	* include/float.h (_FPCLASS* ): Protect against redefinition.
 
-2001-11-29   Wu Yongwei  <adah@netstd.com>
+2001-11-29  Wu Yongwei <adah@netstd.com>
 
 	* include/_mingw.h,assert.h,conio.h,ctype.h,dir.h,direct.h
 	dirent.h,dos.h,errno.h,excpt.h,fcntl.h,float.h,io.h,
@@ -2647,11 +3415,11 @@
 	Correct spelling of "disclaimed" in comments.
 	* include/excpt.h: Another spelling correction.
 
-2001-11-08  Robert Collins  <rbtcollins@hotmail.com>
+2001-11-08 Robert Collins <rbtcollins@hotmail.com>
 
 	* include/errno.h: Fix "errno is not a prototype" warning.
 
-2001-11-07  Danny Smith  <dannysmith@users.sourceforge.net>
+2001-11-07 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/ctype.h (tolower, toupper,_tolower,_toupper): Comment
 	differences between ANSI and non-ANSI versions.
@@ -2665,7 +3433,7 @@
 	(isw* ctype functions): Inline definitions.
 
 
-2001-11-06  Danny Smith  <dannysmith@users.sourceforge.net>
+2001-11-06 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/float.h (_clearfp, _statusfp, _fpreset, fpreset,
 	__fpecode): Use __STDC__ prototypes.
@@ -2675,71 +3443,71 @@
 
  	* mthr_stub.c (__mingwthr_remove_key_dtor) New.
  	* mthr_init.c (DllMain) Run dtors if a process terminates.
- 	* mthr.c  (__mingwthr_add_key_dtor)  Removed.
- 	(___mingwthr_add_key_dtor)  New.
+ 	* mthr.c (__mingwthr_add_key_dtor) Removed.
+ 	(___mingwthr_add_key_dtor) New.
  	(___mingwthr_remove_key_dtor) New.
  	(__mingwthr_run_key_dtors) Complete rewrite.
-  	(__mingwthr_remove_key_dtor) New.
+ 	(__mingwthr_remove_key_dtor) New.
 
-2001-11-05  Egor Duda  <deo@logos-m.ru>
+2001-11-05 Egor Duda <deo@logos-m.ru>
 
 	* Makefile.in: Delete unused executable after creating base-files.
 
-2001-11-06  Danny Smith  <dannysmith@users.sourceforge.net>
+2001-11-06 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/errno.h (_errno): Use __STDC__ prototype.
 	Thanks to: Jim Barton.
 
-2001-11-04  "stefan" <stefan@lkcc.org>
+2001-11-04 "stefan" <stefan@lkcc.org>
 
 	* include/sys/locking.h (_LK_UNLCK, LK_UNLCK): Correct names.
 
-2001-10-30  Danny Smith  <dannysmith@users.sourceforge.net>
+2001-10-30 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/io.h (_commit): Add declaration.
 	Thanks to: "stefan" <stefan@lkcc.org>
 
-2001-10-30  Danny Smith  <dannysmith@users.sourceforge.net>
+2001-10-30 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/sys/stat.h: Make S_IS* macros safer.
 
-2001-10-27  Danny Smith  <dannysmith@users.sourceforge.net>
+2001-10-27 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/stdlib.h (EXIT_FAILURE): Change value to 1.
 
-2001-10-12  Danny Smith  <dannysmith@users.sourceforge.net>
+2001-10-12 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/stdlib.h (__p__environ, __p__wenviron): Use
 	__STDC__ prototypes.
 
-2001-09-19  Earnie Boyd  <earnie@SF.net>
+2001-09-19 Earnie Boyd <earnie@SF.net>
 
 	* Makefile.in: Remove the /usr from the install target.
 	(VERSION): Increment.
 	include/_mingw.h: Ditto.
 
-2001-09-17  Earnie Boyd  <earnie@SF.net>
+2001-09-17 Earnie Boyd <earnie@SF.net>
 
 	* Makefile.in: Increment version.
 	* include/_mingw.h: Ditto.
 
-2001-09-10  Earnie Boyd  <earnie@SF.net>
+2001-09-10 Earnie Boyd <earnie@SF.net>
 
 	* dossh: Remove inadvertantly imported file.
 
-2001-09-10  Danny Smith  <dannysmith@users.sourceforge.net>
+2001-09-10 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* dirent.c (opendir): Use GetFileAttributes rather than stat
 	to determine if input arg is dir.
 
-2001-08-29  Danny Smith  <dannysmith@users.sourceforge.net>
+2001-08-29 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/stdarg.h (va_list): Typedef as __builtin_va_list if
 	__GNUC__ >= 3.
 	* include/varargs.h (va_list): Ditto.
 	* include/stdio.h (va_list): Ditto.
 
-2001-08-01  Danny Smith  <dannysmith@users.sourceforge.net>
+2001-08-01 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/stdlib.h (_wpgmptr): Don't declare ifndef __MSVCRT__.
 	* include/stdio.h (_IORW): Change constant to 0x0080.
@@ -2748,17 +3516,17 @@
 	(_wP_tmpdir): Ditto.
 	(L_tmpnam): Change constant to 16.
 
-2001-06-28  Danny Smith  <dannysmith@users.sourceforge.net>
+2001-06-28 Danny Smith <dannysmith@users.sourceforge.net>
 
 	* include/malloc.h: Fix non-ANSI comment after #endif.
 
-2001-06-11  Danny Smith  <danny_r_smith_2001@yahoo.co.nz>
+2001-06-11 Danny Smith <danny_r_smith_2001@yahoo.co.nz>
 
 	* profile/configure.in: Make msvcrt.dll version default.
 	* profile/makefile.in: Build both gcrt1.o and gcrt2.o.
 	* provile/configure: Regenerate.
 
-2001-06-11  Mattia Barbon  <mbarbon@dsi.unive.it>
+2001-06-11 Mattia Barbon <mbarbon@dsi.unive.it>
 
 	* include/stdio.h (swscanf): Make first arugument const.
 	* include/wchar.h (swscanf): Ditto.
@@ -2766,22 +3534,22 @@
 	(_tgetenv): Ditto.
 	(_tsetlocale): Ditto.
 
-2001-06-04  Earnie Boyd  <earnie@users.sourceforge.net>
+2001-06-04 Earnie Boyd <earnie@users.sourceforge.net>
 
 	* profile/Makefile.in (mkinstalldirs): Correct relative path.
 
-2001-06-04  Earnie Boyd  <earnie@users.sourceforge.net>
+2001-06-04 Earnie Boyd <earnie@users.sourceforge.net>
 
 	* include/_mingw.h: Change version to 1.0.
 	Makefile.in: Ditto.
 
-2000-02-21  Earnie Boyd  <earnie@users.sourceforge.net>
+2000-02-21 Earnie Boyd <earnie@users.sourceforge.net>
 
 	* include/tchar.h: (__TEXT): Remove undef.
 	(_TEXT): Ditto.
 	(_T): Ditto.
 
-Fri Feb  2 10:34:07  2001  Earnie Boyd  <earnie@users.sourceforge.net>
+Fri Feb 2 10:34:07 2001 Earnie Boyd <earnie@users.sourceforge.net>
 
 	* include/tchar.h: (__TEXT): Add private macro.
 	(_TEXT): Modify definition to use __TEXT.
@@ -2790,68 +3558,68 @@ Fri Feb  2 10:34:07  2001  Earnie Boyd  <earnie@users.sourceforge.net>
 	MACRO resolved first.
 	Thanks to: Eric PAIRE <eric.paire@ri.silicomp.com>
 
-Wed Jan 31 17:12:51  2001  Earnie Boyd  <earnie@users.sourceforge.net>
+Wed Jan 31 17:12:51 2001 Earnie Boyd <earnie@users.sourceforge.net>
 
 	* Makefile.in: Increment version to 0.5
 	* include/_mingw.h: Increment minor version
 
-Tue Jan 30 13:01:01  2001  Earnie Boyd  <earnie@users.sourceforge.net>
+Tue Jan 30 13:01:01 2001 Earnie Boyd <earnie@users.sourceforge.net>
 
 	* include/assert.h: (assert): Remove ; from end of definition
 	Thanks to: AJ Reins <tbisp@qwest.net>
 
-Tue Jan 30 07:31:22  2001  Earnie Boyd  <earnie@users.sourceforge.net>
+Tue Jan 30 07:31:22 2001 Earnie Boyd <earnie@users.sourceforge.net>
 
 	* include/time.h: (CLOCKS_PER_SEC): Type cast the constant.
-	Thanks to: Cosmin Truta  <cosmin@cs.toronto.edu>
+	Thanks to: Cosmin Truta <cosmin@cs.toronto.edu>
 
-Mon Jan 29 14:03:07  2001  Earnie Boyd  <earnie@users.sourceforge.net>
+Mon Jan 29 14:03:07 2001 Earnie Boyd <earnie@users.sourceforge.net>
 
-	* time.h: (CLOCKS_PER_SEC) Change from FP to  integer constant.
+	* time.h: (CLOCKS_PER_SEC) Change from FP to integer constant.
 
-Sun Jan 28 13:01:08  2001  Earnie Boyd  <earnie@users.sourceforge.net>
+Sun Jan 28 13:01:08 2001 Earnie Boyd <earnie@users.sourceforge.net>
 
-	* include/wchar.h: The 2001.01.18 Change was incorrect.  The functions
-	are actually C functions.  These functions are resolved via the
+	* include/wchar.h: The 2001.01.18 Change was incorrect. The functions
+	are actually C functions. These functions are resolved via the
 	-lmsvcp60 library and comments were placed in the header.
 
-2001-01-28  Danny Smith  <danny_r_smith_2001@yahoo.co.nz>
+2001-01-28 Danny Smith <danny_r_smith_2001@yahoo.co.nz>
 
-	*include/stdlib.h (__p__pgmptr): add prototype.
+	* include/stdlib.h (__p__pgmptr): add prototype.
 	(__p__wpgmptr): likewise.
 	(_pgmptr_dll): move declaration from dos.h.
 	(_wpgmptr_dll): likewise.
 	(_pgmptr): conditional define (MSVCT/CRTDLL).
 	(_wpgmptr): likewise.
-	*include/dos.h (_base*_dll variables): declare only for CRTDLL.
+	* include/dos.h (_base*_dll variables): declare only for CRTDLL.
 	(_os*_dll variables): likewise.
 	(_pgmptr_dll): remove declaration and associated defines to stdlib.h.
 	(_wpgmptr_dll): likewise.
 
-2001-01-22  Danny Smith  <danny_r_smith_2001@yahoo.co.nz>
+2001-01-22 Danny Smith <danny_r_smith_2001@yahoo.co.nz>
 
 	* include/stdint.h: New file.
 
-Thu Jan 18 10:33:01  2001  Earnie Boyd  <earnie@users.sourceforge.net>
+Thu Jan 18 10:33:01 2001 Earnie Boyd <earnie@users.sourceforge.net>
 
 	* include/wchar.h: Protect prototypes only declared in the C++ STL
 	from being declared unless __cplusplus is defined.
 
-Tue Jan 16 11:37:31  2001  Earnie Boyd  <earnie@users.sourceforge.net>
+Tue Jan 16 11:37:31 2001 Earnie Boyd <earnie@users.sourceforge.net>
 
 	* include/stdlib.h: Apply Danny Smith patch 102730
-	2000-12-09  Danny Smith  <danny_r_smith_2001@yahoo.co.nz>
+	2000-12-09 Danny Smith <danny_r_smith_2001@yahoo.co.nz>
 	(_wgetenv) Correction to return type.
 
-Tue Jan 16 09:41:41  2001  Earnie Boyd  <earnie@users.sourceforge.net>
+Tue Jan 16 09:41:41 2001 Earnie Boyd <earnie@users.sourceforge.net>
 
 	* include/locale.h: Apply Danny Smith patch 101834
-	2000-11-23  Danny Smith  <danny_r_smith_2001@yahoo.co.nz>
+	2000-11-23 Danny Smith <danny_r_smith_2001@yahoo.co.nz>
 	(LC_MIN) Add definition.
  	(LC_MAX) ditto.
 	(_wsetlocale) Add prototype.
 
-2000-11-29  Earnie Boyd  <earnie_boyd@yahoo.com>
+2000-11-29 Earnie Boyd <earnie_boyd@yahoo.com>
 
 	* Makefile.in: eliminate the need for RUNTIME and CRT_ID.
 	Always build crt1.o, dllcrt1.o, crt2.o and dllcrt2.o.
@@ -2863,13 +3631,13 @@ Tue Jan 16 09:41:41  2001  Earnie Boyd  <earnie@users.sourceforge.net>
 	Change Cygwin's HEADER_SUBDIR value from mingw32 to mingw.
 	* configure: regenerate.
 
-2000-11-22  Earnie Boyd  <earnie_boyd@yahoo.com>
+2000-11-22 Earnie Boyd <earnie_boyd@yahoo.com>
 
 	* Makefile.in: Fix bindist target to distribute the correct files.
 	Remove the use of SNAPSHOT variable and test SNAPDATE instead.
 	Set SNAPDATE within the snapshot target on recursive call to $(MAKE).
 
-2000-11-21  Earnie Boyd  <earnie_boyd@yahoo.com>
+2000-11-21 Earnie Boyd <earnie_boyd@yahoo.com>
 
 	* Makefile.in: Add missing line continuation `\' for $(SUBDIRS) target.
 	Add variables and targets to control binary and source distributions.
@@ -2887,10 +3655,10 @@ Tue Jan 16 09:41:41  2001  Earnie Boyd  <earnie@users.sourceforge.net>
 	* configure: regenerate.
 	* profile/configure: ditto.
 
-2000-11-20  Earnie Boyd  <earnie_boyd@yahoo.com>
+2000-11-20 Earnie Boyd <earnie_boyd@yahoo.com>
 
 	* Merge in changes from
-	2000-10-23  Danny Smith  <danny_r_smith_2001@yahoo.co.nz>
+	2000-10-23 Danny Smith <danny_r_smith_2001@yahoo.co.nz>
 	* include/direct.h: add guard around MSVCRT-only prototytpes
 	* include/io.h: add __int64 struct definitions and function prototypes;
 		 add guard for MSVCRT-only prototypes
@@ -2906,26 +3674,26 @@ Tue Jan 16 09:41:41  2001  Earnie Boyd  <earnie@users.sourceforge.net>
 		some oldname wide char function prototypes #if (0)'d
 	* profile/gmon.h: add guard around BSD-ish typedefs
 
-Mon Nov 20 18:58:12 2000  Christopher Faylor <cgf@cygnus.com>
+Mon Nov 20 18:58:12 2000 Christopher Faylor <cgf@cygnus.com>
 
 	* Makefile.in: Use a different variable name for subdirectory since the
 	previous one was used by the top level make.
 
-Sun Nov 19 20:50:51 2000  Christopher Faylor <cgf@cygnus.com>
+Sun Nov 19 20:50:51 2000 Christopher Faylor <cgf@cygnus.com>
 
 	* Makefile.in: Install mingw stuff in a subdirectory if building under
 	cygwin.
 
-Sat Jun 17 21:48:23 2000  Christopher Faylor <cgf@cygnus.com>
+Sat Jun 17 21:48:23 2000 Christopher Faylor <cgf@cygnus.com>
 
 	* Makefile.in (subdirs): Eliminate for loop.
 
-Sat Jun 17 18:27:59 2000  Christopher Faylor <cgf@cygnus.com>
+Sat Jun 17 18:27:59 2000 Christopher Faylor <cgf@cygnus.com>
 
 	* Makefile.in (subdirs): Previous change did not fix problem in
 	broken shells.
 
-Sat Jun 17 13:49:12 2000  Christopher Faylor <cgf@cygnus.com>
+Sat Jun 17 13:49:12 2000 Christopher Faylor <cgf@cygnus.com>
 
 	* Makefile.in: Avoid installing dll if we're cross building and the
 	cross-host system isn't a Windows system.
@@ -2933,20 +3701,20 @@ Sat Jun 17 13:49:12 2000  Christopher Faylor <cgf@cygnus.com>
 	variables in Makefile.in.
 	* configure: Regenerate.
 
-Wed Apr 19 13:10:54 2000  Christopher Faylor <cgf@cygnus.com>
+Wed Apr 19 13:10:54 2000 Christopher Faylor <cgf@cygnus.com>
 
 	* configure.in: Change HEADER_SUBDIR to mingw32.
 	* configure: Regenerate.
 
-Mon Apr 10 17:24:28 2000  Christopher Faylor <cgf@cygnus.com>
+Mon Apr 10 17:24:28 2000 Christopher Faylor <cgf@cygnus.com>
 
 	* include/string.h: Use proper prototype for _strerror.
 
-2000-03-30  Mumit Khan  <khan@xraylith.wisc.edu>
+2000-03-30 Mumit Khan <khan@xraylith.wisc.edu>
 
 	* Makefile.in (subdirs): Workaround for broken shells.
 
-2000-02-03  Mumit Khan  <khan@xraylith.wisc.edu>
+2000-02-03 Mumit Khan <khan@xraylith.wisc.edu>
 
 	* Snapshot 2000-02-03.
 
@@ -2959,11 +3727,11 @@ Mon Apr 10 17:24:28 2000  Christopher Faylor <cgf@cygnus.com>
 	* Makefile.in (all): Build CRT0S first.
 	(libmingwthrd.a): Remove thread support DLL from dependency.
 
-2000-01-21  Mumit Khan  <khan@xraylith.wisc.edu>
+2000-01-21 Mumit Khan <khan@xraylith.wisc.edu>
 
 	* Snapshot 2000-01-21.
 
-2000-01-20  Mumit Khan  <khan@xraylith.wisc.edu>
+2000-01-20 Mumit Khan <khan@xraylith.wisc.edu>
 
 	Merge in changes from Cygwin:
 	* configure.in (HEADER_SUBDIRS): New variable. Substitute.
@@ -2974,7 +3742,7 @@ Mon Apr 10 17:24:28 2000  Christopher Faylor <cgf@cygnus.com>
 	(DLL_CC_STUFF): Add DLL entry point.
 	* configure: Regenerate.
 
-2000-01-19  Mumit Khan  <khan@xraylith.wisc.edu>
+2000-01-19 Mumit Khan <khan@xraylith.wisc.edu>
 
 	* include/stdio.h (fsetpos): Fix prototype.
 	(fpos_t): Fix for MSVCRT.
@@ -2990,7 +3758,7 @@ Mon Apr 10 17:24:28 2000  Christopher Faylor <cgf@cygnus.com>
 	* moldname-crtdll.def: Regenerate.
 	* moldname-msvcrt.def: Regenerate.
 
-Tue Dec 21 02:22:14 1999  Mumit Khan  <khan@xraylith.wisc.edu>
+Tue Dec 21 02:22:14 1999 Mumit Khan <khan@xraylith.wisc.edu>
 
 	* Snapshot 1999-12-21.
 
@@ -3005,13 +3773,13 @@ Tue Dec 21 02:22:14 1999  Mumit Khan  <khan@xraylith.wisc.edu>
 	(_TIME_T): Rename macro to _TIME_T_DEFINED.
 	* include/sys/types.h: Likewise.
 
-Thu Nov 18 00:22:26 1999  Mumit Khan  <khan@xraylith.wisc.edu>
+Thu Nov 18 00:22:26 1999 Mumit Khan <khan@xraylith.wisc.edu>
 
 	* profile/profil.c (profile_on): Set the profiler thread priority to
 	be time critical. Thanks to Pascal Obry <pascal_obry@csi.com>.
 	* Snapshot 1999-11-18.
 
-Sun Nov  7 02:50:09 1999  Mumit Khan  <khan@xraylith.wisc.edu>
+Sun Nov 7 02:50:09 1999 Mumit Khan <khan@xraylith.wisc.edu>
 
 	Released 1999-11-07.
 
@@ -3022,7 +3790,7 @@ Sun Nov  7 02:50:09 1999  Mumit Khan  <khan@xraylith.wisc.edu>
 	Eric Kohl <ekohl@abo.rhein-zeitung.de>.
 	* profile/Makefile.in (install): Fix target.
 
-Thu Nov  4 14:32:58 1999  Mumit Khan  <khan@xraylith.wisc.edu>
+Thu Nov 4 14:32:58 1999 Mumit Khan <khan@xraylith.wisc.edu>
 
 	* Makefile.in: Add support for profile directory.
 	* configure.in: Likewise.
@@ -3040,7 +3808,7 @@ Thu Nov  4 14:32:58 1999  Mumit Khan  <khan@xraylith.wisc.edu>
 	* profile/profil.c (profile_on): thread id is DWORD, not int.
 
 
-Wed Nov  3 16:26:44 1999  Mumit Khan  <khan@xraylith.wisc.edu>
+Wed Nov 3 16:26:44 1999 Mumit Khan <khan@xraylith.wisc.edu>
 
 	* include/stdlib.h: Add wide character version of argv/environ.
 	Formatting changes.
@@ -3051,7 +3819,7 @@ Wed Nov  3 16:26:44 1999  Mumit Khan  <khan@xraylith.wisc.edu>
 	(DllMainCRTStartup): Don't call _mingw32_init_mainargs().
 	* Makefile.in: Remove init.c from dllcrt{1,2}.c dependency lists.
 
-Sat Oct 30 03:06:26 1999  Mumit Khan  <khan@xraylith.wisc.edu>
+Sat Oct 30 03:06:26 1999 Mumit Khan <khan@xraylith.wisc.edu>
 
 	* moldname.def: Remove file.
 	* moldname.def.in: And add this.
@@ -3067,12 +3835,12 @@ Sat Oct 30 03:06:26 1999  Mumit Khan  <khan@xraylith.wisc.edu>
 	under Cygwin winsup.
 	* configure: Regenerate.
 
-Fri Oct  1 11:10:30 1999 Mumit Khan  <khan@xraylith.wisc.edu>
+Fri Oct 1 11:10:30 1999 Mumit Khan <khan@xraylith.wisc.edu>
 
 	* include/_mingw.h: Add version macros.
-	* include/direct.h (_diskfree_t, getdiskfree, getdrives):  Add.
+	* include/direct.h (_diskfree_t, getdiskfree, getdrives): Add.
 	Also add wide character versions shared with wchar.h.
-	* include/dos.h (_diskfree_t, getdiskfree, getdrives):  Add.
+	* include/dos.h (_diskfree_t, getdiskfree, getdrives): Add.
 	* include/io.h (sopen, _sopen): Fix prototype.
 	Add wide character prototypes.
 	* include/wchar.h: Likewise.
@@ -3083,7 +3851,7 @@ Fri Oct  1 11:10:30 1999 Mumit Khan  <khan@xraylith.wisc.edu>
 	* include/sys/timeb.h (struct _timeb): Don't use macro, but real
 	definition.
 
-Wed Aug 18 18:38:39 1999  Mumit Khan  <khan@xraylith.wisc.edu>
+Wed Aug 18 18:38:39 1999 Mumit Khan <khan@xraylith.wisc.edu>
 
 	* configure.in (RUNTIME, CRT_ID): Add to differentiate between
 	crtdll and msvcrt runtimes. Remove DLL_ENTRY and DEF_DLL_ENTRY
@@ -3113,12 +3881,12 @@ Wed Aug 18 18:38:39 1999  Mumit Khan  <khan@xraylith.wisc.edu>
 	* include/stdio.h (_snprintf): Add prototype.
 	(_vsnprintf): Likewise.
 
-Sat Aug  7 18:00:00 1999  Mumit Khan  <khan@xraylith.wisc.edu>
+Sat Aug 7 18:00:00 1999 Mumit Khan <khan@xraylith.wisc.edu>
 
 	Reported by Tor Lillqvist <tml@iki.fi>:
 	* include/stdlib.h (__p___argv): Fix return type.
 
-Fri Jul 30 22:07:06 1999  Mumit Khan  <khan@xraylith.wisc.edu>
+Fri Jul 30 22:07:06 1999 Mumit Khan <khan@xraylith.wisc.edu>
 
 	Add UWIN support.
 	* include/errno.h (errno): It's linked in from startup, not imported.
@@ -3129,7 +3897,7 @@ Fri Jul 30 22:07:06 1999  Mumit Khan  <khan@xraylith.wisc.edu>
 	* include/string.h: Likewise.
 	* include/time.h: Likewise.
 
-Fri Jul 30 13:47:34 1999  Mumit Khan  <khan@xraylith.wisc.edu>
+Fri Jul 30 13:47:34 1999 Mumit Khan <khan@xraylith.wisc.edu>
 
 	* include/io.h (X_OK): Fix definition. Thanks to Jan Nijtmans.
 	* include/dos.h: Fix typo __MINGW_EXPORT->__MINGW_IMPORT.
@@ -3146,21 +3914,21 @@ Fri Jul 30 13:47:34 1999  Mumit Khan  <khan@xraylith.wisc.edu>
 
 	* ALL *.c files: Reformat according to GNU coding style.
 
-Fri Jul 16 00:46:04 1999  Mumit Khan  <khan@xraylith.wisc.edu>
+Fri Jul 16 00:46:04 1999 Mumit Khan <khan@xraylith.wisc.edu>
 
 	* Makefile.in (INCLUDES): Add w32api include directory.
 
 	* include/_mingw.h: New file.
 	* include/{assert.h,conio.h,ctype.h,direct.h,dirent.h,dos.h,
-	  errno.h,excpt.h,fcntl.h,float.h,io.h,limits.h,locale.h,malloc.h,
-	  math.h,process.h,setjmp.h,share.h,signal.h,stdarg.h,stdio.h,
-	  stdlib.h,string.h,tchar.h,time.h,varargs.h,sys/locking.h,
-	  sys/stat.h,sys/timeb.h,sys/types.h,sys/utime.h}: Include and
-	  use the macros __DECLSPEC_SUPPORTED  and __MINGW_IMPORT.
+	 errno.h,excpt.h,fcntl.h,float.h,io.h,limits.h,locale.h,malloc.h,
+	 math.h,process.h,setjmp.h,share.h,signal.h,stdarg.h,stdio.h,
+	 stdlib.h,string.h,tchar.h,time.h,varargs.h,sys/locking.h,
+	 sys/stat.h,sys/timeb.h,sys/types.h,sys/utime.h}: Include and
+	 use the macros __DECLSPEC_SUPPORTED and __MINGW_IMPORT.
 
 	* include/stdlib.h (atexit): Fix prototype.
 
-Mon Jun 14 18:38:49 1999  Mumit Khan  <khan@xraylith.wisc.edu>
+Mon Jun 14 18:38:49 1999 Mumit Khan <khan@xraylith.wisc.edu>
 
 	* include/stdio.h (_tempnam): Fix prototype.
 	(tempnam): Likewise.
@@ -3171,18 +3939,18 @@ Mon Jun 14 18:38:49 1999  Mumit Khan  <khan@xraylith.wisc.edu>
 	* include/stdlib.h (__argc): Declare.
 	(__argv): Likewise.
 
-Mon Apr  5 13:49:17 1999  Mumit Khan  <khan@xraylith.wisc.edu>
+Mon Apr 5 13:49:17 1999 Mumit Khan <khan@xraylith.wisc.edu>
 
 	* crt1.c (_gnu_exception_handler): Acknowledge Jacob Navia's
 	contribution.
 	* Makefile.in (_libm_dummy.o): New target.
 	(libm.a): Use.
 
-Tue Mar 16 18:15:26 1999  Mumit Khan  <khan@xraylith.wisc.edu>
+Tue Mar 16 18:15:26 1999 Mumit Khan <khan@xraylith.wisc.edu>
 
 	* Released 1999-03-16 along with egcs-1.1.2.
 
-Wed Feb 17 17:15:56 1999  Mumit Khan  <khan@xraylith.wisc.edu>
+Wed Feb 17 17:15:56 1999 Mumit Khan <khan@xraylith.wisc.edu>
 
 	* Makefile.in (LIBS): Add libm.a.
 	(libm.a): Dummy libm.a.
@@ -3196,7 +3964,7 @@ Wed Feb 17 17:15:56 1999  Mumit Khan  <khan@xraylith.wisc.edu>
 	(libmoldname-msvc.a): Add target.
 	(distclean): Add target.
 
-Tue Feb  9 00:26:05 1999  Mumit Khan  <khan@xraylith.wisc.edu>
+Tue Feb 9 00:26:05 1999 Mumit Khan <khan@xraylith.wisc.edu>
 
 	* include/dir.h: Reintroduce as an obsolescent header.
 	* crt1.c (signal.h): Include.
@@ -3204,14 +3972,14 @@ Tue Feb  9 00:26:05 1999  Mumit Khan  <khan@xraylith.wisc.edu>
 	asynchronous signals.
 	(mainCRTStartup): Use.
 
-Sun Jan  3 23:52:25 1999  Mumit Khan  <khan@xraylith.wisc.edu>
+Sun Jan 3 23:52:25 1999 Mumit Khan <khan@xraylith.wisc.edu>
 
 	* include/direct.h: Include io.h instead of dir.h
 	* include/dirent.h: Likewise.
 	* include/dos.h: Likewise.
 	* include/stdio.h: Replace reference to dir.h with io.h.
 
-Thu Dec 31 16:04:55 1998  Mumit Khan  <khan@xraylith.wisc.edu>
+Thu Dec 31 16:04:55 1998 Mumit Khan <khan@xraylith.wisc.edu>
 
 	* 1999-01-01 release bundled with egcs-1.1.1.
 
@@ -3219,7 +3987,7 @@ Thu Dec 31 16:04:55 1998  Mumit Khan  <khan@xraylith.wisc.edu>
 	* include/dir.h: Remove.
 	* include/signal.h: Move RC_INVOKED up a bit.
 
-Tue Dec 29 15:04:38 1998  Mumit Khan  <khan@xraylith.wisc.edu>
+Tue Dec 29 15:04:38 1998 Mumit Khan <khan@xraylith.wisc.edu>
 
 	* include/signal.h (sig_atomic_t): Define.
 	(NSIG): Define.
@@ -3231,7 +3999,7 @@ Tue Dec 29 15:04:38 1998  Mumit Khan  <khan@xraylith.wisc.edu>
 	* include/sys/stat.h (struct stat): st_uid is of type short. Use
 	_off_t instead of long for st_size.
 
-Thu Sep 10 22:28:49 1998  Mumit Khan  <khan@xraylith.wisc.edu>
+Thu Sep 10 22:28:49 1998 Mumit Khan <khan@xraylith.wisc.edu>
 
 	* include/errno.h (sys_errlist, sys_nerr): Move from here ...
 	* include/stdlib.h: Here.
@@ -3241,14 +4009,14 @@ Thu Sep 10 22:28:49 1998  Mumit Khan  <khan@xraylith.wisc.edu>
 	* include/netinet/in.h: Remove.
 	* include/sys/socket.h: Remove.
 
-Fri Sep  4 15:09:11 1998  Mumit Khan  <khan@xraylith.wisc.edu>
+Fri Sep 4 15:09:11 1998 Mumit Khan <khan@xraylith.wisc.edu>
 
 	* Release egcs-1.1.
 
 	* include/{ctype.h,dos.h,io.h,string.h,time.h,sys/types.h,
 	sys/utime.h}: Protect stddef.h in RC_INVOKED macro.
 
-Thu Sep  3 10:43:29 1998  Mumit Khan  <khan@xraylith.wisc.edu>
+Thu Sep 3 10:43:29 1998 Mumit Khan <khan@xraylith.wisc.edu>
 
 	* setjmp.h (_JBTYPE, _JBLEN): Define correctly.
 	(jmpbuf): typedef using above.
@@ -3268,11 +4036,11 @@ Thu Sep  3 10:43:29 1998  Mumit Khan  <khan@xraylith.wisc.edu>
 	* include/time.h (tzset, daylight, timezone): Replace with Colin's.
 	* include/sys/state.h: Merge.
 
-Thu Sep  3 09:49:07 1998  Mumit Khan  <khan@xraylith.wisc.edu>
+Thu Sep 3 09:49:07 1998 Mumit Khan <khan@xraylith.wisc.edu>
 
 	* include/assert.h (assert): Lose the trailing semicolon.
 
-Thu Jul 30 21:18:49 1998  Mumit Khan  <khan@xraylith.wisc.edu>
+Thu Jul 30 21:18:49 1998 Mumit Khan <khan@xraylith.wisc.edu>
 
 	* include/math.h (matherr): Declare.
 	* include/stdio.h (fileno, _fileno): Declare.
@@ -3283,7 +4051,7 @@ Thu Jul 30 21:18:49 1998  Mumit Khan  <khan@xraylith.wisc.edu>
 	(getw, putw): Declare.
 	* include/stdlib.h (MAX_{DRIVE,DIR,FNAME,EXT}): Fix.
 
-Sat Jun 13 18:19:41 1998  Mumit Khan  <khan@xraylith.wisc.edu>
+Sat Jun 13 18:19:41 1998 Mumit Khan <khan@xraylith.wisc.edu>
 
 	* include/time.h (_timezone): Undefine.
 	* include/sys/timeb.h (struct timeb): Rename _timezone to timezone.
@@ -3293,7 +4061,7 @@ Sat Jun 13 18:19:41 1998  Mumit Khan  <khan@xraylith.wisc.edu>
 	* include/stdlib.h (environ): Use DLL version.
 	* init.c (environ): Undefine it before use.
 
-Sun Mar 22 19:59:30 1998  Mumit Khan  <khan@xraylith.wisc.edu>
+Sun Mar 22 19:59:30 1998 Mumit Khan <khan@xraylith.wisc.edu>
 
 	* Update to 980309 snapshot from Colin Peters.
 
@@ -3309,17 +4077,17 @@ Sun Mar 22 19:59:30 1998  Mumit Khan  <khan@xraylith.wisc.edu>
 	* include/arpa/inet.h: Likewise.
 	* include/netinet/in.h: Likewise.
 
-Wed Feb  4 14:16:44 1998  Mumit Khan  <khan@xraylith.wisc.edu>
+Wed Feb 4 14:16:44 1998 Mumit Khan <khan@xraylith.wisc.edu>
 
 	* Update to 980128 snapshot from Colin Peters.
 
-Sat Dec  6 21:30:35 1997  Mumit Khan  <khan@xraylith.wisc.edu>
+Sat Dec 6 21:30:35 1997 Mumit Khan <khan@xraylith.wisc.edu>
 
 	* configure.in (AC_INIT): Use dllmain.c instead of defunct
 	oldnames.c
 	* configure: Regenerate.
 
-Fri Dec  5 15:57:36 1997  Mumit Khan  <khan@xraylith.wisc.edu>
+Fri Dec 5 15:57:36 1997 Mumit Khan <khan@xraylith.wisc.edu>
 
 	* Update to 971205 snapshot from Colin Peters. Lots of changes.
 	Files renamed and include hierarchy loses directories named
@@ -3327,7 +4095,7 @@ Fri Dec  5 15:57:36 1997  Mumit Khan  <khan@xraylith.wisc.edu>
 
 	* include/dos.h: from Jan-Jaap.
 
-Thu Dec  4 21:48:13 1997  Mumit Khan  <khan@xraylith.wisc.edu>
+Thu Dec 4 21:48:13 1997 Mumit Khan <khan@xraylith.wisc.edu>
 
 	Changes to conform to FSF tree.
 
@@ -3336,7 +4104,7 @@ Thu Dec  4 21:48:13 1997  Mumit Khan  <khan@xraylith.wisc.edu>
 	* Makefile.in: Update above. Also renamed libmoldnames.a to
 	libmoldname.a.
 
-Mon Dec  1 16:51:30 1997  Mumit Khan  <khan@xraylith.wisc.edu>
+Mon Dec 1 16:51:30 1997 Mumit Khan <khan@xraylith.wisc.edu>
 
 	* crtdll.def: Export all functions but the ones with funny names.
 	* moldnames.def: Add fdopen since fileno is already there.
@@ -3348,7 +4116,7 @@ Mon Dec  1 16:51:30 1997  Mumit Khan  <khan@xraylith.wisc.edu>
 	* include/nonansi/process.h: Likewise.
 	* include/sys/types.h: Likewise.
 
-Tue Nov  4 14:51:01 1997  Mumit Khan  <khan@xraylith.wisc.edu>
+Tue Nov 4 14:51:01 1997 Mumit Khan <khan@xraylith.wisc.edu>
 
 	* include/time.h (CLK_TCK): Renamed from CLK_TICK.
 	(CLK_TICK): Delete.
@@ -3361,7 +4129,7 @@ Tue Nov  4 14:51:01 1997  Mumit Khan  <khan@xraylith.wisc.edu>
 	* Makefile.in (LIBS): Delete moldnames.dll from target libs.
 	(libmoldnames.a): Add explicit rule to create it.
 
-Fri Aug 15 18:23:43 1997  Rob Savoye  <rob@cygnus.com>
+Fri Aug 15 18:23:43 1997 Rob Savoye <rob@cygnus.com>
 
 	New directory for the minimalist cygwin environment.
 
@@ -3379,7 +4147,7 @@ Fri Aug 15 18:23:43 1997  Rob Savoye  <rob@cygnus.com>
 	* mcrt0.c: New file. Default crt0 for mingw32.
 	* oldnames.c: New File. Wrappers for functions that don't
 	have an underscore.
-	* string_old.c:  New File.
+	* string_old.c: New File.
 	* include/{assert.h,ctype.h,errno.h,float.h,limits.h,locale.h
 	math.h,nonansi,setjmp.h,signal.h,stdarg.h,stddef.h,stdio.h,stdlib.h
 	string.h,tchar.h,time.h,wchar.h}: New header files for mingw.

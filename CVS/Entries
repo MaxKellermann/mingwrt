@@ -1,53 +1,55 @@
-/CRT_noglob.c/1.2/Tue Apr 20 22:49:32 2004/-ko/
-/CRTfmode.c/1.3/Tue Apr 20 22:49:32 2004/-ko/
-/CRTglob.c/1.2/Tue Apr 20 22:49:32 2004/-ko/
-/CRTinit.c/1.2/Tue Apr 20 22:49:32 2004/-ko/
-/README/1.2/Thu Apr 22 16:16:26 2004//
-/TODO/1.1/Wed Nov 22 01:51:54 2000//
-/binmode.c/1.1/Sat Oct 19 20:26:26 2002//
 /config.sub/1.2/Thu Jul  3 15:15:56 2003//
-/cpu_features.h/1.1/Mon Jul  3 10:32:58 2006//
-/crtmt.c/1.1.1.1/Thu Feb 17 19:38:32 2000/-ko/
-/crtst.c/1.1.1.1/Thu Feb 17 19:38:32 2000/-ko/
 /dllmain.c/1.2/Tue Apr 20 22:49:32 2004/-ko/
 /gccmain.c/1.2/Tue Apr 20 22:49:32 2004/-ko/
-/isascii.c/1.2/Tue Apr 20 22:49:32 2004//
-/iscsym.c/1.2/Tue Apr 20 22:49:32 2004//
-/iscsymf.c/1.2/Tue Apr 20 22:49:32 2004//
-/moldname.def.in/1.7/Mon Aug  8 10:22:20 2005/-ko/
-/mthr.c/1.2/Wed Dec  5 15:01:06 2001/-ko/
-/mthr_init.c/1.2/Wed Dec  5 15:01:06 2001/-ko/
-/mthr_stub.c/1.3/Wed Aug 10 10:05:02 2005/-ko/
-/pseudo-reloc-list.c/1.1/Wed Jan  1 10:00:40 2003//
-/readme.txt/1.1.1.1/Thu Feb 17 19:38:32 2000/-ko/
-/strcasecmp.c/1.2/Tue Apr 20 22:49:32 2004//
-/strncasecmp.c/1.2/Thu Apr 22 16:34:32 2004//
 /test_headers.c/1.4/Thu Jul  3 07:50:54 2003//
-/toascii.c/1.2/Tue Apr 20 22:49:32 2004//
-/txtmode.c/1.1/Sat Oct 19 20:26:26 2002//
-/wcscmpi.c/1.2/Tue Apr 20 22:49:32 2004//
 D/include////
 D/mingwex////
 D/profile////
 D/samples////
 /CRT_fp10.c/1.2/Wed Aug 23 23:25:48 2006//
 /CRT_fp8.c/1.2/Wed Aug 23 23:25:48 2006//
-/cpu_features.c/1.1/Wed Aug 23 23:25:50 2006//
-/crt1.c/1.11/Wed Aug 23 23:25:50 2006/-ko/
 /dllcrt1.c/1.4/Wed Aug 23 23:25:50 2006/-ko/
-/init.c/1.2/Wed Aug 23 23:25:50 2006/-ko/
-/main.c/1.2/Wed Aug 23 23:25:50 2006/-ko/
 /pseudo-reloc.c/1.1/Wed Aug 23 23:25:50 2006//
-/CONTRIBUTORS/1.1/Tue Apr 20 23:49:32 2004//
-/DISCLAIMER/1.2/Thu Apr 22 17:16:24 2004//
-/Makefile.in/1.69/Result of merge+Sun Feb  4 20:14:28 2007/-ko/
-/aclocal.m4/1.4/Sun Feb  4 20:14:28 2007//
-/config.guess/1.2/Thu Jul  3 16:15:56 2003//
-/configure/1.19/Result of merge+Sun Feb  4 20:14:30 2007/-ko/
-/configure.in/1.15/Result of merge+Sun Feb  4 20:14:30 2007/-ko/
-/crtdll.def/1.3/Tue Apr 20 23:49:32 2004/-ko/
-/install-sh/1.1/Wed Nov 22 02:51:54 2000//
-/jamfile/1.2/Tue Apr 20 23:49:32 2004/-ko/
-/mkinstalldirs/1.1/Wed Nov 22 02:51:54 2000//
-/ChangeLog/1.336/Sun Feb  4 22:12:36 2007/-ko/
-/msvcrt.def.in/1.6/Sun Feb  4 22:19:54 2007//
+/CONTRIBUTORS/1.1/Fri Feb  8 14:20:02 2008//
+/CRT_noglob.c/1.2/Fri Feb  8 14:20:02 2008/-ko/
+/CRTfmode.c/1.6/Thu Feb  5 07:28:02 2009/-ko/
+/CRTglob.c/1.2/Fri Feb  8 14:20:02 2008/-ko/
+/CRTinit.c/1.2/Fri Feb  8 14:20:02 2008/-ko/
+/ChangeLog/1.427/Thu Feb  5 07:28:03 2009/-ko/
+/DISCLAIMER/1.2/Fri Feb  8 14:20:02 2008//
+/Makefile.in/1.88/Result of merge+Thu Feb  5 07:28:03 2009/-ko/
+/README/1.2/Fri Feb  8 14:20:02 2008//
+/TODO/1.1/Fri Feb  8 14:20:02 2008//
+/aclocal.m4/1.6/Thu Feb  5 07:28:03 2009//
+/binmode.c/1.1/Fri Feb  8 14:20:02 2008//
+/config.guess/1.2/Fri Feb  8 14:20:02 2008//
+/configure/1.23/Result of merge+Thu Feb  5 07:28:03 2009/-ko/
+/configure.in/1.19/Result of merge/-ko/
+/cpu_features.c/1.2/Result of merge//
+/cpu_features.h/1.1/Fri Feb  8 14:20:02 2008//
+/crt1.c/1.12/Thu Feb  5 07:28:04 2009/-ko/
+/crtdll.def/1.3/Fri Feb  8 14:20:02 2008/-ko/
+/crtmt.c/1.1.1.1/Fri Feb  8 14:20:02 2008/-ko/
+/crtst.c/1.1.1.1/Fri Feb  8 14:20:02 2008/-ko/
+/init.c/1.2/Fri Feb  8 14:20:02 2008/-ko/
+/install-sh/1.1/Fri Feb  8 14:20:02 2008//
+/isascii.c/1.2/Fri Feb  8 14:20:02 2008//
+/iscsym.c/1.2/Fri Feb  8 14:20:02 2008//
+/iscsymf.c/1.2/Fri Feb  8 14:20:02 2008//
+/jamfile/1.2/Fri Feb  8 14:20:02 2008/-ko/
+/main.c/1.2/Fri Feb  8 14:20:02 2008/-ko/
+/mkinstalldirs/1.1/Fri Feb  8 14:20:02 2008//
+/moldname.def.in/1.8/Result of merge/-ko/
+/msvcrt.def.in/1.10/Thu Feb  5 07:28:04 2009//
+/mthr.c/1.2/Fri Feb  8 14:20:02 2008/-ko/
+/mthr_init.c/1.2/Fri Feb  8 14:20:02 2008/-ko/
+/mthr_stub.c/1.3/Fri Feb  8 14:20:02 2008/-ko/
+/ofmt_stub.s/1.1/Mon Jul 28 22:57:43 2008//
+/pseudo-reloc-list.c/1.1/Fri Feb  8 14:20:02 2008//
+/readme.txt/1.1.1.1/Fri Feb  8 14:20:02 2008/-ko/
+/strcasecmp.c/1.2/Fri Feb  8 14:20:02 2008//
+/strncasecmp.c/1.2/Fri Feb  8 14:20:02 2008//
+/toascii.c/1.2/Fri Feb  8 14:20:02 2008//
+/txtmode.c/1.1/Fri Feb  8 14:20:02 2008//
+/wcscmpi.c/1.2/Fri Feb  8 14:20:02 2008//
+D/man////

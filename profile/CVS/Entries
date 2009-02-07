@@ -1,6 +1,3 @@
-/aclocal.m4/1.1/Wed May 24 16:59:04 2006//
-/configure/1.7/Wed May 24 16:59:04 2006/-ko/
-/configure.in/1.7/Wed May 24 16:59:04 2006/-ko/
 /gcrt0.c/1.2/Fri Jan 25 03:29:56 2002/-ko/
 /gmon.c/1.3/Sun Aug 15 10:45:44 2004/-ko/
 /gmon.h/1.3/Wed Nov 22 01:51:54 2000/-ko/
@@ -8,7 +5,10 @@
 /profil.h/1.2/Fri Jan 25 03:29:56 2002/-ko/
 /profil.c/1.2/Wed Aug 23 23:25:50 2006/-ko/
 /profile.h/1.3/Wed Aug 23 23:25:50 2006/-ko/
-/COPYING/1.1/Sun Aug 15 12:35:06 2004//
-/CYGWIN_LICENSE/1.1/Sun Aug 15 12:35:08 2004//
-/Makefile.in/1.14/Result of merge+Sun Feb  4 20:14:44 2007/-ko/
+/COPYING/1.1/Fri Feb  8 14:20:01 2008//
+/CYGWIN_LICENSE/1.1/Fri Feb  8 14:20:01 2008//
+/Makefile.in/1.16/Result of merge/-ko/
+/aclocal.m4/1.1/Fri Feb  8 14:20:01 2008//
+/configure/1.8/Result of merge+Thu Feb  5 07:28:16 2009/-ko/
+/configure.in/1.8/Result of merge/-ko/
 D

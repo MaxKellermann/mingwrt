@@ -44,7 +44,7 @@ _CRTIMP int __cdecl setjmp (jmp_buf);
  * The function provided by CRTDLL which appears to do the actual work
  * of setjmp.
  */
-_CRTIMP int __cdecl _setjmp (jmp_buf);
+_CRTIMP int __cdecl __MINGW_NOTHROW _setjmp (jmp_buf);
 
 #define	setjmp(x)	_setjmp(x)
 #endif
@@ -53,7 +53,7 @@ _CRTIMP int __cdecl _setjmp (jmp_buf);
  * Return to the last setjmp call and act as if setjmp had returned
  * nVal (which had better be non-zero!).
  */
-_CRTIMP void __cdecl longjmp (jmp_buf, int) __MINGW_ATTRIB_NORETURN;
+_CRTIMP void __cdecl __MINGW_NOTHROW longjmp (jmp_buf, int) __MINGW_ATTRIB_NORETURN;
 
 #ifdef __cplusplus
 }

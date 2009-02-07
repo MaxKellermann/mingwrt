@@ -1,5 +1,5 @@
 # Makefile.in for the winsup/mingw directory.
-# Copyright (c) 1995, 1996, 1997, 1998 Cygnus Solutions
+# Copyright (c) 1995-2008, 1996, 1997, 1998 Cygnus Solutions
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,7 +17,6 @@
 
 # This makefile requires GNU make.
 
-PACKAGE = mingw-runtime
 VERSION = @PACKAGE_VERSION@
 CYGRELEASE = 1
 
@@ -34,13 +33,29 @@ target_alias = @target_alias@
 with_cross_host = @with_cross_host@
 prefix = @prefix@
 conf_prefix = @prefix@
+# FIXME: this needs an appropriate AC_SUBST
+host_os = mingw32
+
+ifneq (,$(findstring cygwin, $(target_alias)))
+PACKAGE = mingw-runtime
+else
+PACKAGE = mingwrt
+endif
 
 program_transform_name = @program_transform_name@
 exec_prefix = @exec_prefix@
 bindir = @bindir@
 libdir = @libdir@
-ifeq ($(target),$(host))
-ifeq ($(build),$(host))
+ifneq (,$(findstring cygwin,$(target_alias)))
+mandir = $(prefix)/share/man
+mansection = mingw
+else
+mandir = @mandir@
+mansection = 3
+endif
+manpage_transform = @mingw_manpage_transform@
+ifeq ($(target_alias),$(host_alias))
+ifeq ($(build_alias),$(host_alias))
 tooldir:=$(exec_prefix)
 else
 tooldir:=$(exec_prefix)/$(host_alias)
@@ -72,7 +87,7 @@ else
 inst_bindir:=$(bindir)
 inst_includedir:=$(includedir)
 inst_libdir:=$(libdir)
-inst_docdir:=$(prefix)/doc/mingw-runtime
+inst_docdir:=$(prefix)/doc/runtime
 endif
 endif
 endif
@@ -99,11 +114,9 @@ CFLAGS = @CFLAGS@
 CXXFLAGS = @CXXFLAGS@
 
 # compiling with Cygwin?
-MNO_CYGWIN = @MNO_CYGWIN@
-ifdef MNO_CYGWIN
-   subdirforlib=/mingw
-else
-   libdir=
+NO_CYGWIN := @NO_CYGWIN@
+ifdef NO_CYGWIN
+override CC := ${NO_CYGWIN} $(firstword ${CC})
 endif
 
 # Either crtdll (CRT_ID 1) or msvcrt (CRT_ID 2) or coredll (CRT_ID 3).
@@ -119,12 +132,12 @@ THREAD_DLL_NAME = $(THREAD_DLL)$(THREAD_DLL_VERSION).dll
 LIBM_A=@LIBM_A@
 
 W32API_INCLUDE = @W32API_INCLUDE@
-INCLUDES+= -I$(srcdir)/include \
+INCLUDES = -I$(srcdir)/include \
   -I$(srcdir)/../include \
   -nostdinc \
   -iwithprefixbefore include
-ALL_CFLAGS = $(CFLAGS) $(W32API_INCLUDE) $(INCLUDES) $(MNO_CYGWIN)
-ALL_CXXFLAGS = $(CXXFLAGS) $(W32API_INCLUDE) $(INCLUDES) -nostdinc++ $(MNO_CYGWIN)
+ALL_CFLAGS = $(CFLAGS) $(INCLUDES) $(W32API_INCLUDE)
+ALL_CXXFLAGS = $(CXXFLAGS) $(INCLUDES) -nostdinc++ $(W32API_INCLUDE)
 
 AS = @AS@
 AR = @AR@
@@ -138,6 +151,8 @@ DLLTOOL_FLAGS = --as $(AS_FOR_TARGET)
 DLLWRAP = @DLLWRAP@
 DLLWRAP_FOR_TARGET = $(DLLWRAP)
 DLLWRAP_FLAGS = --dlltool $(DLLTOOL) --as $(AS) --driver-name $(CC)
+OBJCOPY = @OBJCOPY@
+NM = @NM@
 
 TAR = tar
 TARFLAGS = z
@@ -205,13 +220,18 @@ LIBS = libcoredll.a \
        libmingwthrd.a
 else
 LIBS = libcrtdll.a \
-       libmsvcrt.a libmsvcrtd.a \
+       libmsvcrt.a  libmsvcrtd.a \
        libmsvcr70.a libmsvcr70d.a \
        libmsvcr71.a libmsvcr71d.a \
        libmsvcr80.a libmsvcr80d.a \
+       libmsvcr90.a libmsvcr90d.a \
        libmingw32.a \
        libcoldname.a \
-       libmoldname.a libmoldnamed.a \
+       libmoldname.a   libmoldnamed.a \
+       libmoldname70.a libmoldname70d.a \
+       libmoldname71.a libmoldname71d.a \
+       libmoldname80.a libmoldname80d.a \
+       libmoldname90.a libmoldname90d.a \
        $(LIBM_A) \
        libmingwthrd.a
 endif
@@ -226,7 +246,7 @@ SRCDIST_FILES = CRT_noglob.c CRTfmode.c CRTglob.c CRTinit.c ChangeLog \
 Makefile.in README TODO config.guess config.sub configure configure.in \
 aclocal.m4 crt1.c crtdll.def crtmt.c crtst.c  dllcrt1.c dllmain.c \
 gccmain.c init.c install-sh jamfile main.c mkinstalldirs \
-moldname.def.in msvcrt.def.in \
+moldname.def.in msvcrt.def.in ofmt_stub.s \
 mthr.c mthr_init.c mthr_stub.c readme.txt \
 isascii.c iscsym.c iscsymf.c toascii.c \
 strcasecmp.c strncasecmp.c wcscmpi.c \
@@ -264,33 +284,15 @@ libmingwthrd.a: crtmt.o mingwthrd.def
 	$(AR) $(ARFLAGS) $@ crtmt.o
 	$(RANLIB) $@
 
-# Using dllwrap would be so much easier, but Cygnus top-level configure
-# Makefile.in etc don't pass the right variables yet.
-xx_$(THREAD_DLL_NAME) xx_mingwthrd.def: mthr.o mthr_init.o
-	$(DLLWRAP) $(DLLWRAP_FLAGS) -o $(THREAD_DLL_NAME) \
-		--output-def mingwthrd.def \
-		mthr.o mthr_init.o
-
 DLL_OFILES        = mthr.o mthr_init.o
-DLL_CC_STUFF      = -B./ -mdll $(MNO_CYGWIN) -Wl,--image-base,0x6FBC0000 \
-		    \
-                    $(DLL_OFILES) \
+DLL_CC_STUFF      = -B./ -shared $(MNO_CYGWIN) -Wl,--image-base,0x6FBC0000 \
+		    -Wl,--entry,DllMainCRTStartup \
+                    $(DLL_OFILES) mingwthrd.def \
 		    -Lmingwex
-
-DLL_DLLTOOL_STUFF = --as=$(AS) --dllname $(THREAD_DLL_NAME) \
-                    --def mingwthrd.def \
-                    --base-file mingwthrd.base --output-exp mingwthrd.exp
 
 $(THREAD_DLL_NAME) mingwthrd.def: $(DLL_OFILES) Makefile $(SUBDIRS)
 	$(DLLTOOL) --as $(AS) --output-def mingwthrd.def $(DLL_OFILES)
-	$(CC) -Wl,--base-file=mingwthrd.base $(DLL_CC_STUFF) \
-		-o mingwthrd_dummy.exe
-	$(DLLTOOL) $(DLL_DLLTOOL_STUFF)
-	$(CC) -Wl,--base-file=mingwthrd.base mingwthrd.exp $(DLL_CC_STUFF) \
-		-o mingwthrd_dummy.exe
-	$(DLLTOOL) $(DLL_DLLTOOL_STUFF)
-	$(CC) mingwthrd.exp -o $(THREAD_DLL_NAME) $(DLL_CC_STUFF)
-	rm -f mingwthrd_dummy.exe
+	$(CC) $(DLL_CC_STUFF) -o $(THREAD_DLL_NAME)
 
 libmingw32.a: $(MINGW_OBJS)
 	$(AR) rc $@ $(MINGW_OBJS)
@@ -300,6 +302,7 @@ msvcrt.def msvcrtd.def \
 msvcr70.def msvcr70d.def \
 msvcr71.def msvcr71d.def \
 msvcr80.def msvcr80d.def \
+msvcr90.def msvcr90d.def \
 : msvcrt.def.in
 	$(CC) -DRUNTIME=$(basename $(notdir $@)) \
 		-D__$(basename $(notdir $@))__=1 \
@@ -332,17 +335,20 @@ libcoldname.a: moldname-crtdll.def $(MOLD_OBJS)
 	$(AR) rc $@ $(MOLD_OBJS)
 	$(RANLIB) $@
 
-libmoldname.a: moldname-msvcrt.def $(MOLD_OBJS)
+libmoldname.a libmoldnamed.a: moldname-msvcrt.def $(MOLD_OBJS)
 	$(DLLTOOL) --as $(AS) -k -U	\
-		--dllname msvcrt.dll	\
+		--dllname msvcrt$(@:libmoldname%a=%)dll \
 		--def moldname-msvcrt.def	\
 		--output-lib $@
 	$(AR) rc $@ $(MOLD_OBJS)
 	$(RANLIB) $@
 
-libmoldnamed.a: moldname-msvcrt.def $(MOLD_OBJS)
+libmoldname70.a libmoldname70d.a \
+libmoldname71.a libmoldname71d.a \
+libmoldname80.a libmoldname80d.a \
+libmoldname90.a libmoldname90d.a: moldname-msvcrt.def $(MOLD_OBJS)
 	$(DLLTOOL) --as $(AS) -k -U	\
-		--dllname msvcrtd.dll	\
+		--dllname msvcr$(@:libmoldname%a=%)dll  \
 		--def moldname-msvcrt.def	\
 		--output-lib $@
 	$(AR) rc $@ $(MOLD_OBJS)
@@ -366,11 +372,13 @@ crt2.o dllcrt2.o:
 crt3.o dllcrt3.o:
 	$(CC) -c -D__COREDLL__ -U__CRTDLL__ -U__MSVCRT__ $(ALL_CFLAGS) $< -o $@
 
+check: check-headers
+
 TEST_H_OPTIONS = $(ALL_CFLAGS) -Wall -W -Wsystem-headers -c \
 	$(srcdir)/test_headers.c -o test_headers.o
 
-.PHONY: test_headers
-test_headers:
+.PHONY: check-headers
+check-headers: force
 	@echo "Testing runtime headers..."
 	@for lang in c c++ objective-c ; do \
 		echo "$$lang ..."; \
@@ -389,7 +397,7 @@ test_headers:
 clean:
 	-rm -f *.o *.a *~ core a.out mingwthrd.def mingwthrd.base mingwthrd.exp
 	-rm -f $(THREAD_DLL_NAME) mingwthrd_dummy.exe
-	-rm -f moldname-*.def
+	-rm -f msvcr*.def moldname-*.def
 	@$(MAKE) subdirs DO=$@ $(FLAGS_TO_PASS)
 
 distclean: clean
@@ -403,19 +411,14 @@ else
    ifneq (,$(findstring cygwin, $(target_alias)))
       distdir=$(PACKAGE)-$(VERSION)-$(CYGRELEASE)
    else
-      distdir=$(PACKAGE)-$(VERSION)
+      distdir=$(PACKAGE)-$(VERSION)-$(host_os)
    endif
 endif
 
 ifneq (,$(findstring cygwin, $(target_alias)))
   TARFLAGS = j
   TARFILEEXT = .tar.bz2
-endif
-
-ifneq (,$(findstring mingw, $(target_alias)))
-    dist_prefix =
-else
-    dist_prefix = $(conf_prefix)
+  dist_prefix = $(conf_prefix)
 endif
 
 dist: srcdist bindist
@@ -431,23 +434,57 @@ srcdist:
 		(cd $$i; $(MAKE) distdir=../$(distdir) dist); \
 	done
 #FIXME this needs to be done with SUBDIRS and Makefiles.
+#
+#  Maybe, but this is simpler, and adequate for now!
+#  However, as more manpages are added, spanning multiple sections,
+#  we'll probably need a separate Makefile to organise them.
+#
 	mkdir $(distdir)/include
 	mkdir $(distdir)/include/sys
 	cp $(srcdir)/include/*.h $(distdir)/include/
 	cp $(srcdir)/include/sys/*.h $(distdir)/include/sys/
+	mkdir $(distdir)/man
+	cp $(srcdir)/man/*.man $(distdir)/man/
+#
 #end FIXME
 	rm -f $(distdir)-src.tar.gz
 	$(TAR) $(TARFLAGS)cf $(distdir)-src$(TARFILEEXT) $(distdir)
 
+# Binary package structure is determined according to the
+# preferred package name assigned at configure time...
+#
+bindist: bindist-$(PACKAGE)
 
-bindist:
+# The directory structure is common to both package styles...
+#
+bindist-common:
 	rm -rf $(distdir)
 	mkdir $(distdir)
 	chmod 755 $(distdir)
 	$(MAKE) install prefix=$(shell pwd)/$(distdir)$(dist_prefix)
 	rm -f $(distdir).tar.gz
+
+# Current MinGW distributions prefer separate `dev' and `dll' bundles,
+# and use the abbreviated `mingwrt' form for the package name...
+#
+DEVDIST_FILES = * --exclude=bin
+DLLDIST_FILES = bin/*.dll doc/*
+#
+bindist-mingwrt: bindist-common
 	cd $(distdir); \
-	$(TAR) $(TARFLAGS)cf ../$(distdir)$(TARFILEEXT) *
+	$(TAR) $(TARFLAGS)cf ../$(distdir)-dev$(TARFILEEXT) $(DEVDIST_FILES); \
+	$(TAR) $(TARFLAGS)cf ../$(distdir)-dll$(TARFILEEXT) $(DLLDIST_FILES)
+	rm -rf $(distdir)
+
+# However, Cygwin maintainers continue to prefer a composite package,
+# retaining the older `mingw-runtime' naming convention...
+#
+BINDIST_FILES = *
+#
+bindist-mingw-runtime: bindist-common
+	cd $(distdir); \
+	$(TAR) $(TARFLAGS)cf ../$(distdir)$(TARFILEEXT) $(BINDIST_FILES)
+	rm -rf $(distdir)
 
 snapshot:
 	make dist SNAPDATE=$(shell date '+%Y%m%d')
@@ -463,6 +500,7 @@ install-dirs:
 	$(mkinstalldirs) $(inst_includedir)
 	$(mkinstalldirs) $(inst_libdir)
 	$(mkinstalldirs) $(inst_docdir)
+	$(mkinstalldirs) $(mandir)/man$(mansection)
 
 install: all install-dirs $(install_dlls_host)
 	for i in $(LIBS); do \
@@ -481,6 +519,18 @@ install: all install-dirs $(install_dlls_host)
 		  $(INSTALL_DATA) $$i $$dstdir/`basename $$i` ; \
 		done ; \
 	done
+#
+# This provisional hack installs the only manpage we have at present...
+# It simply CANNOT suffice, when we have more manpages to ship.
+#
+	$(mkinstalldirs) $(mandir)/man$(mansection)
+	$(INSTALL_DATA) $(srcdir)/man/dirname.man $(mandir)/man$(mansection)/`\
+	  echo dirname.man|sed '$(manpage_transform);s,man$$,$(mansection),'`
+	$(INSTALL_DATA) $(srcdir)/man/dirname.man $(mandir)/man$(mansection)/`\
+	  echo basename.man|sed '$(manpage_transform);s,man$$,$(mansection),'`
+#
+# End provisional hack.
+#
 	@$(MAKE) subdirs DO=$@ $(FLAGS_TO_PASS)
 
 subdirs: $(SUBDIRS)
@@ -495,13 +545,15 @@ subdirs: $(SUBDIRS)
 	    rootsrc=`cd $(srcdir); pwd`/ ; export rootsrc ; \
 	    cd ./$@; \
 	    $(MAKE) $(FLAGS_TO_PASS) $(DO)) ; then true ; \
-	  else exit 1 ; fi ; \
-	else true ; fi ; \
+	  else exit 1 ; \
+	  fi ; \
+	else true ; \
+	fi
 
 force:
 
 #
-# Dependancies
+# Dependencies
 #
 libcoredll.a: coredll.def
 libcrtdll.a: crtdll.def
@@ -539,8 +591,35 @@ config.status: configure
 
 .SUFFIXES: .y $(SUFFIXES) .cc .def .a
 
-lib%.a:%.def
-	$(DLLTOOL) --as=$(AS) -k --dllname $*.dll --output-lib lib$*.a --def $<
+sym_prefix = __msvcrt
+
+NM_LOOKUP = $(NM) $@ | sed -n \
+  -e '/:$$/h;/^[0-7][0-7]*  *T  */{s///;H;g;s/\n//p' \
+  -e '}' | sed -n 's/:_'"$$key"'$$//p'
+
+MINGW_REPL_FUNCS = printf fprintf sprintf vprintf vfprintf vsprintf
+
+lib%.a: %.def
+	$(DLLTOOL) --as=$(AS) -k --dllname $*.dll --output-lib $@ --def $<
+	for key in $(MINGW_REPL_FUNCS); do \
+	  src=`$(NM_LOOKUP)`; \
+	  if test -n "$$src"; then \
+	    dst=`echo "$$src" | sed 's/0/4/'`; repl="$$repl $$dst"; \
+	    tmpfiles="$$tmpfiles $$src $$dst"; \
+	    $(AR) x $@ $$src; \
+	    $(OBJCOPY) --redefine-sym _$$key=_$(sym_prefix)_$$key \
+	      --redefine-sym __imp__$$key=__imp__$(sym_prefix)_$$key \
+	      $$src $$dst; \
+	  fi; done; \
+	test `key=_get_output_format; $(NM_LOOKUP)` || \
+	  repl="$$repl ofmt_stub.o"; \
+	test -n "$$repl" && $(AR) rcs $@ $$repl; \
+	$(RM) $$tmpfiles
+
+libmsvcrt.a  libmsvcrtd.a:  ofmt_stub.o
+libmsvcr70.a libmsvcr70d.a: ofmt_stub.o
+libmsvcr71.a libmsvcr71d.a: ofmt_stub.o
+libcrtdll.a  libcrtdlld.a:  ofmt_stub.o
 
 .c.o:
 	$(CC) -c $(ALL_CFLAGS) $< -o $@

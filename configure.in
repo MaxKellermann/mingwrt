@@ -17,8 +17,8 @@ dnl along with this program; if not, write to the Free Software
 dnl Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 AC_PREREQ([2.59])
-AC_INIT([mingw-runtime], [__MINGW32_VERSION])
-MINGW_AC_CONFIG_SRCDIR([$PACKAGE_VERSION], [include/_mingw.h])
+AC_INIT([MinGW Runtime], [v3.x], [http://mingw.org/reporting_bugs], [mingwrt])
+MINGW_AC_CONFIG_SRCDIR([__MINGW32_VERSION], [include/_mingw.h])
 
 AC_CANONICAL_SYSTEM
 GCC_NO_EXECUTABLES
@@ -36,6 +36,8 @@ AC_CHECK_TOOL([AR], [ar], [ar])
 AC_CHECK_TOOL([AS], [as], [as])
 AC_CHECK_TOOL([RANLIB], [ranlib], [ranlib])
 AC_CHECK_TOOL([LD], [ld], [ld])
+AC_CHECK_TOOL([NM], [nm], [nm])
+AC_CHECK_TOOL([OBJCOPY], [objcopy], [objcopy])
 AC_CHECK_TOOL([DLLTOOL], [dlltool], [dlltool])
 AC_CHECK_TOOL([DLLWRAP], [dlltool], [dlltool])
 AC_CHECK_TOOL([WINDRES], [windres], [windres])
@@ -52,14 +54,14 @@ W32API_INCLUDE='-I $(srcdir)/../w32api/include'
 
 case "$target_os" in
 *cygwin*)
-  MNO_CYGWIN=-mno-cygwin
+  NO_CYGWIN="$(cd ${srcdir}/../utils; pwd)/mingw"
   LIBM_A=libm.a
   # Install mingw headers in mingw subdirectory.
   HEADER_SUBDIR="mingw"
   ;;
 *)
   # Build it for MSVCRT by default.
-  MNO_CYGWIN=
+  NO_CYGWIN=
   LIBM_A=libm.a
   ;;
 esac
@@ -72,13 +74,14 @@ esac
 AC_SUBST([THREAD_DLL], [mingwm])
 
 AC_SUBST([MKINSTALLDIRS], [$ac_aux_dir/mkinstalldirs])
-AC_SUBST([MNO_CYGWIN])
+AC_SUBST([NO_CYGWIN])
 AC_SUBST([LIBM_A])
 AC_SUBST([LIBGMON_A])
 AC_SUBST([HEADER_SUBDIR])
 AC_SUBST([W32API_INCLUDE])
 
 AC_PROG_INSTALL
+MINGW_AC_MANPAGE_TRANSFORM
 
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT

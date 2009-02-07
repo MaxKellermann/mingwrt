@@ -24,7 +24,9 @@ INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
 mkinstalldirs = $(SHELL) $(srcdir)/../mkinstalldirs
-DISTFILES = Makefile.in configure configure.in aclocal.m4 \
+
+DISTFILES = \
+	Makefile.in configure configure.in aclocal.m4 \
 	_Exit.c atoll.c dirent.c feclearexcept.c fegetenv.c \
 	fegetexceptflag.c fegetround.c feholdexcept.c feraiseexcept.c \
 	fesetenv.c fesetexceptflag.c fesetround.c fetestexcept.c \
@@ -36,7 +38,8 @@ DISTFILES = Makefile.in configure configure.in aclocal.m4 \
 	wdirent.c wmemchr.c wmemcmp.c wmemcpy.c wmemmove.c wmemset.c wtoll.c \
 	wcrtomb.c wctob.c mbrtowc.c btowc.c mb_wc_common.h \
 	gettimeofday.c isblank.c iswblank.c \
-	basename.c dirname.c
+	basename.c dirname.c usleep.c \
+	tsearch.c twalk.c tdelete.c tfind.c
 
 MATH_DISTFILES = \
 	acosf.c acosl.c asinf.c asinl.c atan2f.c atan2l.c \
@@ -51,27 +54,28 @@ MATH_DISTFILES = \
 	fpclassify.c fpclassifyf.c fpclassifyl.c \
 	frexpf.c frexpl.S fucom.c hypotf.c hypotl.c ilogb.S ilogbf.S \
 	ilogbl.S isnan.c isnanf.c isnanl.c ldexpf.c ldexpl.c \
-	lgamma.c lgammaf.c lgammal.c llrint.c \
-	llrintf.c llrintl.c llround.c llroundf.c llroundl.c \
+	lgamma.c lgammaf.c lgammal.c llrint.c llrintf.c llrintl.c \
 	log10f.S log10l.S log1p.S log1pf.S log1pl.S log2.S log2f.S \
 	log2l.S logb.c logbf.c logbl.c logf.S logl.S lrint.c lrintf.c \
-	lrintl.c lround.c lroundf.c lroundl.c modff.c modfl.c \
+	lrintl.c lround_generic.c modff.c modfl.c \
 	nearbyint.S nearbyintf.S nearbyintl.S \
 	nextafterf.c nextafterl.c nexttowardf.c nexttoward.c \
 	powf.c powi.c powif.c powil.c powl.c \
 	remainder.S remainderf.S remainderl.S remquo.S \
-	remquof.S remquol.S rint.c rintf.c rintl.c round.c roundf.c \
-	roundl.c scalbn.S scalbnf.S scalbnl.S s_erf.c sf_erf.c \
+	remquof.S remquol.S rint.c rintf.c rintl.c round_internal.h \
+	round_generic.c scalbn.S scalbnf.S scalbnl.S s_erf.c sf_erf.c \
 	signbit.c signbitf.c signbitl.c sinf.S sinhf.c sinhl.c sinl.S \
 	sqrtf.c sqrtl.c tanf.S tanhf.c tanhl.c tanl.S tgamma.c \
 	tgammaf.c tgammal.c trunc.c truncf.c truncl.c \
-	acosh.c acoshf.c acoshl.c  asinh.c asinhf.c asinhl.c \
+	acosh.c acoshf.c acoshl.c asinh.c asinhf.c asinhl.c \
 	atanh.c atanhf.c atanhl.c fastmath.h
 
 STDIO_DISTFILES = \
 	fopen64.c fseeko64.c ftello64.c lseek64.c \
-	snprintf.c snwprintf.c vsnprintf.c vsnwprintf.c \
-	vfscanf.c vfwscanf.c vscanf.c vsscanf.c vswscanf.c vwscanf.c
+	vfscanf.c vfwscanf.c vscanf.c vsscanf.c vswscanf.c vwscanf.c \
+	pformat.c pformat.h printf.c fprintf.c sprintf.c snprintf.c \
+	vprintf.c vfprintf.c vsprintf.c vsnprintf.c \
+	snwprintf.c vsnwprintf.c
 
 COMPLEX_DISTFILES = \
 	cabs.c cabsf.c cabsl.c cacos.c cacosf.c cacosl.c cacosh.c \
@@ -124,14 +128,17 @@ WARNFLAGS = -Wall
 
 
 # compiling with Cygwin?
-MNO_CYGWIN = @MNO_CYGWIN@
+NO_CYGWIN := @NO_CYGWIN@
+ifdef NO_CYGWIN
+override CC := ${NO_CYGWIN} $(firstword $(filter-out ${NO_CYGWIN},${CC}))
+endif
 
 W32API_INCLUDE = @W32API_INCLUDE@
 INCLUDES = -I$(srcdir) -I$(srcdir)/.. -I$(srcdir)/../include \
   -nostdinc \
   -iwithprefixbefore include
-ALL_CFLAGS = $(CFLAGS) $(WARNFLAGS) $(OPTFLAGS) $(W32API_INCLUDE) $(INCLUDES) $(MNO_CYGWIN) $(MATHCE_FLAGS)
-ALL_CXXFLAGS = $(CXXFLAGS) $(WARNFLAGS) $(OPTFLAGS) $(W32API_INCLUDE) $(INCLUDES) -nostdinc++ $(MNO_CYGWIN) $(MATHCE_FLAGS)
+ALL_CFLAGS = $(CFLAGS) $(WARNFLAGS) $(OPTFLAGS) $(INCLUDES) $(W32API_INCLUDE) $(MATHCE_FLAGS)
+ALL_CXXFLAGS = $(CXXFLAGS) $(WARNFLAGS) $(OPTFLAGS) $(INCLUDES) -nostdinc++ $(W32API_INCLUDE) $(MATHCE_FLAGS)
 
 AS = @AS@
 AR = @AR@
@@ -160,8 +167,10 @@ STDLIB_STUB_OBJS = \
 	_Exit.o
 STDIO_OBJS = \
 	fopen64.o fseeko64.o ftello64.o lseek64.o \
-	snprintf.o  vsnprintf.o snwprintf.o vsnwprintf.o \
-	vfscanf.o vfwscanf.o vscanf.o vsscanf.o vswscanf.o vwscanf.o
+	vfscanf.o vfwscanf.o vscanf.o vsscanf.o vswscanf.o vwscanf.o \
+	pformat.o snprintf.o vsnprintf.o snwprintf.o vsnwprintf.o \
+	printf.o fprintf.o sprintf.o vprintf.o vfprintf.o vsprintf.o
+#TODO: Try out the new objects here?
 STDIO_OBJS_CE = \
 	snprintf.o vsnprintf.o snwprintf.o vsnwprintf.o
 MATH_OBJS = \
@@ -176,29 +185,31 @@ MATH_OBJS = \
 	fpclassify.o fpclassifyf.o fpclassifyl.o \
 	frexpf.o frexpl.o fucom.o hypotf.o hypotl.o ilogb.o ilogbf.o \
 	ilogbl.o isnan.o isnanf.o isnanl.o ldexpf.o ldexpl.o \
-	lgamma.o lgammaf.o lgammal.o llrint.o \
-	llrintf.o llrintl.o llround.o llroundf.o llroundl.o \
+	lgamma.o lgammaf.o lgammal.o llrint.o llrintf.o llrintl.o \
 	log10f.o log10l.o log1p.o log1pf.o log1pl.o log2.o log2f.o \
-	log2l.o logb.o logbf.o logbl.o logf.o logl.o lrint.o lrintf.o \
-	lrintl.o lround.o lroundf.o lroundl.o modff.o modfl.o \
+	log2l.o logb.o logbf.o logbl.o logf.o logl.o \
+	lrint.o lrintf.o lrintl.o modff.o modfl.o \
 	nearbyint.o nearbyintf.o nearbyintl.o \
 	nextafterf.o nextafterl.o nexttowardf.o nexttoward.o \
 	powf.o powi.o powif.o powil.o powl.o \
 	remainder.o remainderf.o remainderl.o remquo.o \
-	remquof.o remquol.o rint.o rintf.o rintl.o round.o roundf.o \
-	roundl.o scalbn.o scalbnf.o scalbnl.o s_erf.o sf_erf.o \
+	remquof.o remquol.o rint.o rintf.o rintl.o \
+	scalbn.o scalbnf.o scalbnl.o s_erf.o sf_erf.o \
 	signbit.o signbitf.o signbitl.o sinf.o sinhf.o sinhl.o sinl.o \
 	sqrtf.o sqrtl.o tanf.o tanhf.o tanhl.o tanl.o tgamma.o \
 	tgammaf.o tgammal.o trunc.o truncf.o truncl.o \
 	acosh.o acoshf.o acoshl.o asinh.o asinhf.o asinhl.o \
 	atanh.o atanhf.o atanhl.o
+MATH_ROUND_OBJS = round.o roundf.o roundl.o
+MATH_LROUND_OBJS = lround.o lroundf.o lroundl.o
+MATH_LLROUND_OBJS = llround.o llroundf.o llroundl.o
 FENV_OBJS = fesetround.o  fegetround.o \
 	fegetenv.o fesetenv.o feupdateenv.o \
 	feclearexcept.o feholdexcept.o fegetexceptflag.o \
 	feraiseexcept.o fetestexcept.o fesetexceptflag.o
 POSIX_OBJS = \
-	dirent.o wdirent.o getopt.o ftruncate.o gettimeofday.o \
-	basename.o dirname.o
+	dirent.o wdirent.o getopt.o ftruncate.o gettimeofday.o usleep.o \
+	basename.o dirname.o tsearch.o twalk.o tdelete.o tfind.o
 REPLACE_OBJS = \
 	mingw-aligned-malloc.o mingw-fseek.o
 COMPLEX_OBJS = \
@@ -223,31 +234,35 @@ MATHCE_OBJS = \
 	e_expf.o e_gamma_r.o e_gammaf_r.o e_lgamma_r.o e_lgammaf_r.o e_log10f.o \
 	e_logf.o e_powf.o e_rem_pio2.o e_rem_pio2f.o e_remainder.o \
 	e_remainderf.o e_sinhf.o k_cos.o k_cosf.o k_rem_pio2.o k_rem_pio2f.o \
-	k_sin.o k_sinf.o k_tan.o k_tanf.o llround.o llroundf.o \
-	lround.o lroundf.o s_asinh.o s_asinhf.o s_atanf.o s_cbrt.o s_cbrtf.o \
+	k_sin.o k_sinf.o k_tan.o k_tanf.o \
+	s_asinh.o s_asinhf.o s_atanf.o s_cbrt.o s_cbrtf.o \
 	s_copysignf.o s_cosf.o s_erf.o s_erff.o s_expm1.o s_expm1f.o s_frexpf.o \
 	s_ilogb.o s_ilogbf.o s_isinf.o s_isinff.o s_ldexpf.o s_llrint.o \
 	s_llrintf.o s_log1p.o s_log1pf.o s_logbf.o s_lrint.o s_lrintf.o \
-	s_modff.o s_nextafterf.o s_rint.o s_rintf.o s_round.o s_roundf.o \
+	s_modff.o s_nextafterf.o s_rint.o s_rintf.o \
 	s_scalbn.o s_scalbnf.o s_signgam.o s_sinf.o s_tanf.o s_tanh.o s_tanhf.o \
 	s_trunc.o s_truncf.o w_acosf.o w_acosh.o w_acoshf.o w_asinf.o w_atan2f.o \
 	w_atanh.o w_coshf.o w_expf.o w_hypotf.o w_lgamma.o w_lgammaf.o w_log2.o \
 	w_log2f.o w_log10f.o w_logf.o w_powf.o w_remainder.o w_remainderf.o \
 	w_sinhf.o w_tgamma.o w_tgammaf.o fpclassify.o
+MATCHCE_ROUND_OBJS=llround.o llroundf.o lround.o lroundf.o s_round.o s_roundf.o
 GDTOA_OBJS = \
 	dmisc.o dtoa.o g__fmt.o g_dfmt.o g_ffmt.o g_xfmt.o gdtoa.o \
 	gethex.o gmisc.o hd_init.o hexnan.o misc.o smisc.o \
 	strtodg.o strtodnrp.o strtof.o strtopx.o sum.o ulp.o
 
+#TODO: check this:
 MATHCE_FLAGS=
 ifneq (,$(findstring mingw32ce,$(host_alias)))
-LIB_OBJS = $(WINCE_OBJS) $(MATHCE_OBJS) $(Q8_OBJS) $(STDIO_OBJS_CE) \
+LIB_OBJS = $(WINCE_OBJS) $(MATHCE_OBJS) $(MATCHCE_ROUND_OBJS) \
+	$(Q8_OBJS) $(STDIO_OBJS_CE) \
 	$(POSIX_OBJS)
 MATHCE_FLAGS=-D_IEEE_LIBM
 MATHDIR=mathce
 else
 LIB_OBJS = $(Q8_OBJS)  $(CTYPE_OBJS) $(STDLIB_STUB_OBJS) \
-	$(STDIO_OBJS) $(MATH_OBJS)  $(FENV_OBJS) \
+	$(STDIO_OBJS) $(MATH_OBJS) $(MATH_ROUND_OBJS) \
+	$(MATH_LROUND_OBJS) $(MATH_LLROUND_OBJS) $(FENV_OBJS) \
 	$(POSIX_OBJS) $(REPLACE_OBJS) $(COMPLEX_OBJS) \
 	$(GDTOA_OBJS)
 MATHDIR=math
@@ -264,6 +279,16 @@ $(LIBMINGWEX_A): $(LIB_OBJS)
 	rm -f $(LIBMINGWEX_A)
 	$(AR) $(ARFLAGS) $@ $(LIB_OBJS)
 	$(RANLIB) $@
+
+ifeq (,$(findstring mingw32ce,$(host_alias)))
+$(MATH_ROUND_OBJS): round_generic.c
+	$(CC) $(ALL_CFLAGS) -I$(srcdir)/math -c -o $@ \
+	  -D FUNCTION=$* $(srcdir)/math/round_generic.c
+
+$(MATH_LROUND_OBJS) $(MATH_LLROUND_OBJS): lround_generic.c
+	$(CC) $(ALL_CFLAGS) -I$(srcdir)/math -c -o $@ \
+	  -D FUNCTION=$* $(srcdir)/math/lround_generic.c
+endif
 
 Makefile: Makefile.in config.status configure
 	$(SHELL) config.status
@@ -297,6 +322,14 @@ distclean:
 .s.o:
 	$(CC) -c  $< -o $@
 
+# pformat.o needs an explicit build rule; we always build it
+# assuming __MSVCRT_VERSION__ >= 0x0800, relying on ofmt_stub.s
+# (in the parent directory) to maintain forward compatibility
+# for earlier versions of MSVCRT.DLL
+#
+PFORMAT_CFLAGS = $(ALL_CFLAGS) -I $(srcdir)/gdtoa -D__MSVCRT_VERSION__=0x0800
+pformat.o: pformat.c pformat.h
+	$(CC) -c $(PFORMAT_CFLAGS) $(srcdir)/stdio/$*.c -o $@
 
 #
 # Dependencies
@@ -309,6 +342,19 @@ atanh.o atanhf.o atanhl.o: fastmath.h
 mbrtowc.o wcrtomb.o wcstof.o wcstold.o: mb_wc_common.h
 
 $(GDTOA_OBJS): gd_arith.h gdtoa.h gdtoaimp.h gd_qnan.h
+
+ifeq (,$(findstring mingw32ce,$(host_alias)))
+$(MATH_ROUND_OBJS) $(MATH_LROUND_OBJS) $(MATH_LLROUND_OBJS): round_internal.h
+endif
+
+printf.o:     printf.c     pformat.h
+fprintf.o:    fprintf.c    pformat.h
+sprintf.o:    sprintf.c    pformat.h
+snprintf.o:   snprintf.c   pformat.h
+vprintf.o:    vprintf.c    pformat.h
+vfprintf.o:   vfprintf.c   pformat.h
+vsprintf.o:   vsprintf.c   pformat.h
+vsnprintf.o:  vsnprintf.c  pformat.h
 
 dist:
 	mkdir $(distdir)/mingwex

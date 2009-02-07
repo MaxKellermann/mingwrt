@@ -261,7 +261,14 @@ _CRTIMP double __cdecl y1 (double);
 _CRTIMP double __cdecl yn (int, double);
 
 _CRTIMP double __cdecl chgsign (double);
+/*
+ * scalb() is a GCC built-in.
+ * Exclude this _scalb() stub; the semantics are incompatible
+ * with the built-in implementation.
+ *
 _CRTIMP double __cdecl scalb (double, long);
+ *
+ */
 _CRTIMP int __cdecl finite (double);
 _CRTIMP int __cdecl fpclass (double);
 
@@ -305,6 +312,24 @@ extern const long double  __INFL;
 extern const double __QNAN;
 #define NAN __QNAN
 #endif /* __MINGW_GNUC_PREREQ(3, 3) */
+
+/* Use the compiler's builtin define for FLT_EVAL_METHOD to
+   set float_t and double_t.  */
+#if defined(__FLT_EVAL_METHOD__)  
+# if ( __FLT_EVAL_METHOD__== 0)
+typedef float float_t;
+typedef double double_t;
+# elif (__FLT_EVAL_METHOD__ == 1)
+typedef double float_t;
+typedef double double_t;
+# elif (__FLT_EVAL_METHOD__ == 2)
+typedef long double float_t;
+typedef long double double_t;
+#endif
+#else /* ix87 FPU default */
+typedef long double float_t;
+typedef long double double_t;
+#endif
 
 /* 7.12.3.1 */
 
@@ -484,7 +509,7 @@ extern long double __cdecl asinhl (long double);
 
 /* 7.12.5.3 */
 extern double __cdecl atanh (double);
-extern float __cdecl atanf  (float);
+extern float __cdecl atanhf  (float);
 extern long double __cdecl atanhl (long double);
 
 /* Exponentials and logarithms  */

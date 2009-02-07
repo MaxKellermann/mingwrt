@@ -1,3 +1,7 @@
+2009-02-07  Pedro Alves  <pedroalves@users.sourceforge.net>
+
+	Merge from upstream.
+
 2007-12-25  Pedro Alves  <pedro_alves@portugalmail.pt>
 
 	* Makefile.in, mingwex/Makefile.in, profile/Makefile.in: Use
