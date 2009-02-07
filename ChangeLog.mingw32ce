@@ -1,5 +1,16 @@
 2009-02-07  Pedro Alves  <pedroalves@users.sourceforge.net>
 
+	* mingwex/Makefile.in (STDIO_OBJS_CE): Add pformat.o, vsnprintf.o,
+	printf.o, fprintf.o, sprintf.o, vprintf.o, vfprintf.o and
+	vsprintf.o.
+	* mingwex/stdio/pformat.c: Don't include locale.h.
+	(__pformat_exponent_digits): Don't use getenv.
+	(__pformat_t): Don't declare rplen and rpchr fields.
+	(__pformat_emit_radix_point): Don't do localization.
+	(__pformat): Don't initialize rplen or rpchr fields.
+
+2009-02-07  Pedro Alves  <pedroalves@users.sourceforge.net>
+
 	Merge from upstream.
 
 2007-12-25  Pedro Alves  <pedro_alves@portugalmail.pt>

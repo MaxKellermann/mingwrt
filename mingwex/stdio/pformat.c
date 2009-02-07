@@ -62,7 +62,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <limits.h>
+#ifndef __COREDLL__
 #include <locale.h>
+#endif
 #include <wchar.h>
 #include <math.h>
 
@@ -175,7 +177,11 @@
 static __inline__ __attribute__((__always_inline__))
 int __pformat_exponent_digits( void )
 {
+#ifdef __COREDLL__
+  char *exponent_digits = NULL;
+#else
   char *exponent_digits = getenv( "PRINTF_EXPONENT_DIGITS" );
+#endif
   return ((exponent_digits != NULL) && ((unsigned)(*exponent_digits - '0') < 3))
     || (_get_output_format() & _TWO_DIGIT_EXPONENT)
     ? 2
@@ -252,8 +258,10 @@ typedef struct
   int            flags;
   int            width;
   int            precision;
+#ifndef __COREDLL__
   int            rplen;
   wchar_t        rpchr;
+#endif
   int            count;
   int            quota;
   int            expmin;
@@ -864,6 +872,7 @@ char *__pformat_fcvt( long double x, int precision, int *dp, int *sign )
 static __inline__
 void __pformat_emit_radix_point( __pformat_t *stream )
 {
+#ifndef __COREDLL__
   /* Helper to place a localised representation of the radix point
    * character at the ultimate destination, when formatting fixed or
    * floating point numbers.
@@ -922,6 +931,7 @@ void __pformat_emit_radix_point( __pformat_t *stream )
   }
 
   else
+#endif
     /* No localisation: just use ASCII '.'...
      */
     __pformat_putc( '.', stream );
@@ -1791,8 +1801,10 @@ int __pformat( int flags, void *dest, int max, const char *fmt, va_list argv )
     flags &= PFORMAT_TO_FILE | PFORMAT_NOLIMIT,	/* only these valid initially */
     PFORMAT_IGNORE,				/* no field width yet         */
     PFORMAT_IGNORE,				/* nor any precision spec     */
+#ifndef __COREDLL__
     PFORMAT_RPINIT,				/* radix point uninitialised  */
     (wchar_t)(0),				/* leave it unspecified       */
+#endif
     0,						/* zero output char count     */
     max,					/* establish output limit     */
     PFORMAT_MINEXP				/* exponent chars preferred   */

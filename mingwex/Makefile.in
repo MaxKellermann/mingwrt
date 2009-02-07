@@ -172,7 +172,8 @@ STDIO_OBJS = \
 	printf.o fprintf.o sprintf.o vprintf.o vfprintf.o vsprintf.o
 #TODO: Try out the new objects here?
 STDIO_OBJS_CE = \
-	snprintf.o vsnprintf.o snwprintf.o vsnwprintf.o
+	pformat.o snprintf.o vsnprintf.o snwprintf.o vsnwprintf.o \
+	printf.o fprintf.o sprintf.o vprintf.o vfprintf.o vsprintf.o
 MATH_OBJS = \
 	acosf.o acosl.o asinf.o asinl.o atan2f.o atan2l.o \
 	atanf.o atanl.o cbrt.o cbrtf.o cbrtl.o ceilf.o ceill.o \
