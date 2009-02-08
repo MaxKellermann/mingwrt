@@ -172,7 +172,9 @@ THIS SOFTWARE.
 
 #define INFNAN_CHECK 1
 #define MULTIPLE_THREADS 1
+#ifndef __COREDLL__
 #define USE_LOCALE 1
+#endif
 
 #ifdef DEBUG
 #include <stdio.h>
@@ -201,6 +203,10 @@ extern Char *MALLOC ANSI((size_t));
 #endif
 #ifdef IEEE_8087
 #define IEEE_Arith
+#endif
+
+#ifdef __COREDLL__
+#define NO_ERRNO
 #endif
 
 #ifndef NO_ERRNO

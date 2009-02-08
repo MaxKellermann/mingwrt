@@ -1,5 +1,11 @@
 2009-02-07  Pedro Alves  <pedroalves@users.sourceforge.net>
 
+	* mingwex/Makefile.in (LIB_OBJS): Also pull in $(GDTOA_OBJS).
+	* mingwex/gdtoa/gdtoaimp.h [__COREDLL__]: Don't define USE_LOCALE.
+	Define NO_ERRNO.
+
+2009-02-07  Pedro Alves  <pedroalves@users.sourceforge.net>
+
 	* mingwex/Makefile.in (STDIO_OBJS_CE): Add pformat.o, vsnprintf.o,
 	printf.o, fprintf.o, sprintf.o, vprintf.o, vfprintf.o and
 	vsprintf.o.

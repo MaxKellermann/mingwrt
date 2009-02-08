@@ -257,7 +257,7 @@ MATHCE_FLAGS=
 ifneq (,$(findstring mingw32ce,$(host_alias)))
 LIB_OBJS = $(WINCE_OBJS) $(MATHCE_OBJS) $(MATCHCE_ROUND_OBJS) \
 	$(Q8_OBJS) $(STDIO_OBJS_CE) \
-	$(POSIX_OBJS)
+	$(POSIX_OBJS) $(GDTOA_OBJS)
 MATHCE_FLAGS=-D_IEEE_LIBM
 MATHDIR=mathce
 else
