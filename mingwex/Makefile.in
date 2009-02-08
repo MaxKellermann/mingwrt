@@ -328,7 +328,12 @@ distclean:
 # (in the parent directory) to maintain forward compatibility
 # for earlier versions of MSVCRT.DLL
 #
-PFORMAT_CFLAGS = $(ALL_CFLAGS) -I $(srcdir)/gdtoa -D__MSVCRT_VERSION__=0x0800
+PFORMAT_CFLAGS = $(ALL_CFLAGS) -I $(srcdir)/gdtoa
+
+ifeq (,$(findstring mingw32ce,$(host_alias)))
+PFORMAT_CFLAGS:=$(PFORMAT_CFLAGS) -D__MSVCRT_VERSION__=0x0800
+endif
+
 pformat.o: pformat.c pformat.h
 	$(CC) -c $(PFORMAT_CFLAGS) $(srcdir)/stdio/$*.c -o $@
 

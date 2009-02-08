@@ -1,5 +1,12 @@
 2009-02-08  Pedro Alves  <pedroalves@users.sourceforge.net>
 
+	* include/_mingw.h (__MSVCRT_VERSION__): Only define if __MSVCRT__
+	is defined.
+	* mingwex/Makefile.in (PFORMAT_CFLAGS): Don't define
+	__MSVCRT_VERSION__ when building for mingw32ce.
+
+2009-02-08  Pedro Alves  <pedroalves@users.sourceforge.net>
+
 	* Makefile.in (install-headers): New rule.
 
 2009-02-07  Pedro Alves  <pedroalves@users.sourceforge.net>

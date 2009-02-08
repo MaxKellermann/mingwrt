@@ -230,7 +230,7 @@
 /* TODO: Mark (almost) all CRT functions as __MINGW_NOTHROW.  This will
 allow GCC to optimize away some EH unwind code, at least in DW2 case.  */
 
-#ifndef __MSVCRT_VERSION__
+#if defined __MSVCRT__ && !defined (__MSVCRT_VERSION__)
 /*  High byte is the major version, low byte is the minor. */
 # define __MSVCRT_VERSION__ 0x0600
 #endif
