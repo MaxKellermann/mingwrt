@@ -1,3 +1,7 @@
+2009-02-08  Pedro Alves  <pedroalves@users.sourceforge.net>
+
+	* Makefile.in (install-headers): New rule.
+
 2009-02-07  Pedro Alves  <pedroalves@users.sourceforge.net>
 
 	* mingwex/Makefile.in (LIB_OBJS): Also pull in $(GDTOA_OBJS).

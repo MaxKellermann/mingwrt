@@ -502,6 +502,15 @@ install-dirs:
 	$(mkinstalldirs) $(inst_docdir)
 	$(mkinstalldirs) $(mandir)/man$(mansection)
 
+install-headers: install-dirs
+	for sub in . sys ; do \
+		dstdir=$(inst_includedir)/$$sub ; \
+		$(mkinstalldirs) $$dstdir ; \
+		for i in $(srcdir)/include/$$sub/*.h ; do \
+		  $(INSTALL_DATA) $$i $$dstdir/`basename $$i` ; \
+		done ; \
+	done
+
 install: all install-dirs $(install_dlls_host)
 	for i in $(LIBS); do \
 		$(INSTALL_DATA) $$i $(inst_libdir)/$$i ; \
