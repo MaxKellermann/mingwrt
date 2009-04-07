@@ -1,3 +1,8 @@
+2009-04-07  Danny Backx  <dannybackx@users.sourceforge.net>
+
+	* include/stdio.h (_wfdopen) : Add const keyword to 2nd parameter
+	after discussion on the mailing list.
+
 2009-02-08  Pedro Alves  <pedroalves@users.sourceforge.net>
 
 	* include/_mingw.h (__MSVCRT_VERSION__): Only define if __MSVCRT__
