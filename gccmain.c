@@ -19,7 +19,7 @@ extern func_ptr __CTOR_LIST__[];
 extern func_ptr __DTOR_LIST__[];
 
 void
-__do_global_dtors (void)
+__mingw_do_global_dtors (void)
 {
   static func_ptr *p = __DTOR_LIST__ + 1;
 
@@ -35,7 +35,7 @@ __do_global_dtors (void)
 }
 
 void
-__do_global_ctors (void)
+__mingw_do_global_ctors (void)
 {
   unsigned long nptrs = (unsigned long) __CTOR_LIST__[0];
   unsigned i;
@@ -51,7 +51,7 @@ __do_global_ctors (void)
 	;
     }
 
-  /* 
+  /*
    * Go through the list backwards calling constructors.
    */
   for (i = nptrs; i >= 1; i--)
@@ -62,7 +62,7 @@ __do_global_ctors (void)
   /*
    * Register the destructors for processing on exit.
    */
-  atexit (__do_global_dtors);
+  atexit (__mingw_do_global_dtors);
 }
 
 static int initialized = 0;
@@ -77,7 +77,7 @@ __gccmain (void)
   if (!initialized)
     {
       initialized = 1;
-      __do_global_ctors ();
+      __mingw_do_global_ctors ();
     }
 }
 
