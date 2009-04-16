@@ -204,10 +204,14 @@
 #define __MINGW_ATTRIB_NONNULL(arg)
 #endif /* GNUC >= 3.3 */
 
-#ifdef UNDER_CE
+#if defined(UNDER_CE) && defined(__ARM__)
 /* ARM Windows CE is not underscored.  */
 # define __U(SYM) _ ## SYM
 # define __IMP(S) __imp_ ## S
+#elif defined(UNDER_CE) && defined(i386)
+/* i386 Windows CE versions are underscored.  */
+# define __U(SYM) SYM
+# define __IMP(S) _imp__ ## S
 #else
 /* Desktop i386 Windows versions are underscored.  */
 # define __U(SYM) SYM

@@ -284,9 +284,19 @@ libmingwthrd.a: crtmt.o mingwthrd.def
 	$(AR) $(ARFLAGS) $@ crtmt.o
 	$(RANLIB) $@
 
+#
+# Special rule because this target has a leading underscore
+# where others (ARM) do not.
+#
+ifeq ($(target_alias),i386-mingw32ce)
+DLLSTARTUPSYM=_DllMainCRTStartup
+else
+DLLSTARTUPSYM=DllMainCRTStartup
+endif
+
 DLL_OFILES        = mthr.o mthr_init.o
 DLL_CC_STUFF      = -B./ -shared $(MNO_CYGWIN) -Wl,--image-base,0x6FBC0000 \
-		    -Wl,--entry,DllMainCRTStartup \
+		    -Wl,--entry,$(DLLSTARTUPSYM) \
                     $(DLL_OFILES) mingwthrd.def \
 		    -Lmingwex
 
@@ -356,7 +366,7 @@ libmoldname90.a libmoldname90d.a: moldname-msvcrt.def $(MOLD_OBJS)
 
 libceoldname.a: moldname-coredll.def $(MOLD_OBJS)
 	$(DLLTOOL) --as $(AS) -k -U	\
-		--dllname coredll.dll	\
+		--dllname COREDLL	\
 		--def moldname-coredll.def	\
 		--output-lib $@
 	$(AR) rc $@ $(MOLD_OBJS)

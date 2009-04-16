@@ -1,3 +1,9 @@
+2009-04-16  Danny Backx  <dannybackx@users.sourceforge.net>
+
+	* Makefile.in (DLLSTARTUPSYM): Create extra variable to prefix
+	the DllMainCRTStartup symbol with an underscore when on an x86 target.
+	* include/_mingw.h (__U, __IMP) : Define them separately for x86.
+
 2009-04-16  Johnny Willemsen <jwillemsen@remedy.nl>
 
 	* gccmain.c (do_global_dtors, do_global_ctors): Add _mingw prefix
