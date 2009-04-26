@@ -213,7 +213,7 @@ MOLD_OBJS = isascii.o iscsym.o iscsymf.o toascii.o \
 	strcasecmp.o strncasecmp.o wcscmpi.o
 
 ifneq (,$(findstring mingw32ce,$(target_alias)))
-LIBS = libcoredll.a \
+LIBS = libcoredll.a libcoredll6.a \
        libmingw32.a \
        libceoldname.a \
        $(LIBM_A) \
@@ -575,6 +575,7 @@ force:
 # Dependencies
 #
 libcoredll.a: coredll.def
+libcoredll6.a: coredll6.def
 libcrtdll.a: crtdll.def
 libmsvcrt.a: msvcrt.def
 libmsvcrtd.a: msvcrtd.def
@@ -618,6 +619,9 @@ NM_LOOKUP = $(NM) $@ | sed -n \
 
 MINGW_REPL_FUNCS = printf fprintf sprintf vprintf vfprintf vsprintf
 
+libcoredll6.a: coredll6.def
+	$(DLLTOOL) --as=$(AS) -k --dllname coredll.dll --output-lib $@ --def $<
+
 lib%.a: %.def
 	$(DLLTOOL) --as=$(AS) -k --dllname $*.dll --output-lib $@ --def $<
 	for key in $(MINGW_REPL_FUNCS); do \
@@ -630,8 +634,6 @@ lib%.a: %.def
 	      --redefine-sym __imp__$$key=__imp__$(sym_prefix)_$$key \
 	      $$src $$dst; \
 	  fi; done; \
-	test `key=_get_output_format; $(NM_LOOKUP)` || \
-	  repl="$$repl ofmt_stub.o"; \
 	test -n "$$repl" && $(AR) rcs $@ $$repl; \
 	$(RM) $$tmpfiles
 

@@ -1,3 +1,12 @@
+2009-04-26  Danny Backx  <dannybackx@users.sourceforge.net>
+
+	* coredll6.def : New file.
+	* Makefile.in (libcoredll6.a) : New target to build a library that
+	supports APIs new to higher versions of CE (to be sure that people
+	who also aim older devices can develop with the regular library).
+	* Makefile.in (lib%.a) : Remove the rule for ofmt_stub.o, it always
+	fails because it relies on a function that is a macro in our sources.
+
 2009-04-22  Danny Backx  <dannybackx@users.sourceforge.net>
 
 	* include/_mingw.h : Change test to check for __arm__ instead of
