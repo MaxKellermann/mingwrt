@@ -1672,5 +1672,5 @@ GetDeviceInformationByFileHandle
 CaptureDumpFileOnDevice
 ReportFault
 LockFileEx
-UnLockFileEx
+UnlockFileEx
 GetSystemTimeAsFileTime
