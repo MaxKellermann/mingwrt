@@ -1669,3 +1669,8 @@ FindFirstDevice
 FindNextDevice
 GetDeviceInformationByDeviceHandle
 GetDeviceInformationByFileHandle
+CaptureDumpFileOnDevice
+ReportFault
+LockFileEx
+UnLockFileEx
+GetSystemTimeAsFileTime

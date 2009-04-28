@@ -1,3 +1,8 @@
+2009-04-28  Danny Backx  <dannybackx@users.sourceforge.net>
+
+	* coredll6.def (LockFileEx,UnLockFileEx,GetSystemTimeAsFileTime) :
+	Add. See feature request #2750015.
+
 2009-04-26  Danny Backx  <dannybackx@users.sourceforge.net>
 
 	* coredll6.def : New file.
