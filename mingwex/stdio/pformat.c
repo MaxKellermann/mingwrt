@@ -729,7 +729,11 @@ typedef union
   unsigned long          __pformat_fpreg_bits;
 } __pformat_fpreg_t;
 
-#ifdef _WIN32
+/*
+ * Something is wrong in the #if part of the code.
+ * Changing the _WIN32 to _WIN32x so we take the #else part for now.
+ */
+#ifdef _WIN32x
 /* TODO: make this unconditional in final release...
  * (see note at head of associated `#else' block.
  */

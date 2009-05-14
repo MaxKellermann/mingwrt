@@ -1,3 +1,8 @@
+2009-05-14  Danny Backx  <dannybackx@users.sourceforge.net>
+
+	* mingwex/stdio/pformat.c : Work around %f issue by selecting the
+	older implementation.
+
 2009-04-28  Danny Backx  <dannybackx@users.sourceforge.net>
 
 	* coredll6.def (LockFileEx,UnLockFileEx,GetSystemTimeAsFileTime) :
