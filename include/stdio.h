@@ -561,13 +561,11 @@ _CRTIMP FILE* __cdecl __MINGW_NOTHROW	_fdopen (int, const char*);
 _CRTIMP FILE* __cdecl __MINGW_NOTHROW	_fsopen (const char*, const char*, int);
 #endif
 #ifdef __COREDLL__
-/* We know the Microsoft defines _fileno as returning
-   a void* (HANDLE), but that is so anoying, that we
-   define it as returning int, which is ok on arm (32-bit).
-_CRTIMP void* __cdecl _fileno (FILE*); */
-_CRTIMP int __cdecl __MINGW_NOTHROW	_fileno (FILE*);
+/* Define _fileno as a void * which appears to be the sensible thing to do,
+ * even though MSDN claims otherwise. */
+_CRTIMP void * __cdecl __MINGW_NOTHROW	_fileno (FILE*);
 #else
-_CRTIMP int __cdecl __MINGW_NOTHROW	_fileno (FILE*);
+_CRTIMP void * __cdecl __MINGW_NOTHROW	_fileno (FILE*);
 #endif
 _CRTIMP int __cdecl __MINGW_NOTHROW	_fcloseall (void);
 #ifdef __MSVCRT__
@@ -590,13 +588,11 @@ _CRTIMP FILE* __cdecl __MINGW_NOTHROW	fdopen (int, const char*);
 #ifndef __COREDLL__
 _CRTIMP int __cdecl __MINGW_NOTHROW	fgetchar (void);
 _CRTIMP int __cdecl __MINGW_NOTHROW	fputchar (int);
-_CRTIMP int __cdecl __MINGW_NOTHROW	fileno (FILE*);
+_CRTIMP void * __cdecl __MINGW_NOTHROW	fileno (FILE*);
 #else
-/* We know the Microsoft defines _fileno as returning
-   a void* (HANDLE), but that is so anoying, that we
-   define it as returning int, which is ok on arm (32-bit).
-_CRTIMP void* __cdecl __MINGW_NOTHROW fileno (FILE*); */
-_CRTIMP int __cdecl __MINGW_NOTHROW	fileno (FILE*);
+/* Define fileno as a void * which appears to be the sensible thing to do,
+ * even though MSDN claims otherwise. */
+_CRTIMP void * __cdecl __MINGW_NOTHROW	fileno (FILE*);
 #endif
 #endif	/* Not _NO_OLDNAMES */
 

@@ -1,3 +1,7 @@
+2009-05-18  Danny Backx  <dannybackx@users.sourceforge.net>
+
+	* include/stdio.h (fileno, _fileno) : Define as void* instead of int.
+
 2009-05-14  Danny Backx  <dannybackx@users.sourceforge.net>
 
 	* mingwex/stdio/pformat.c : Work around %f issue by selecting the
