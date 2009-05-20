@@ -149,10 +149,12 @@ _CRTIMP long __cdecl __MINGW_NOTHROW _findfirst (const char*, struct _finddata_t
 _CRTIMP int __cdecl __MINGW_NOTHROW _findnext (long, struct _finddata_t*);
 _CRTIMP int __cdecl __MINGW_NOTHROW _findclose (long);
 
+#ifndef UNDER_CE
 _CRTIMP int __cdecl __MINGW_NOTHROW _chdir (const char*);
 _CRTIMP char* __cdecl __MINGW_NOTHROW _getcwd (char*, int);
-_CRTIMP int __cdecl __MINGW_NOTHROW _mkdir (const char*);
 _CRTIMP char* __cdecl __MINGW_NOTHROW _mktemp (char*);
+#endif
+_CRTIMP int __cdecl __MINGW_NOTHROW _mkdir (const char*);
 _CRTIMP int __cdecl __MINGW_NOTHROW _rmdir (const char*);
 _CRTIMP int __cdecl __MINGW_NOTHROW _chmod (const char*, int);
 
@@ -180,10 +182,12 @@ __CRT_INLINE off64_t lseek64 (int fd, off64_t offset, int whence)
 #ifndef _NO_OLDNAMES
 
 #ifndef _UWIN
+#ifndef UNDER_CE
 _CRTIMP int __cdecl __MINGW_NOTHROW chdir (const char*);
 _CRTIMP char* __cdecl __MINGW_NOTHROW getcwd (char*, int);
-_CRTIMP int __cdecl __MINGW_NOTHROW mkdir (const char*);
 _CRTIMP char* __cdecl __MINGW_NOTHROW mktemp (char*);
+#endif
+_CRTIMP int __cdecl __MINGW_NOTHROW mkdir (const char*);
 _CRTIMP int __cdecl __MINGW_NOTHROW rmdir (const char*);
 _CRTIMP int __cdecl __MINGW_NOTHROW chmod (const char*, int);
 #endif /* _UWIN */

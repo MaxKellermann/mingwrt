@@ -2,6 +2,7 @@
 
 	* mingwex/wince/findfile.c (_findnext) : Return 0, not the handle, on
 	success.
+	* include/io.h (getcwd,chdir,mktemp) : Remove definitions.
 
 2009-05-18  Danny Backx  <dannybackx@users.sourceforge.net>
 
