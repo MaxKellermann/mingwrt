@@ -1,3 +1,8 @@
+2009-05-20  Vincent Richomme  <forumer@smartmobili.com>
+
+	* Makefile.in : replace COREDLL by coredll.dll in definition of
+	libceoldname, to decrease different DLL loads in applications.
+
 2009-05-20  Danny Backx  <dannybackx@users.sourceforge.net>
 
 	* mingwex/wince/findfile.c (_findnext) : Return 0, not the handle, on

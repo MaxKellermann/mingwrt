@@ -366,7 +366,7 @@ libmoldname90.a libmoldname90d.a: moldname-msvcrt.def $(MOLD_OBJS)
 
 libceoldname.a: moldname-coredll.def $(MOLD_OBJS)
 	$(DLLTOOL) --as $(AS) -k -U	\
-		--dllname COREDLL	\
+		--dllname coredll.dll	\
 		--def moldname-coredll.def	\
 		--output-lib $@
 	$(AR) rc $@ $(MOLD_OBJS)
