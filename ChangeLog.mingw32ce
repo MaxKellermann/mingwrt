@@ -1,3 +1,8 @@
+2009-05-20  Danny Backx  <dannybackx@users.sourceforge.net>
+
+	* mingwex/wince/findfile.c (_findnext) : Return 0, not the handle, on
+	success.
+
 2009-05-18  Danny Backx  <dannybackx@users.sourceforge.net>
 
 	* include/stdio.h (fileno, _fileno) : Define as void* instead of int.

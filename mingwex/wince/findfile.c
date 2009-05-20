@@ -124,5 +124,5 @@ _findnext (long h, struct _finddata_t * f)
     return -1;
 
   tofinddataa (f, &wf);
-  return h;
+  return 0;
 }
