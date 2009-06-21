@@ -29,7 +29,13 @@ extern "C" {
  *       contents could be different on an Alpha or something else.
  */
 #if defined (__i386__)
+#if  defined(__MINGW32CE__)
+  /* Definition for the assembler setjmp/longjmp copied from newlib into mingwex */
+# define _JBLEN 20
+#else
+  /* Native (?) windows ce longjmp */
 # define _JBLEN 16
+#endif
 #elif defined (__arm__)
 # define _JBLEN 11
 #endif

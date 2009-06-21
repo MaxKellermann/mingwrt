@@ -1,3 +1,10 @@
+2009-06-21  Danny Backx  <dannybackx@users.sourceforge.net>
+
+	* mingwex/wince/i386/setjmp.S,i386mach.h : New files, implement setjmp
+	and longjmp on i386 because the CE support is absent.
+	* include/setjmp.h (_JBLEN) : Set the right size for jmp_buf.
+	* mingwex/Makefile.in : Build the new sources on i386 only.
+
 2009-05-20  Vincent Richomme  <forumer@smartmobili.com>
 
 	* Makefile.in : replace COREDLL by coredll.dll in definition of
