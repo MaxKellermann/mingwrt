@@ -590,11 +590,6 @@ __CRT_INLINE wchar_t*  __cdecl __MINGW_NOTHROW ulltow (unsigned long long _n, wc
 
 #endif /* __MSVCRT__ */
 
-#if defined (__COREDLL__) /* these are stubs for MS _i64 versions */ 
-__CRT_INLINE long long  __cdecl __MINGW_NOTHROW atoll (const char * _c)
-{ return _atoi64 (_c); }
-#endif
-
 #endif /* !__NO_ISOCEXT */
 
 

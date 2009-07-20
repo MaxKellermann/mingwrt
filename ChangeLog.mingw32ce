@@ -2,6 +2,7 @@
 
 	* include/stdlib.h : Move atoll definition out of __STRICT_ANSI__, see
 	bug #2821869.
+	* include/stdlib.h : Remove the __COREDLL__ definition of atoll.
 
 2009-07-20  Danny Backx  <dannybackx@users.sourceforge.net>
 
