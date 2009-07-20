@@ -39,7 +39,8 @@ DISTFILES = \
 	wcrtomb.c wctob.c mbrtowc.c btowc.c mb_wc_common.h \
 	gettimeofday.c isblank.c iswblank.c \
 	basename.c dirname.c usleep.c \
-	tsearch.c twalk.c tdelete.c tfind.c
+	tsearch.c twalk.c tdelete.c tfind.c \
+	wince/i386/setjmp.S wince/i386/i386mach.h
 
 MATH_DISTFILES = \
 	acosf.c acosl.c asinf.c asinl.c atan2f.c atan2l.c \
@@ -163,7 +164,7 @@ CTYPE_OBJS = \
 STDLIB_STUB_OBJS = \
 	lltoa.o ulltoa.o \
 	lltow.o ulltow.o \
-	atoll.o wtoll.o \
+	wtoll.o \
 	_Exit.o
 STDIO_OBJS = \
 	fopen64.o fseeko64.o ftello64.o lseek64.o \
@@ -201,6 +202,8 @@ MATH_OBJS = \
 	tgammaf.o tgammal.o trunc.o truncf.o truncl.o \
 	acosh.o acoshf.o acoshl.o asinh.o asinhf.o asinhl.o \
 	atanh.o atanhf.o atanhl.o
+C99OBJS = \
+	atoll.o
 MATH_ROUND_OBJS = round.o roundf.o roundl.o
 MATH_LROUND_OBJS = lround.o lroundf.o lroundl.o
 MATH_LLROUND_OBJS = llround.o llroundf.o llroundl.o
@@ -257,7 +260,7 @@ MATHCE_FLAGS=
 ifneq (,$(findstring mingw32ce,$(host_alias)))
 LIB_OBJS = $(WINCE_OBJS) $(MATHCE_OBJS) $(MATCHCE_ROUND_OBJS) \
 	$(Q8_OBJS) $(STDIO_OBJS_CE) \
-	$(POSIX_OBJS) $(GDTOA_OBJS)
+	$(POSIX_OBJS) $(GDTOA_OBJS) $(C99OBJS)
 MATHCE_FLAGS=-D_IEEE_LIBM
 MATHDIR=mathce
 else
@@ -265,8 +268,14 @@ LIB_OBJS = $(Q8_OBJS)  $(CTYPE_OBJS) $(STDLIB_STUB_OBJS) \
 	$(STDIO_OBJS) $(MATH_OBJS) $(MATH_ROUND_OBJS) \
 	$(MATH_LROUND_OBJS) $(MATH_LLROUND_OBJS) $(FENV_OBJS) \
 	$(POSIX_OBJS) $(REPLACE_OBJS) $(COMPLEX_OBJS) \
-	$(GDTOA_OBJS)
+	$(GDTOA_OBJS) $(C99OBJS)
 MATHDIR=math
+endif
+
+ifeq (,$(findstring i386,$(host_alias)))
+# Do nothing, only i386 supported
+else
+	POSIX_OBJS += setjmp.o
 endif
 
 VPATH = $(srcdir):$(srcdir)/stdio:$(srcdir)/complex:$(srcdir)/wince:$(srcdir)/$(MATHDIR):$(srcdir)/gdtoa
@@ -398,3 +407,10 @@ dist:
 	@for i in $(GDTOA_DISTFILES); do\
 		cp -p $(srcdir)/gdtoa/$$i $(distdir)/mingwex/gdtoa/$$i ; \
 	done
+
+ifeq (,$(findstring i386,$(host_alias)))
+# Do nothing, only i386 supported
+else
+setjmp.o:
+	$(CC) -c -I$(srcdir)/wince/i386 $(srcdir)/wince/i386/setjmp.S
+endif
