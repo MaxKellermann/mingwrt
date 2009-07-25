@@ -286,10 +286,10 @@ _CRTIMP int __cdecl __MINGW_NOTHROW _wcreat(const wchar_t*, int);
 #if defined (__MSVCRT__) || defined (__COREDLL__)
 _CRTIMP long __cdecl __MINGW_NOTHROW _wfindfirst(const wchar_t*, struct _wfinddata_t*);
 _CRTIMP int __cdecl __MINGW_NOTHROW _wfindnext(long, struct _wfinddata_t *);
+_CRTIMP int __cdecl __MINGW_NOTHROW _wopen(const wchar_t*, int, ...);
 #endif
 #if defined (__MSVCRT__)
 _CRTIMP int __cdecl __MINGW_NOTHROW _wunlink(const wchar_t*);
-_CRTIMP int __cdecl __MINGW_NOTHROW _wopen(const wchar_t*, int, ...);
 _CRTIMP int __cdecl __MINGW_NOTHROW _wsopen(const wchar_t*, int, int, ...);
 _CRTIMP wchar_t * __cdecl __MINGW_NOTHROW _wmktemp(wchar_t*);
 _CRTIMP long __cdecl __MINGW_NOTHROW _wfindfirsti64(const wchar_t*, struct _wfinddatai64_t*);

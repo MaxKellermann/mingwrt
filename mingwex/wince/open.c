@@ -4,18 +4,13 @@
 #include <sys/stat.h>
 
 static int
-vopen (const char *path, int oflag, va_list ap)
+vwopen (const wchar_t *wpath, int oflag, va_list ap)
 {
-  wchar_t wpath[MAX_PATH];
   DWORD fileaccess;
   DWORD fileshare;
   DWORD filecreate;
   DWORD fileattrib;
   HANDLE hnd;
-
-  size_t path_len = strlen (path);
-  if (path_len >= MAX_PATH)
-    return -1;
 
   switch (oflag & (O_RDONLY | O_WRONLY | O_RDWR))
     {
@@ -58,8 +53,6 @@ vopen (const char *path, int oflag, va_list ap)
       return -1;
     }
 
-  mbstowcs (wpath, path, path_len + 1);
-
   fileshare = 0;
   if (oflag & O_CREAT)
     {
@@ -83,6 +76,20 @@ vopen (const char *path, int oflag, va_list ap)
   return (int) hnd;
 }
 
+static int
+vopen (const char *path, int oflag, va_list ap)
+{
+  wchar_t wpath[MAX_PATH];
+
+  size_t path_len = strlen (path);
+  if (path_len >= MAX_PATH)
+    return -1;
+
+  mbstowcs (wpath, path, path_len + 1);
+
+  return vwopen (wpath, oflag, ap);
+}
+
 int
 _open (const char *path, int oflag, ...)
 {
@@ -101,6 +108,17 @@ open (const char *path, int oflag, ...)
   int ret;
   va_start (ap, oflag);
   ret = vopen (path, oflag, ap);
+  va_end (ap);
+  return ret;
+}
+
+int
+_wopen (const wchar_t *path, int oflag, ...)
+{
+  va_list ap;
+  int ret;
+  va_start (ap, oflag);
+  ret = vwopen (path, oflag, ap);
   va_end (ap);
   return ret;
 }
