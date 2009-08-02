@@ -21,7 +21,9 @@
 extern "C" {
 #endif
 
-#ifndef __COREDLL__
+#ifdef __COREDLL__
+# include_next <conio.h>
+#else
 
 _CRTIMP char* __cdecl __MINGW_NOTHROW	_cgets (char*);
 _CRTIMP int __cdecl __MINGW_NOTHROW	_cprintf (const char*, ...);
