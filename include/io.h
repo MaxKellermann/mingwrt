@@ -60,6 +60,7 @@ typedef	unsigned long	_fsize_t;
  * The following structure is filled in by _findfirst or _findnext when
  * they succeed in finding a match.
  */
+#ifndef _FINDDATA_T_DEFINED
 struct _finddata_t
 {
 	unsigned	attrib;		/* Attributes, see constants above. */
@@ -94,6 +95,9 @@ struct __finddata64_t {
 #endif
 
 #endif
+
+#define _FINDDATA_T_DEFINED
+#endif	/* _FINDDATA_T_DEFINED */
 
 #ifndef _WFINDDATA_T_DEFINED
 struct _wfinddata_t {
