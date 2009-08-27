@@ -1,4 +1,10 @@
+2009-08-27  Vincent Torri  <vtorri@univ-evry.fr>
+	    Danny Backx    <dannybackx@users.sourceforge.net>
+
+	* include/sys/time.h (struct timezone) : Protect by _TIMEZONE_DEFINED.
+
 2009-08-26  Vincent Torri  <vtorri@univ-evry.fr>
+	    Danny Backx    <dannybackx@users.sourceforge.net>
 
 	* include/io.h (_finddata_t, _finddatai64_t, __finddata64_t) :
 	Protect by _FINDDATA_T_DEFINED.

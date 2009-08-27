@@ -23,11 +23,14 @@ struct timeval {
 /* Provided for compatibility with code that assumes that
    the presence of gettimeofday function implies a definition
    of struct timezone. */
+#ifndef _TIMEZONE_DEFINED
 struct timezone
 {
   int tz_minuteswest; /* of Greenwich */
   int tz_dsttime;     /* type of dst correction to apply */
 };
+#define _TIMEZONE_DEFINED
+#endif
 
 /*
    Implementation as per:
