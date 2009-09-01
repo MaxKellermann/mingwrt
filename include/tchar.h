@@ -416,5 +416,17 @@ typedef char	_TCHAR;
 #define _TEXT(x)	__TEXT(x)
 #define	_T(x)		__TEXT(x)
 
+/*
+ */
+#ifdef	_UNICODE
+#define	_tcsnccpy	wcsncpy
+#define	_tcsncpy	wcsncpy
+#define	_tcsclen	wcslen
+#else
+#define	_tcsnccpy	strncpy
+#define	_tcsncpy	strncpy
+#define	_tcsclen	strlen
+#endif
+
 #endif	/* Not _TCHAR_H_ */
 
