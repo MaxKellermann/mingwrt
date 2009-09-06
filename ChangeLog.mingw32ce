@@ -1,4 +1,12 @@
-2009-02-08  Pedro Alves  <pedroalves@users.sourceforge.net>
+2009-09-06  Pedro Alves  <pedroalves@users.sourceforge.net>
+
+	* Makefile.in (libceoldname.a): Specify COREDLL.dll as dll name,
+	not coredll.dll.
+	(libcoredll6.a): Remove rule.
+	(lib%.a): Don't pass --dllname to dlltool if the .def file already
+	specifies one with LIBRARY.
+
+2009-09-06  Pedro Alves  <pedroalves@users.sourceforge.net>
 
 	* abort.c (abort): Exit with exit code 1 instead of 0.
 

@@ -366,7 +366,7 @@ libmoldname90.a libmoldname90d.a: moldname-msvcrt.def $(MOLD_OBJS)
 
 libceoldname.a: moldname-coredll.def $(MOLD_OBJS)
 	$(DLLTOOL) --as $(AS) -k -U	\
-		--dllname coredll.dll	\
+		--dllname COREDLL.dll	\
 		--def moldname-coredll.def	\
 		--output-lib $@
 	$(AR) rc $@ $(MOLD_OBJS)
@@ -619,11 +619,12 @@ NM_LOOKUP = $(NM) $@ | sed -n \
 
 MINGW_REPL_FUNCS = printf fprintf sprintf vprintf vfprintf vsprintf
 
-libcoredll6.a: coredll6.def
-	$(DLLTOOL) --as=$(AS) -k --dllname coredll.dll --output-lib $@ --def $<
-
+# If the .def file specifies an explicit LIBRARY name, then don't
+# override it with --dllname.
 lib%.a: %.def
-	$(DLLTOOL) --as=$(AS) -k --dllname $*.dll --output-lib $@ --def $<
+	grep -q "^LIBRARY " $< 2>&1 1>/dev/null \
+		&& $(DLLTOOL) --as=$(AS) -k --output-lib $@ --def $< \
+		|| $(DLLTOOL) --as=$(AS) -k --dllname $*.dll --output-lib $@ --def $<
 	for key in $(MINGW_REPL_FUNCS); do \
 	  src=`$(NM_LOOKUP)`; \
 	  if test -n "$$src"; then \
