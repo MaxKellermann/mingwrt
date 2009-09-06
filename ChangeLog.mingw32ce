@@ -1,92 +1,94 @@
 2009-09-01  Danny Backx  <dannybackx@users.sourceforge.net>
 
-	* include/tchar.h (_tcsnccpy, _tcsncpy, _tcsclen) : Define.
+	* include/tchar.h (_tcsnccpy, _tcsncpy, _tcsclen): Define.
 
 2009-08-27  Vincent Torri  <vtorri@univ-evry.fr>
 	    Danny Backx    <dannybackx@users.sourceforge.net>
 
-	* include/sys/time.h (struct timezone) : Protect by _TIMEZONE_DEFINED.
+	* include/sys/time.h (struct timezone): Protect by
+	_TIMEZONE_DEFINED.
 
 2009-08-26  Vincent Torri  <vtorri@univ-evry.fr>
 	    Danny Backx    <dannybackx@users.sourceforge.net>
 
-	* include/io.h (_finddata_t, _finddatai64_t, __finddata64_t) :
+	* include/io.h (_finddata_t, _finddatai64_t, __finddata64_t):
 	Protect by _FINDDATA_T_DEFINED.
 
 2009-07-25  Martin Storsjö  <martin@martin.st>
 
-	* include/conio.h : Make conio.h unavailable on mingw32ce.
+	* include/conio.h: Make conio.h unavailable on mingw32ce.
 
 2009-07-25  Martin Storsjö  <martin@martin.st>
 
-	* include/io.h (_wopen) : Define also when __COREDLL__.
-	* include/wchar.h (_wopen) : Same.
-	* mingwex/wince/open.c : Add _wopen, split up the static
+	* include/io.h (_wopen): Define also when __COREDLL__.
+	* include/wchar.h (_wopen): Same.
+	* mingwex/wince/open.c: Add _wopen, split up the static
 	implementation function into two pieces for this.
 
 2009-07-20  Danny Backx  <dannybackx@users.sourceforge.net>
 
-	* include/stdlib.h : Move atoll definition out of __STRICT_ANSI__, see
-	bug #2821869.
-	* include/stdlib.h : Remove the __COREDLL__ definition of atoll.
+	* include/stdlib.h: Move atoll definition out of __STRICT_ANSI__,
+	see bug #2821869.
+	* include/stdlib.h: Remove the __COREDLL__ definition of atoll.
 
 2009-07-20  Danny Backx  <dannybackx@users.sourceforge.net>
 
-	* mingwex/Makefile.in : Compile atoll always, it's C99.
+	* mingwex/Makefile.in: Compile atoll always, it's C99.
 
 2009-06-21  Danny Backx  <dannybackx@users.sourceforge.net>
 
-	* mingwex/wince/i386/setjmp.S,i386mach.h : New files, implement setjmp
-	and longjmp on i386 because the CE support is absent.
-	* include/setjmp.h (_JBLEN) : Set the right size for jmp_buf.
-	* mingwex/Makefile.in : Build the new sources on i386 only.
+	* mingwex/wince/i386/setjmp.S, mingwex/wince/i386/i386mach.h: New
+	files, implement setjmp and longjmp on i386 because the CE support
+	is absent.
+	* include/setjmp.h (_JBLEN): Set the right size for jmp_buf.
+	* mingwex/Makefile.in: Build the new sources on i386 only.
 
 2009-05-20  Vincent Richomme  <forumer@smartmobili.com>
 
-	* Makefile.in : replace COREDLL by coredll.dll in definition of
+	* Makefile.in: Replace COREDLL by coredll.dll in definition of
 	libceoldname, to decrease different DLL loads in applications.
 
 2009-05-20  Danny Backx  <dannybackx@users.sourceforge.net>
 
-	* mingwex/wince/findfile.c (_findnext) : Return 0, not the handle, on
-	success.
-	* include/io.h (getcwd,chdir,mktemp) : Remove definitions.
+	* mingwex/wince/findfile.c (_findnext): Return 0, not the handle,
+	on success.
+	* include/io.h (getcwd,chdir,mktemp): Remove definitions.
 
 2009-05-18  Danny Backx  <dannybackx@users.sourceforge.net>
 
-	* include/stdio.h (fileno, _fileno) : Define as void* instead of int.
+	* include/stdio.h (fileno, _fileno): Define as void* instead of int.
 
 2009-05-14  Danny Backx  <dannybackx@users.sourceforge.net>
 
-	* mingwex/stdio/pformat.c : Work around %f issue by selecting the
+	* mingwex/stdio/pformat.c: Work around %f issue by selecting the
 	older implementation.
 
 2009-04-28  Danny Backx  <dannybackx@users.sourceforge.net>
 
-	* coredll6.def (LockFileEx,UnLockFileEx,GetSystemTimeAsFileTime) :
+	* coredll6.def (LockFileEx,UnLockFileEx,GetSystemTimeAsFileTime):
 	Add. See feature request #2750015.
-	* coredll6.def : Replace UnLockFileEx by UnlockFileEx.
+	* coredll6.def: Replace UnLockFileEx by UnlockFileEx.
 
 2009-04-26  Danny Backx  <dannybackx@users.sourceforge.net>
 
-	* coredll6.def : New file.
-	* Makefile.in (libcoredll6.a) : New target to build a library that
+	* coredll6.def: New file.
+	* Makefile.in (libcoredll6.a): New target to build a library that
 	supports APIs new to higher versions of CE (to be sure that people
 	who also aim older devices can develop with the regular library).
-	* Makefile.in (lib%.a) : Remove the rule for ofmt_stub.o, it always
+	* Makefile.in (lib%.a): Remove the rule for ofmt_stub.o, it always
 	fails because it relies on a function that is a macro in our sources.
 
 2009-04-22  Danny Backx  <dannybackx@users.sourceforge.net>
 
-	* include/_mingw.h : Change test to check for __arm__ instead of
-	__ARM__. The latter is only declared by an include file, the former
-	is built into the compiler.
+	* include/_mingw.h: Change test to check for __arm__ instead of
+	__ARM__.  The latter is only declared by an include file, the
+	former is built into the compiler.
 
 2009-04-16  Danny Backx  <dannybackx@users.sourceforge.net>
 
-	* Makefile.in (DLLSTARTUPSYM): Create extra variable to prefix
-	the DllMainCRTStartup symbol with an underscore when on an x86 target.
-	* include/_mingw.h (__U, __IMP) : Define them separately for x86.
+	* Makefile.in (DLLSTARTUPSYM): Create extra variable to prefix the
+	DllMainCRTStartup symbol with an underscore when on an x86 target.
+	* include/_mingw.h (__U, __IMP): Define them separately for x86.
 
 2009-04-16  Johnny Willemsen <jwillemsen@remedy.nl>
 
@@ -98,7 +100,7 @@
 
 2009-04-07  Danny Backx  <dannybackx@users.sourceforge.net>
 
-	* include/stdio.h (_wfdopen) : Add const keyword to 2nd parameter
+	* include/stdio.h (_wfdopen): Add const keyword to 2nd parameter
 	after discussion on the mailing list.
 
 2009-02-08  Pedro Alves  <pedroalves@users.sourceforge.net>
