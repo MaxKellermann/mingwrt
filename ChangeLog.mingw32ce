@@ -1,3 +1,7 @@
+2009-02-08  Pedro Alves  <pedroalves@users.sourceforge.net>
+
+	* abort.c (abort): Exit with exit code 1 instead of 0.
+
 2009-09-01  Danny Backx  <dannybackx@users.sourceforge.net>
 
 	* include/tchar.h (_tcsnccpy, _tcsncpy, _tcsclen): Define.

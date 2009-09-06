@@ -4,6 +4,6 @@
 
 void abort(void)
 {
-  TerminateProcess (GetCurrentProcess(), 0);
+  TerminateProcess (GetCurrentProcess(), 1);
   while (1); /* Kill 'noreturn function does return' warning.  */
 }
