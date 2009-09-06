@@ -38,7 +38,7 @@ int __cdecl usleep(useconds_t useconds)
     if(useconds >= 1000000)
         return EINVAL;
 
-    Sleep(useconds / 1000);
+    Sleep((useconds + 999) / 1000);
 
     return 0;
 }

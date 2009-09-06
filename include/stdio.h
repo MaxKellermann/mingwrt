@@ -262,7 +262,7 @@ extern int __mingw_stdio_redirect__(vsnprintf)(char*, size_t, const char*, __VAL
  * For C++ we use inline implementations, to avoid interference
  * with namespace qualification, which may result from using #defines.
  */
-#  define __mingw_stdio_redirect__  static inline __cdecl __MINGW_NOTHROW
+#  define __mingw_stdio_redirect__  inline __cdecl __MINGW_NOTHROW
 
 # elif defined __GNUC__
 /*
@@ -693,9 +693,12 @@ __CRT_INLINE wint_t __cdecl	putwc(wint_t c, FILE* f) { return fputwc(c, f); }
 
 #ifndef __NO_ISOCEXT  /* externs in libmingwex.a */
 int __cdecl __MINGW_NOTHROW snwprintf (wchar_t* s, size_t n, const wchar_t*  format, ...);
+int __cdecl __MINGW_NOTHROW vsnwprintf (wchar_t* s, size_t n, const wchar_t* format, __VALIST arg);
+#ifndef __NO_INLINE__
 __CRT_INLINE int __cdecl __MINGW_NOTHROW
 vsnwprintf (wchar_t* s, size_t n, const wchar_t* format, __VALIST arg)
   { return _vsnwprintf ( s, n, format, arg);}
+#endif
 int __cdecl __MINGW_NOTHROW vwscanf (const wchar_t * __restrict__, __VALIST);
 int __cdecl __MINGW_NOTHROW vfwscanf (FILE * __restrict__,
 		       const wchar_t * __restrict__, __VALIST);

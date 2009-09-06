@@ -1,5 +1,9 @@
 2009-09-06  Pedro Alves  <pedroalves@users.sourceforge.net>
 
+	Merge from upstream (at 3.16 + patches).
+
+2009-09-06  Pedro Alves  <pedroalves@users.sourceforge.net>
+
 	* Makefile.in (libceoldname.a): Specify COREDLL.dll as dll name,
 	not coredll.dll.
 	(libcoredll6.a): Remove rule.

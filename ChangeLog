@@ -1,3 +1,169 @@
+2009-09-01  Keith Marshall  <keithmarshall@users.sourceforge.net>
+
+	Avoid multiple link time definitions of _printf() for C++;
+	(problem reported by Alexander Shaduri, via MinGW-users ML).
+
+	* include/stdio.h [__USE_MINGW_ANSI_STDIO]:
+	(__mingw_stdio_redirect__) [__cplusplus]: remove `static' keyword.
+
+2009-08-14 Chris Sutcliffe <ir0nh34d@users.sourceforge.net>
+
+	* include/_mingw.h: Increment version to 3.16.
+
+2009-08-08  Danny Smith  <dannysmith@users.sourceforge.net>
+
+	* include/math.h (__fpclassifyl, __isnan, __isnanf, isnanl, __signbit,
+	__signbitf, __signbitl, sinhf, tanhf, expf, frexpf, ldexpf, hypotf, powf,
+	__fp_unordered_compare): Add prototypes.
+	* include/stdio.h (vsnwprintf): Add prototype.
+	* include/wchar.h (vsnwprintf): Add prototype.
+	* include/stdlib.h (_Exit): Protect inline definition with !__STRICT_ANSI__.
+	* include/unistd.h (ftruncate): Move prototype out of __NO_INLINE__ guard.
+
+2009-07-29  Keith Marshall  <keithmarshall@users.sourceforge.net>
+
+	Correct disposition of wchar_t output in printf().
+
+	* mingwex/stdio/pformat.c (__pformat) [%C]: Create new instance of...
+	(argval): ...this, in inner scope, with singular type `wchar_t'; use
+	it to pass one wchar to __pformat_wputchars(), for output.
+
+2009-07-27  Chris Sutcliffe  <ir0nh34d@users.sourceforge.net>
+
+	* mingwex/stdio/pformat.c: Implement better fix for type punned warning.
+
+2009-07-27  Keith Marshall  <keithmarshall@users.sourceforge.net>
+
+	Convert to monolithic configuration procedure.
+
+	* configure.in (AC_CHECK_TOOL): All instances; tabulate arguments.
+	(AC_SUBST): Use its 2nd argument to initialise MinGW default settings.
+	(PACKAGE_TARNAME) [target_os ~ cygwin]: Redefine it as appropriate.
+	(W32API_INCLUDE): Redefine; make it relative to `top_srcdir'.
+	(CRT0S): Relocate from `profile'; define it as appropriate.
+	(LIBM_A): Define and AC_SUBST it unconditionally.
+	(AC_CONFIG_SUBDIRS): Remove; none to configure.
+	(AC_OUTPUT_FILES): Add `Makefile' for each of...
+	(mingwex, profile): ...these subdirectories.
+
+	* configure: Regenerated.
+
+	* Makefile.in (PACKAGE, host_os): Let AC_SUBST define them.
+	(top_srcdir, top_builddir): New macros; let AC_SUBST define them.
+	(datarootdir): New macro; autoconf > 2.59 wants AC_SUBST to define it.
+	(SUBDIRS): Define explicitly, to run recursive `make' in...
+	(mingwex, profile): ...these; simplify build commands...
+	(rootme, rootsrc): ...without these shell variables.
+	(all, subdirs): Delete redundant build commands.
+	(FIXME): Flag various issues for follow up.
+
+	* mingwex/Makefile.in (INCLUDES): Redefined macro; refer it to...
+	(top_srcdir): ...this new macro; let AC_SUBST define it.
+	(top_builddir, datarootdir): New macros; let AC_SUBST define them.
+	(Makefile): Make it depend on...
+	(top_builddir/config.status): ...this, itself depending on...
+	(top_srcdir/configure): ...this.
+	(FIXME): Flag various issues for follow up.
+
+	* mingwex/aclocal.m4: File no longer required; delete it.
+	* mingwex/configure mingwex/configure.in: Likewise.
+
+	* profile/Makefile.in (INCLUDES): Redefined macro; refer it to...
+	(top_srcdir): ...this new macro; let AC_SUBST define it.
+	(top_builddir, datarootdir): New macros; let AC_SUBST define them.
+	(Makefile): Make it depend on...
+	(top_builddir/config.status): ...this, itself depending on...
+	(top_srcdir/configure): ...this.
+	(FIXME): Flag various issues for follow up.
+
+	* profile/aclocal.m4: File no longer required; delete it.
+	* profile/configure profile/configure.in: Likewise.
+
+2009-07-23  Chris Sutcliffe  <ir0nh34d@users.sourceforge.net>
+
+	* msvcrt.def.in: disable time symbol for libmsvcr90.a and libmsvcr90d.a due
+	to complaints that it causes issues.
+
+2009-07-23  Jacky Lai  <crazyjacky@users.sourceforge.net>
+
+	* mingwex/math/fminf.c: switch to using __isnanf() as opposed to _isnan().
+
+2009-07-18  Gregory McGarry  <gregorymcgarry@users.sourceforge.net>
+
+	* include/inttypes.h include/math.h include/stdio.h include/stdlib.h
+	include/string.h include/unistd.h include/wchar.h: Add __NO_INLINE__ guard
+	to all inline functions.
+
+2009-07-18  Gregory McGarry  <gregorymcgarry@users.sourceforge.net>
+
+	* CRT_fp8.c: Add PCC alternative to GCC-specific constructs.
+	* CRT_fp10.c: Ditto.
+
+2009-07-18  Gregory McGarry  <gregorymcgarry@users.sourceforge.net>
+
+	* cpu_features.c: replace gcc-specific construct with portable alternative
+	and match the code a few lines above.
+	* crt1.c: remove gcc-specific noreturn attribute with mingw alternative
+
+2009-07-18  Gregory McGarry  <gregorymcgarry@users.sourceforge.net>
+
+	* include/_mingw.h: Changes required for PCC compiler.
+
+2009-07-18 Jeff Lu  <jll544@yahoo.com>
+
+	* mingwex/usleep.c: round up to next ms
+
+2009-07-17  Chris Sutcliffe  <ir0nh34d@users.sourceforge.net>
+
+	* mingwex/math/cephes_mconf.h mingwex/math/erfl.c mingwex/math/lgamma.c
+	mingwex/math/lgammal.c mingwex/math/powl.c mingwex/math/sinhl.c
+	mingwex/math/tanhl.c mingwex/math/tgamma.c mingwex/math/tgammal.c: Based on
+	the fixes from the mingw-w64 code tree, fixed strict-aliasing issues.
+
+2009-07-12  Chris Sutcliffe  <ir0nh34d@users.sourceforge.net>
+
+	* mingwex/stdio/pformat.c: Fix compiler warnings with GCC 4.4.0.
+
+2009-06-28  Ozkan Sezer  <sezero@users.sourceforge.net>
+
+	* mingwex/gdtoa/README.mingw mingwex/gdtoa/gdtoa_fltrnds.h: New files.
+	* mingwex/gdtoa/README mingwex/gdtoa/dmisc.c mingwex/gdtoa/dtoa.c
+	mingwex/gdtoa/g__fmt.c mingwex/gdtoa/g_dfmt.c mingwex/gdtoa/g_ffmt.c
+	mingwex/gdtoa/g_xfmt.c mingwex/gdtoa/gd_arith.h mingwex/gdtoa/gd_qnan.h
+	mingwex/gdtoa/gdtoa.c mingwex/gdtoa/gdtoa.h mingwex/gdtoa/gdtoaimp.h
+	mingwex/gdtoa/gethex.c mingwex/gdtoa/gmisc.c mingwex/gdtoa/hd_init.c
+	mingwex/gdtoa/hexnan.c mingwex/gdtoa/misc.c mingwex/gdtoa/qnan.c
+	mingwex/gdtoa/smisc.c mingwex/gdtoa/strtodg.c mingwex/gdtoa/strtodnrp.c
+	mingwex/gdtoa/strtof.c mingwex/gdtoa/strtopx.c mingwex/gdtoa/sum.c
+	mingwex/gdtoa/ulp.c:  Update the gdtoa library to match the netlib.org
+	sources as of Apr. 20, 2009.  Update further to match the sources in
+	the mingw-w64 tree as of June 28, 2009, by removing IBM, CRAY and VAX
+	code, removing KR_headers, ANSI, Void and Char ifdefs, renaming the
+	double/ulong union from U to dbl_union for better grepping and white-
+	space tidy-ups.
+
+2009-06-16 Chris Sutcliffe <ir0nh34d@users.sourceforge.net>
+
+	* include/stdlib.h (_wtof): Define.
+
+2009-04-11 Danny Smith <dannsymith@users.sourceforge.net>
+
+	* include/stdint.h (int_fast8_t): Specify as signed char.
+	(INT8_C, UINT8_C, INT16_C, UINT16_C): Simplify: just allow promotion to int.
+	(INT32_C, UINT32_C): Remove 'L' type specifier on constant.
+
+2009-03-05  Kai Tietz  <kai.tietz@onevision.com>
+
+	* pseudo-reloc.c: Rewrite to enable pseudo_reloc version 2.
+
+2009-02-08  Keith Marshall  <keithmarshall@users.sourceforge.net>
+
+	MinGW-Feature-Request [2222263]: Make getopt() GNU / BSD compatibile.
+	(Requested by Robert Riebisch)
+
+	* mingwex/getopt.c (getopt_parse): Track external increments of...
+	(optind): ...this global variable.
+
 2009-01-10 Chris Sutcliffe <ir0nh34d@users.sourceforge.net>
 
 	* include/_mingw.h: Increment version to 3.15.2.

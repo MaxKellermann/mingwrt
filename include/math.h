@@ -332,7 +332,6 @@ typedef long double double_t;
 #endif
 
 /* 7.12.3.1 */
-
 /*
    Return values for fpclassify.
    These are based on Intel x87 fpu condition codes
@@ -359,11 +358,13 @@ extern int __cdecl __fpclassify (double);
 extern int __cdecl __fpclassifyl (long double);
 
 #ifdef __i386__
+#ifndef __NO_INLINE__
 __CRT_INLINE int __cdecl __fpclassifyl (long double x){
   unsigned short sw;
   __asm__ ("fxam; fstsw %%ax;" : "=a" (sw): "t" (x));
   return sw & (FP_NAN | FP_NORMAL | FP_ZERO );
 }
+#endif
 #endif
 
 #define fpclassify(x) (sizeof (x) == sizeof (float) ? __fpclassifyf (x)	  \
@@ -383,6 +384,11 @@ __CRT_INLINE int __cdecl __fpclassifyl (long double x){
 #ifdef __i386__
 /* The isnan define could be implemented in terms 
    of fpclassify.  It would compile to the same thing.  */
+extern int __cdecl __isnan (double);
+extern int __cdecl __isnanf (float);
+extern int __cdecl __isnanl (long double);
+#ifndef __NO_INLINE__
+
 __CRT_INLINE int __cdecl __isnan (double _x)
 {
   unsigned short sw;
@@ -409,6 +415,7 @@ __CRT_INLINE int __cdecl __isnanl (long double _x)
   return (sw & (FP_NAN | FP_NORMAL | FP_INFINITE | FP_ZERO | FP_SUBNORMAL))
     == FP_NAN;
 }
+#endif
 
 #define isnan(x) (sizeof (x) == sizeof (float) ? __isnanf (x)	\
 		  : sizeof (x) == sizeof (double) ? __isnan (x)	\
@@ -438,6 +445,10 @@ __CRT_INLINE int __cdecl _isnanl (long double _x)
 
 #ifdef __i386__
 /* 7.12.3.6 The signbit macro */
+extern int __cdecl __signbit (double);
+extern int __cdecl __signbitf (float);
+extern int __cdecl __signbitl (long double);
+#ifndef __NO_INLINE__
 __CRT_INLINE int __cdecl __signbit (double x) {
   unsigned short stw;
   __asm__ ( "fxam; fstsw %%ax;": "=a" (stw) : "t" (x));
@@ -455,6 +466,7 @@ __CRT_INLINE int __cdecl __signbitl (long double x) {
   __asm__ ("fxam; fstsw %%ax;": "=a" (stw) : "t" (x));
   return (stw & 0x0200) != 0;
 }
+#endif
 
 #define signbit(x) (sizeof (x) == sizeof (float) ? __signbitf (x)	\
 		    : sizeof (x) == sizeof (double) ? __signbit (x)	\
@@ -484,16 +496,25 @@ extern float __cdecl atan2f (float, float);
 extern long double __cdecl atan2l (long double, long double);
 
 /* 7.12.5 Hyperbolic functions: Double in C89  */
+extern float __cdecl sinhf (float);
+#ifndef __NO_INLINE__
 __CRT_INLINE float __cdecl sinhf (float x)
   {return (float) sinh (x);}
+#endif
 extern long double __cdecl sinhl (long double);
 
+extern float __cdecl coshf (float);
+#ifndef __NO_INLINE__
 __CRT_INLINE float __cdecl coshf (float x)
   {return (float) cosh (x);}
+#endif
 extern long double __cdecl coshl (long double);
 
+extern float __cdecl tanhf (float);
+#ifndef __NO_INLINE__
 __CRT_INLINE float __cdecl tanhf (float x)
   {return (float) tanh (x);}
+#endif
 extern long double __cdecl tanhl (long double);
 
 /* Inverse hyperbolic trig functions  */ 
@@ -514,8 +535,11 @@ extern long double __cdecl atanhl (long double);
 
 /* Exponentials and logarithms  */
 /* 7.12.6.1 Double in C89 */
+extern float __cdecl expf (float);
+#ifndef __NO_INLINE__
 __CRT_INLINE float __cdecl expf (float x)
   {return (float) exp (x);}
+#endif
 extern long double __cdecl expl (long double);
 
 /* 7.12.6.2 */
@@ -530,8 +554,11 @@ extern float __cdecl expm1f(float);
 extern long double __cdecl expm1l(long double);
 
 /* 7.12.6.4 Double in C89 */
+extern float __cdecl frexpf (float, int*);
+#ifndef __NO_INLINE__
 __CRT_INLINE float __cdecl frexpf (float x, int* expn)
   {return (float) frexp (x, expn);}
+#endif
 extern long double __cdecl frexpl (long double, int*);
 
 /* 7.12.6.5 */
@@ -542,8 +569,11 @@ extern int __cdecl ilogbf (float);
 extern int __cdecl ilogbl (long double);
 
 /* 7.12.6.6  Double in C89 */
+extern float __cdecl ldexpf (float, int);
+#ifndef __NO_INLINE__
 __CRT_INLINE float __cdecl ldexpf (float x, int expn)
   {return (float) ldexp (x, expn);}
+#endif
 extern long double __cdecl ldexpl (long double, int);
 
 /* 7.12.6.7 Double in C89 */
@@ -571,6 +601,7 @@ extern long double __cdecl logbl (long double);
 
 /* Inline versions.  GCC-4.0+ can do a better fast-math optimization
    with __builtins. */ 
+#ifndef __NO_INLINE__
 #if !(__MINGW_GNUC_PREREQ (4, 0) && defined __FAST_MATH__ ) && defined __i386__
 __CRT_INLINE double __cdecl logb (double x)
 {
@@ -596,6 +627,7 @@ __CRT_INLINE long double __cdecl logbl (long double x)
   return res;
 }
 #endif /* !defined __FAST_MATH__ || !__MINGW_GNUC_PREREQ (4, 0) && __i386__ */
+#endif /* !defined __NO_INLINE__ */
 
 /* 7.12.6.12  Double in C89 */
 extern float __cdecl modff (float, float*);
@@ -622,13 +654,19 @@ extern long double __cdecl fabsl (long double x);
 
 /* 7.12.7.3  */
 extern double __cdecl hypot (double, double); /* in libmoldname.a */
+extern float __cdecl hypotf (float, float);
+#ifndef __NO_INLINE__
 __CRT_INLINE float __cdecl hypotf (float x, float y)
   { return (float) hypot (x, y);}
+#endif
 extern long double __cdecl hypotl (long double, long double);
 
 /* 7.12.7.4 The pow functions. Double in C89 */
+extern float __cdecl powf (float, float);
+#ifndef __NO_INLINE__
 __CRT_INLINE float __cdecl powf (float x, float y)
   {return (float) pow (x, y);}
+#endif
 extern long double __cdecl powl (long double, long double);
 
 /* 7.12.7.5 The sqrt functions. Double in C89. */
@@ -685,6 +723,7 @@ extern long long __cdecl llrintl (long double);
 
 /* Inline versions of above. 
    GCC 4.0+ can do a better fast-math job with __builtins. */
+#ifndef __NO_INLINE__
 #if !(__MINGW_GNUC_PREREQ (4, 0) && defined __FAST_MATH__ ) && defined __i386__
 __CRT_INLINE double __cdecl rint (double x)
 {
@@ -755,6 +794,7 @@ __CRT_INLINE long long __cdecl llrintl (long double x)
   return retval;
 }
 #endif /* !__FAST_MATH__ || !__MINGW_GNUC_PREREQ (4,0) && __i386__ */
+#endif /* !defined __NO_INLINE */
 
 /* 7.12.9.6 */
 /* round away from zero, regardless of fpu control word settings */
@@ -865,6 +905,8 @@ extern long double __cdecl fmal (long double, long double, long double);
 
 #else
 /*  helper  */
+extern int  __cdecl __fp_unordered_compare (long double, long double);
+#ifndef __NO_INLINE__
 __CRT_INLINE int  __cdecl
 __fp_unordered_compare (long double x, long double y){
   unsigned short retval;
@@ -872,6 +914,7 @@ __fp_unordered_compare (long double x, long double y){
 	   "fnstsw;": "=a" (retval) : "t" (x), "u" (y));
   return retval;
 }
+#endif
 
 #define isgreater(x, y) ((__fp_unordered_compare(x, y) \
 			   & 0x4500) == 0)

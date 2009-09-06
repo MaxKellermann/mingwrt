@@ -39,10 +39,12 @@ int __cdecl __MINGW_NOTHROW usleep(useconds_t useconds);
 /* This is defined as a real library function to allow autoconf
    to verify its existence. */
 int ftruncate(int, off_t);
+#ifndef __NO_INLINE__
 __CRT_INLINE int ftruncate(int __fd, off_t __length)
 {
   return _chsize (__fd, __length);
 }
+#endif
 
 #ifdef __cplusplus
 }
