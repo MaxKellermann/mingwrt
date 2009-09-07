@@ -1,5 +1,6 @@
 ; PLEASE KEEP THE MINGW/COREDLL.DEF AND W32API/LIBCE/COREDLL.DEF
 ; FILES IN SYNC.
+; this is the mingw/coredll.def file
 
 LIBRARY COREDLL
 EXPORTS
@@ -290,6 +291,7 @@ EnterCriticalSection
 EnumCalendarInfoW
 EnumClipboardFormats
 EnumDateFormatsW
+EnumDeviceInterfaces
 EnumDevices
 EnumDisplayDevices
 EnumDisplayMonitors
@@ -326,7 +328,9 @@ FindCloseChangeNotification
 FindFirstChangeNotificationW
 FindFirstFileExW
 FindFirstFileW
+FindFirstDevice
 FindNextChangeNotification
+FindNextDevice
 FindNextFileW
 FindResource
 FindResourceW
@@ -393,6 +397,8 @@ GetDateFormatW
 GetDesktopWindow
 GetDeviceByIndex
 GetDeviceCaps
+GetDeviceInformationByDeviceHandle
+GetDeviceInformationByFileHandle
 GetDeviceKeys
 GetDevicePower
 GetDialogBaseUnits

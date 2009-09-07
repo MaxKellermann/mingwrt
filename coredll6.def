@@ -290,6 +290,7 @@ EnterCriticalSection
 EnumCalendarInfoW
 EnumClipboardFormats
 EnumDateFormatsW
+EnumDeviceInterfaces
 EnumDevices
 EnumDisplayDevices
 EnumDisplayMonitors
@@ -326,7 +327,9 @@ FindCloseChangeNotification
 FindFirstChangeNotificationW
 FindFirstFileExW
 FindFirstFileW
+FindFirstDevice
 FindNextChangeNotification
+FindNextDevice
 FindNextFileW
 FindResource
 FindResourceW
@@ -393,6 +396,8 @@ GetDateFormatW
 GetDesktopWindow
 GetDeviceByIndex
 GetDeviceCaps
+GetDeviceInformationByDeviceHandle
+GetDeviceInformationByFileHandle
 GetDeviceKeys
 GetDevicePower
 GetDialogBaseUnits
