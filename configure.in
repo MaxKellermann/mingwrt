@@ -83,7 +83,7 @@ AC_SUBST([MKINSTALLDIRS], [$ac_aux_dir/mkinstalldirs])
 AC_PROG_INSTALL
 MINGW_AC_MANPAGE_TRANSFORM
 
-AC_CONFIG_FILES([Makefile mingwex/Makefile profile/Makefile])
+AC_CONFIG_FILES([Makefile mingwex/Makefile])
 AC_OUTPUT
 
 # $RCSfile$: end of file

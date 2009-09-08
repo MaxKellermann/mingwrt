@@ -200,7 +200,7 @@ TAR = tar
 TARFLAGS = z
 TARFILEEXT = .tar.gz
 
-SUBDIRS = mingwex profile
+SUBDIRS = mingwex
 
 # FIXME: Most of these are either redundant, or should be set
 # directly in the subdirectories' Makefiles, by `configure'.
