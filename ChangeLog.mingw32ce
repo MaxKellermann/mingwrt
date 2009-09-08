@@ -18,7 +18,6 @@
 
 	* abort.c (abort): Exit with exit code 1 instead of 0.
 
->>>>>>> .r1377
 2009-09-01  Danny Backx  <dannybackx@users.sourceforge.net>
 
 	* include/tchar.h (_tcsnccpy, _tcsncpy, _tcsclen): Define.
