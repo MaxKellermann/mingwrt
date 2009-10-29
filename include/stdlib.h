@@ -574,10 +574,12 @@ char* __cdecl __MINGW_NOTHROW ulltoa (unsigned long long , char *, int);
 wchar_t* __cdecl __MINGW_NOTHROW lltow (long long, wchar_t *, int);
 wchar_t* __cdecl __MINGW_NOTHROW ulltow (unsigned long long, wchar_t *, int);
 
-  /* inline using non-ansi functions */
-#ifndef __NO_INLINE__
+/* C99 addition, this used to be blocked by __STRICT_ANSI__ (see below). */
 __CRT_INLINE long long  __cdecl __MINGW_NOTHROW atoll (const char * _c)
 	{ return _atoi64 (_c); }
+
+  /* inline using non-ansi functions */
+#ifndef __NO_INLINE__
 __CRT_INLINE char*  __cdecl __MINGW_NOTHROW lltoa (long long _n, char * _c, int _i)
 	{ return _i64toa (_n, _c, _i); }
 __CRT_INLINE char*  __cdecl __MINGW_NOTHROW ulltoa (unsigned long long _n, char * _c, int _i)
