@@ -1,3 +1,7 @@
+2009-10-31  Danny Backx  <dannybackx@users.sourceforge.net>
+
+	* include/stdlib.h: Do the fix below right this time.
+
 2009-10-29  Pierre Ynard  <linkfanel@yahoo.fr>
 
 	* include/stdlib.h: Apply the atoll change again, this disappeared
