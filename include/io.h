@@ -256,7 +256,7 @@ _CRTIMP long __cdecl __MINGW_NOTHROW _lseek (int, long, int);
 _CRTIMP int __cdecl __MINGW_NOTHROW _open (const char*, int, ...);
 
 #ifndef __COREDLL__
-_CRTIMP int __cdecl __MINGW_NOTHROW _open_osfhandle (long, int);
+_CRTIMP int __cdecl __MINGW_NOTHROW _open_osfhandle (intptr_t, int);
 _CRTIMP int __cdecl __MINGW_NOTHROW _pipe (int *, unsigned int, int);
 #endif /* __COREDLL__ */
 _CRTIMP int __cdecl __MINGW_NOTHROW _read (int, void*, unsigned int);
