@@ -96,7 +96,8 @@ _fstat (int fd, struct _stat *st)
   BY_HANDLE_FILE_INFORMATION fi;
   struct stat_file_info_t sfi;
 
-  GetFileInformationByHandle ((HANDLE)fd, &fi);
+  if (!GetFileInformationByHandle ((HANDLE) fd, &fi))
+    return -1;
   TO_STAT_FILE_INFO (&sfi, &fi);
   return __stat_by_file_info (&sfi, st, 0);
 }

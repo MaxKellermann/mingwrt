@@ -1,3 +1,8 @@
+2009-12-10  Pedro Alves  <pedroalves@users.sourceforge.net>
+
+	* mingwex/wince/stat.c (_fstat): Return -1 if
+	GetFileInformationByHandle returns false.
+
 2009-10-31  Danny Backx  <dannybackx@users.sourceforge.net>
 
 	* include/stdlib.h: Do the fix below right this time.
