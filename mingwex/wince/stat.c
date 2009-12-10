@@ -27,19 +27,19 @@ struct stat_file_info_t
   DWORD nFileSizeLow;
 };
 
-#define COPY_MEMBER(DEST, SRC, MEMBER) \
-do { \
-  (DEST)->MEMBER = (SRC)->MEMBER; \
-} while (0)
+#define COPY_MEMBER(DEST, SRC, MEMBER)		\
+  do {						\
+    (DEST)->MEMBER = (SRC)->MEMBER;		\
+  } while (0)
 
-#define TO_STAT_FILE_INFO(DEST, SRC) \
-do { \
-  COPY_MEMBER (DEST, SRC, dwFileAttributes); \
-  COPY_MEMBER (DEST, SRC, ftLastWriteTime); \
-  COPY_MEMBER (DEST, SRC, ftCreationTime); \
-  COPY_MEMBER (DEST, SRC, ftLastAccessTime); \
-  COPY_MEMBER (DEST, SRC, nFileSizeLow); \
-} while (0)
+#define TO_STAT_FILE_INFO(DEST, SRC)		\
+  do {						\
+    COPY_MEMBER (DEST, SRC, dwFileAttributes);	\
+    COPY_MEMBER (DEST, SRC, ftLastWriteTime);	\
+    COPY_MEMBER (DEST, SRC, ftCreationTime);	\
+    COPY_MEMBER (DEST, SRC, ftLastAccessTime);	\
+    COPY_MEMBER (DEST, SRC, nFileSizeLow);	\
+  } while (0)
 
 static int
 __stat_by_file_info (struct stat_file_info_t *fi, struct _stat *st, int exec)
@@ -71,21 +71,21 @@ __stat_by_file_info (struct stat_file_info_t *fi, struct _stat *st, int exec)
 
   /* Looks like the code below is never triggered.
      Windows CE always only keeps the LastWriteTime, and
-	copies it to the CreationTime and LastAccessTime fields.  */
+     copies it to the CreationTime and LastAccessTime fields.  */
   if (st->st_ctime == 0)
     st->st_ctime = st->st_mtime;
   if (st->st_atime == 0)
     {
-	 /* On XP, at least, the st_atime is always set to the same
-	    as the st_mtime, except the hour/min/sec == 00:00:00.  */
-	 SYSTEMTIME s;
-	 FILETIME f = fi->ftLastWriteTime;
-	 FileTimeToSystemTime (&f, &s);
-	 s.wHour = 0; s.wMinute = 0;
-	 s.wSecond = 0; s.wMilliseconds = 0;
-	 SystemTimeToFileTime (&s, &f);
-	 st->st_atime = __FILETIME_to_time_t (&f);
-	 /* st->st_atime = st->st_mtime; */
+      /* On XP, at least, the st_atime is always set to the same as
+	 the st_mtime, except the hour/min/sec == 00:00:00.  */
+      SYSTEMTIME s;
+      FILETIME f = fi->ftLastWriteTime;
+      FileTimeToSystemTime (&f, &s);
+      s.wHour = 0; s.wMinute = 0;
+      s.wSecond = 0; s.wMilliseconds = 0;
+      SystemTimeToFileTime (&s, &f);
+      st->st_atime = __FILETIME_to_time_t (&f);
+      /* st->st_atime = st->st_mtime; */
     }
   return 0;
 }

@@ -1,5 +1,9 @@
 2009-12-10  Pedro Alves  <pedroalves@users.sourceforge.net>
 
+	* mingwex/wince/stat.c: Fix indentation.
+
+2009-12-10  Pedro Alves  <pedroalves@users.sourceforge.net>
+
 	* mingwex/wince/stat.c (_fstat): Return -1 if
 	GetFileInformationByHandle returns false.
 
