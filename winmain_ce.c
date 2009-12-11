@@ -23,21 +23,23 @@ char **__argv = 0;
 
 extern int main (int, char **, char **);
 
+/* Extract whitespace- and quotes- delimited tokens from the given
+ * string and put them into the tokens array. Returns number of tokens
+ * extracted. Length specifies the current size of tokens[], not
+ * counting for the NULL terminator.  THIS METHOD MODIFIES string.
+ */
 static int
 _parse_tokens(char* string, char*** tokens, int length)
 {
-    /* Extract whitespace- and quotes- delimited tokens from the given string
-       and put them into the tokens array. Returns number of tokens
-       extracted. Length specifies the current size of tokens[].
-       THIS METHOD MODIFIES string.  */
-
     const char* whitespace = " \t\r\n";
     char* tokenEnd;
     const char* quoteCharacters = "\"\'";
-    char* end = string + strlen (string);
+    char* end;
 
     if (string == NULL)
         return length;
+
+    end = string + strlen (string);
 
     while (1)
     {
@@ -68,20 +70,15 @@ _parse_tokens(char* string, char*** tokens, int length)
 
         *tokenEnd = '\0';
 
-        {
-            char** new_tokens;
-            int newlen = length + 1;
-            new_tokens = realloc (*tokens, sizeof (char**) * newlen);
-            if (!new_tokens)
-            {
-                /* Out of memory.  */
-                return -1;
-            }
+	length++;
+	*tokens = realloc (*tokens, sizeof (char**) * (length + 1));
+	if (!*tokens)
+	  {
+	    /* Out of memory.  */
+	    return -1;
+	  }
 
-            *tokens = new_tokens;
-            (*tokens)[length] = string;
-            length = newlen;
-        }
+	(*tokens)[length - 1] = string;
         if (tokenEnd == end)
             break;
         string = tokenEnd + 1;
@@ -101,7 +98,8 @@ __mainArgs(int *argc, char ***argv, wchar_t *cmdlinePtrW)
 
     /* argv[0] is the path of invoked program - get this from CE.  */
     cmdnameBufW[0] = 0;
-    modlen = GetModuleFileNameW(NULL, cmdnameBufW, sizeof (cmdnameBufW)/sizeof (cmdnameBufW[0]));
+    modlen = GetModuleFileNameW(NULL, cmdnameBufW,
+				sizeof (cmdnameBufW)/sizeof (cmdnameBufW[0]));
 
     if (!cmdlinePtrW)
         cmdlineLen = 0;
@@ -112,14 +110,16 @@ __mainArgs(int *argc, char ***argv, wchar_t *cmdlinePtrW)
     if (!__cmdlinebuf)
         ExitProcess(-1);
 
-    *argv = malloc (sizeof (char**) * 1);
+    /* Add one to account for argv[0] */
+    (*argc)++;
+
+    /* + 1 accounts for the null terminator.  */
+    *argv = malloc (sizeof (char**) * (*argc + 1));
     if (!*argv)
         ExitProcess(-1);
 
     (*argv)[0] = __cmdlinebuf;
     wcstombs((*argv)[0], cmdnameBufW, wcslen(cmdnameBufW) + 1);
-    /* Add one to account for argv[0] */
-    (*argc)++;
 
     if (cmdlineLen > 0)
     {
@@ -129,7 +129,7 @@ __mainArgs(int *argc, char ***argv, wchar_t *cmdlinePtrW)
         if (*argc < 0)
             ExitProcess(-1);
     }
-    (*argv)[*argc] = 0;
+    (*argv)[*argc] = NULL;
     return;
 }
 

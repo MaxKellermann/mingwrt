@@ -1,3 +1,10 @@
+2009-12-11  Pedro Alves  <pedroalves@users.sourceforge.net>
+
+	SF #2901705
+
+	* winmain_ce.c (_parse_tokens, __mainArgs): Fix memory allocation
+	and properly null terminate argv.
+
 2009-12-10  Pedro Alves  <pedroalves@users.sourceforge.net>
 
 	* mingwex/wince/stat.c: Fix indentation.
