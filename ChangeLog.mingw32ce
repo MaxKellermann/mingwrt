@@ -1,3 +1,10 @@
+2010-01-01  Pedro Alves  <pedroalves@users.sourceforge.net>
+
+	* pseudo-reloc.c (__text_start__): Declare.
+	(_pei386_runtime_relocator): On CE, don't reference
+	&__image_base__; get at the image base through __text_start__ -
+	0x1000 instead.
+
 2009-12-11  Pedro Alves  <pedroalves@users.sourceforge.net>
 
 	SF #2901705

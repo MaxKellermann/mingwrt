@@ -20,12 +20,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
-#include <stddef.h>
  
  extern char __RUNTIME_PSEUDO_RELOC_LIST__;
  extern char __RUNTIME_PSEUDO_RELOC_LIST_END__;
- extern char __U(_image_base__);
-
+ extern char _image_base__;
+ extern char __text_start__;
+ 
 typedef struct {
   DWORD addend;
   DWORD target;
@@ -172,10 +172,36 @@ void
  _pei386_runtime_relocator ()
 {
   static int was_init = 0;
+#ifdef UNDER_CE
+  static volatile void *text_start;
+  static volatile int pe_header_size;
+#endif
+  void *image_base;
   if (was_init)
     return;
   ++was_init;
+
+#ifndef UNDER_CE
+  image_base = _image_base__;
+#else
+  /* The loader of Windows Mobile 6.1 and above refuses to apply base
+     relocations if the resulting RVA falls out of the image.
+     __image_base__ happens to be one such symbol, as most other ld
+     magic symbols (__dll__, __major_image_version__, etc.).
+     Basically, symbols that end up on the absolute section.  As an
+     alternative to get at the image base, we relocate against the
+     __text_start__ symbol, and subtract the PE header from that.  In
+     practice, this gives us the image base.  We go through volatile
+     globals to make sure gcc doesn't fold the 0x1000 subtraction into
+     the relocatable address, as that would be the same as relocating
+     against __image_base__ in the first place, exactly what we need
+     to avoid.  */
+  text_start = &__text_start__;
+  pe_header_size = 0x1000;
+  image_base = (char *) text_start - pe_header_size;
+#endif
+
   do_pseudo_reloc (&__RUNTIME_PSEUDO_RELOC_LIST__,
 		   &__RUNTIME_PSEUDO_RELOC_LIST_END__,
-		    &__U(_image_base__));
+		   image_base);
 }
