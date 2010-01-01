@@ -1,3 +1,14 @@
+/*
+ * utime.c: utime and _utime implementations for WinCE.
+ *
+ * This file has no copyright assigned and is placed in the Public Domain.
+ * This file is a part of the mingw-runtime package.
+ * No warranty is given; refer to the file DISCLAIMER within the package.
+ *
+ * Written by Pedro Alves <pedro_alves@portugalmail.pt> Feb 2007
+ *
+ */
+
 #include <sys/utime.h>
 #include <fcntl.h>
 

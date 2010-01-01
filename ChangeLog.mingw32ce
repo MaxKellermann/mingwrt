@@ -1,5 +1,25 @@
 2010-01-01  Pedro Alves  <pedroalves@users.sourceforge.net>
 
+	* mingwex/wince/freopen.c, mingwex/wince/unlink.c,
+	mingwex/wince/open.c, mingwex/wince/ctime.c,
+	mingwex/wince/tempnam.c, mingwex/wince/close.c,
+	mingwex/wince/isalnum.c, mingwex/wince/read.c,
+	mingwex/wince/fdopen.c, mingwex/wince/isalpha.c,
+	mingwex/wince/wcsftime.c, mingwex/wince/gmtime.c,
+	mingwex/wince/utime.c, mingwex/wince/isxdigit.c,
+	mingwex/wince/mktime.c, mingwex/wince/isupper.c,
+	mingwex/wince/isgraph.c, mingwex/wince/_toupper.c,
+	mingwex/wince/time.c, mingwex/wince/lseek.c,
+	mingwex/wince/rename.c, mingwex/wince/localtime.c,
+	mingwex/wince/iscntrl.c, mingwex/wince/islower.c,
+	mingwex/wince/ispunct.c, mingwex/wince/asctime.c,
+	mingwex/wince/isspace.c, mingwex/wince/isprint.c,
+	mingwex/wince/futime.c, mingwex/wince/_tolower.c,
+	mingwex/wince/chmod.c, mingwex/wince/write.c: Add explicit public
+	domain header.
+
+2010-01-01  Pedro Alves  <pedroalves@users.sourceforge.net>
+
 	* pseudo-reloc.c: Put back include of stddef.h.
 
 2010-01-01  Pedro Alves  <pedroalves@users.sourceforge.net>
