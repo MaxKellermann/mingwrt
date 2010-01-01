@@ -20,6 +20,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
+#include <stddef.h>
  
  extern char __RUNTIME_PSEUDO_RELOC_LIST__;
  extern char __RUNTIME_PSEUDO_RELOC_LIST_END__;
