@@ -561,11 +561,10 @@ _CRTIMP FILE* __cdecl __MINGW_NOTHROW	_fdopen (int, const char*);
 _CRTIMP FILE* __cdecl __MINGW_NOTHROW	_fsopen (const char*, const char*, int);
 #endif
 #ifdef __COREDLL__
-/* Define _fileno as a void * which appears to be the sensible thing to do,
- * even though MSDN claims otherwise. */
+/* See declaration of fileno below.  */
 _CRTIMP void * __cdecl __MINGW_NOTHROW	_fileno (FILE*);
 #else
-_CRTIMP void * __cdecl __MINGW_NOTHROW	_fileno (FILE*);
+_CRTIMP int __cdecl __MINGW_NOTHROW	_fileno (FILE*);
 #endif
 _CRTIMP int __cdecl __MINGW_NOTHROW	_fcloseall (void);
 #ifdef __MSVCRT__
@@ -588,11 +587,14 @@ _CRTIMP FILE* __cdecl __MINGW_NOTHROW	fdopen (int, const char*);
 #ifndef __COREDLL__
 _CRTIMP int __cdecl __MINGW_NOTHROW	fgetchar (void);
 _CRTIMP int __cdecl __MINGW_NOTHROW	fputchar (int);
-_CRTIMP void * __cdecl __MINGW_NOTHROW	fileno (FILE*);
+_CRTIMP int __cdecl __MINGW_NOTHROW	fileno (FILE*);
 #else
-/* Define fileno as a void * which appears to be the sensible thing to do,
- * even though MSDN claims otherwise. */
-_CRTIMP void * __cdecl __MINGW_NOTHROW	fileno (FILE*);
+ /* Microsoft defines _fileno as returning a void* (HANDLE), since
+    file descriptors are really HANDLES, but, that is so annoying for
+    portability, that we define fileno (no underscore) as returning
+    int, which is OK on arm (32-bit).  The underscored version
+    (_fileno) is left returning void*.  */
+_CRTIMP int __cdecl __MINGW_NOTHROW     fileno (FILE*);
 #endif
 #endif	/* Not _NO_OLDNAMES */
 

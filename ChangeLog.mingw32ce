@@ -1,5 +1,15 @@
 2010-01-02  Pedro Alves  <pedroalves@users.sourceforge.net>
 
+	Partially revert:
+	2009-05-18  Danny Backx  <dannybackx@users.sourceforge.net>
+	* include/stdio.h (fileno, _fileno): Define as void* instead of int.
+
+	Now:
+	* include/stdio.h (fileno): Revert back to returning int.
+	(_fileno): Non-CE versions return int.
+
+2010-01-02  Pedro Alves  <pedroalves@users.sourceforge.net>
+
 	* include/stdlib.h (atoll): Don't define the inline version with
 	__NO_INLINE__ is defined.  Don't define or declare if
 	__STRICT_ANSI__ is defined, unless compiling for C99 or above.
