@@ -562,12 +562,26 @@ __CRT_INLINE long long __cdecl __MINGW_NOTHROW llabs(long long _j)
   {return (_j >= 0 ? _j : -_j);}
 #endif
 
-/* C99 addition, this used to be blocked by __STRICT_ANSI__ (see below). */
+#ifndef __NO_INLINE__
+#if (!defined (__STRICT_ANSI__)						\
+     || (defined (__STDC_VERSION__) && __STDC_VERSION__ >= 199901L))
 __CRT_INLINE long long  __cdecl __MINGW_NOTHROW atoll (const char * _c)
 	{ return _atoi64 (_c); }
+#endif
+#endif
 
 long long  __cdecl __MINGW_NOTHROW strtoll (const char* __restrict__, char** __restrict, int);
 unsigned long long  __cdecl __MINGW_NOTHROW strtoull (const char* __restrict__, char** __restrict__, int);
+
+/* these are stubs for MS _i64 versions */
+#if defined (__MSVCRT__) || defined (__COREDLL__)
+
+#if (!defined (__STRICT_ANSI__)						\
+     || (defined (__STDC_VERSION__) && __STDC_VERSION__ >= 199901L))
+long long  __cdecl __MINGW_NOTHROW atoll (const char * _c);
+#endif
+
+#endif
 
 #if defined (__MSVCRT__) /* these are stubs for MS _i64 versions */ 
 

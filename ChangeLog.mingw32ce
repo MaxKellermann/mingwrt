@@ -1,3 +1,10 @@
+2010-01-02  Pedro Alves  <pedroalves@users.sourceforge.net>
+
+	* include/stdlib.h (atoll): Don't define the inline version with
+	__NO_INLINE__ is defined.  Don't define or declare if
+	__STRICT_ANSI__ is defined, unless compiling for C99 or above.
+	Add missing declaration for out-of-line copy.
+
 2010-01-01  Pedro Alves  <pedroalves@users.sourceforge.net>
 
 	* mingwex/wince/freopen.c, mingwex/wince/unlink.c,
