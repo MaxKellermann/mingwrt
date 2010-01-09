@@ -25,7 +25,7 @@
  extern char __RUNTIME_PSEUDO_RELOC_LIST__;
  extern char __RUNTIME_PSEUDO_RELOC_LIST_END__;
  extern char _image_base__;
- extern char __text_start__;
+ extern char __U(_text_start__);
  
 typedef struct {
   DWORD addend;
@@ -197,7 +197,7 @@ void
      the relocatable address, as that would be the same as relocating
      against __image_base__ in the first place, exactly what we need
      to avoid.  */
-  text_start = &__text_start__;
+  text_start = &__U(_text_start__);
   pe_header_size = 0x1000;
   image_base = (char *) text_start - pe_header_size;
 #endif

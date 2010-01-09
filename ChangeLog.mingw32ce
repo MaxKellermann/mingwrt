@@ -1,3 +1,8 @@
+2010-01-09  Danny Backx  <dannybackx@users.sourceforge.net>
+
+	* pseudo-reloc.c (__text_start__): Redefine as __U(_text_start__) to
+	prepend the right number of underscores.
+
 2010-01-02  Pedro Alves  <pedroalves@users.sourceforge.net>
 
 	Partially revert:
