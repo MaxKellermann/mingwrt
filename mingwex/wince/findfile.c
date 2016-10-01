@@ -11,6 +11,7 @@
  */
 
 #include <stdarg.h>
+#include <stdlib.h>
 #include <time.h>
 #include <windows.h>
 #include <io.h>

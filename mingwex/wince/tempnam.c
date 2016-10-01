@@ -10,6 +10,7 @@
  */
 
 #include <stdio.h>
+#include <wchar.h>
 #include <windows.h>
 
 typedef void *(*dupfun_t) (wchar_t *);

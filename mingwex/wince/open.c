@@ -13,6 +13,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/stat.h>
+#include <string.h>
 
 static int
 vwopen (const wchar_t *wpath, int oflag, va_list ap)
