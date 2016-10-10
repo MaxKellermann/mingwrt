@@ -158,7 +158,7 @@ _CRTIMP int __cdecl __MINGW_NOTHROW _toupper(int);
 
 #if (!(defined (__NO_INLINE__)  || defined (__NO_CTYPE_INLINES) \
 	|| defined (__STRICT_ANSI__)) \
-	|| defined (__COREDLL__))
+	|| (defined (__COREDLL__) && !defined (__STRICT_ANSI__)))
 
 #ifdef __COREDLL__
 # define __ISCTYPE(c, mask)  _isctype(c, mask)
