@@ -241,6 +241,7 @@ COMPLEX_OBJS = \
 	cprojf.o cprojl.o creal.o crealf.o creall.o csin.o csinf.o \
 	csinl.o csinh.o csinhf.o csinhl.o csqrt.o csqrtf.o csqrtl.o \
 	ctan.o ctanf.o ctanl.o ctanh.o ctanhf.o ctanhl.o
+COMPLEX_OBJS_CE = $(filter-out carg%,$(COMPLEX_OBJS))
 WINCE_OBJS = \
 	asctime.o freopen.o gmtime.o localtime.o mktime.o strftime.o time.o \
 	tempnam.o unlink.o wcsftime.o fdopen.o read.o write.o open.o lseek.o \
@@ -275,7 +276,8 @@ MATHCE_FLAGS=
 ifneq (,$(findstring mingw32ce,$(host_alias)))
 LIB_OBJS = $(WINCE_OBJS) $(MATHCE_OBJS) $(MATCHCE_ROUND_OBJS) \
 	$(Q8_OBJS) $(STDIO_OBJS_CE) \
-	$(POSIX_OBJS) $(GDTOA_OBJS) $(C99OBJS)
+	$(POSIX_OBJS) $(COMPLEX_OBJS_CE) \
+	$(GDTOA_OBJS) $(C99OBJS)
 MATHCE_FLAGS=-D_IEEE_LIBM
 MATHDIR=mathce
 else
