@@ -9,7 +9,9 @@
 
 #include <math.h>
 #include <complex.h>
+#ifndef UNDER_CE
 #include <errno.h>
+#endif
 
 /* catan (z) = -I/2 * clog ((I + z) / (I - z)) */ 
 
@@ -27,7 +29,9 @@ catanl (long double complex Z)
 
   if ( x == 0.0L && (1.0L - fabsl (y)) == 0.0L)
     {
+#ifndef UNDER_CE
       errno = ERANGE;
+#endif
       __real__ Res = HUGE_VALL;
       __imag__ Res = HUGE_VALL;
     }

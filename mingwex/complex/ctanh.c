@@ -8,7 +8,9 @@
 
 #include <math.h>
 #include <complex.h>
+#ifndef UNDER_CE
 #include <errno.h>
+#endif
 
 /*
   ctanh (x + I * y) = (sinh (2 * x)  +  sin (2 * y) * I )
@@ -25,13 +27,17 @@ ctanh (double complex Z)
 
   if (denom == 0.0)
     {
+#ifndef UNDER_CE
       errno = ERANGE;
+#endif
       __real__ Res = HUGE_VAL;
       __imag__ Res = HUGE_VAL;
     }
   else if ( isinf (denom))
     {
+#ifndef UNDER_CE
       errno = ERANGE;
+#endif
       __real__ Res = two_R > 0 ? 1.0 : -1.0;
       __imag__ Res = 0.0;
     }

@@ -9,7 +9,9 @@
 
 #include <math.h>
 #include <complex.h>
+#ifndef UNDER_CE
 #include <errno.h>
+#endif
 
 /* catan (z) = -I/2 * clog ((I + z) / (I - z)) */ 
 
@@ -23,7 +25,9 @@ catan (double complex Z)
 
   if ( x == 0.0 && (1.0 - fabs (y)) == 0.0)
     {
+#ifndef UNDER_CE
       errno = ERANGE;
+#endif
       __real__ Res = HUGE_VAL;
       __imag__ Res = HUGE_VAL;
     }

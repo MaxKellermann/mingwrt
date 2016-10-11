@@ -7,7 +7,9 @@
 
 #include <math.h>
 #include <complex.h>
+#ifndef UNDER_CE
 #include <errno.h>
+#endif
 
 
 /* ctan (x + I * y) = (sin (2 * x)  +  I * sinh(2 * y))
@@ -21,13 +23,17 @@ float complex ctanf (float complex Z)
   float denom = cosf (two_R) + coshf (two_I);
   if (denom == 0.0f)
     {
+#ifndef UNDER_CE
       errno = ERANGE;
+#endif
       __real__ Res = HUGE_VALF;
       __imag__ Res = HUGE_VALF;
     }
   else if (isinf (denom))
     {
+#ifndef UNDER_CE
       errno = ERANGE;
+#endif
       __real__ Res = 0.0;
       __imag__ Res = two_I > 0 ? 1.0f : -1.0f;
     }
