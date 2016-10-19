@@ -190,6 +190,18 @@ __CRT_INLINE off64_t lseek64 (int fd, off64_t offset, int whence)
 _CRTIMP int __cdecl __MINGW_NOTHROW chdir (const char*);
 _CRTIMP char* __cdecl __MINGW_NOTHROW getcwd (char*, int);
 _CRTIMP char* __cdecl __MINGW_NOTHROW mktemp (char*);
+#else
+static inline int chdir(const char *path)
+{
+	(void)path;
+	return -1;
+}
+static inline char *getcwd(char *buf, size_t size)
+{
+	(void)buf;
+	(void)size;
+	return 0;
+}
 #endif
 _CRTIMP int __cdecl __MINGW_NOTHROW mkdir (const char*);
 _CRTIMP int __cdecl __MINGW_NOTHROW rmdir (const char*);

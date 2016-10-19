@@ -401,6 +401,11 @@ int __cdecl __MINGW_NOTHROW	atexit	(void (*)(void));
 #ifndef __COREDLL__
 _CRTIMP int __cdecl __MINGW_NOTHROW	system	(const char*);
 _CRTIMP char* __cdecl __MINGW_NOTHROW	getenv	(const char*);
+#else
+static inline char *getenv(const char *name) {
+	(void)name;
+	return 0;
+}
 #endif
 
 /* bsearch and qsort are also in non-ANSI header search.h  */
