@@ -202,6 +202,9 @@ __write_memory (void *addr, const void *src, size_t len)
 static void
 do_pseudo_reloc (void * start, void * end, void * base)
 {
+#ifdef UNDER_CE
+  unsigned opcode;
+#endif
   ptrdiff_t addr_imp, reldata;
   ptrdiff_t reloc_target = (ptrdiff_t) ((char *)end - (char*)start);
   runtime_pseudo_reloc_v2 *v2_hdr = (runtime_pseudo_reloc_v2 *) start;
@@ -312,6 +315,13 @@ do_pseudo_reloc (void * start, void * end, void * base)
 	    if ((reldata & 0x8000) != 0)
 	      reldata |= ~((ptrdiff_t) 0xffff);
 	    break;
+#ifdef UNDER_CE
+	  case 24:
+	    opcode = *(unsigned *)reloc_target;
+	    reldata = (ptrdiff_t) ((opcode & 0xffffff) << 2);
+	    opcode &= ~0xffffff;
+	    break;
+#endif
 	  case 32:
 	    reldata = (ptrdiff_t) (*((unsigned int *)reloc_target));
 #ifdef _WIN64
@@ -344,6 +354,20 @@ do_pseudo_reloc (void * start, void * end, void * base)
 	 case 16:
            __write_memory ((void *) reloc_target, &reldata, 2);
 	   break;
+#ifdef UNDER_CE
+	 case 24:
+	   if ((reldata & 0x3) != 0)
+		   __report_error ("  Misaligned 24-bit pseudo relocation to 0x%x.\n",
+				   reldata);
+
+	   if (reldata >= 0x1ffffff || reldata < -0x1ffffff)
+		   __report_error ("  Pseudo relocation (0x%x) does not fit in 24 bit target.\n",
+				   reldata);
+
+	   reldata = opcode | ((reldata >> 2) & 0xffffff);
+	   __write_memory ((void *) reloc_target, &reldata, 4);
+	   break;
+#endif
 	 case 32:
            __write_memory ((void *) reloc_target, &reldata, 4);
 	   break;
